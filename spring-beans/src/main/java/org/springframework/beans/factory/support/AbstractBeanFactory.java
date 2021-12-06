@@ -280,6 +280,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			// Check if bean definition exists in this factory.
 			// 获取父类容器
 			BeanFactory parentBeanFactory = getParentBeanFactory();
+			// 如果 beanDefinitionMap 中即在所有已经加载的类中不包含 beanName,尝试从父容器中获取
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
 				String nameToLookup = originalBeanName(name);
@@ -300,22 +301,28 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 
+			// 标志位
 			if (!typeCheckOnly) {
 				markBeanAsCreated(beanName);
 			}
 
 			try {
+				// 此处做了 BeanDefinition 对象的转换，当从 xml文件中加载 beandefinition 对象的时候，封装的对象是 GenericBeanDefinition
+				// 此处要做类型转换，如果是子类 bean 的话，会合并父类的相关属性
 				RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.
+				// 如果存在依赖的 bean，则优先实例化依赖的 bean; A->B,优先实例化 B
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
+					// 如果存在依赖，需要递归实例化依赖的 bean
 					for (String dep : dependsOn) {
 						if (isDependent(beanName, dep)) {
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 									"Circular depends-on relationship between '" + beanName + "' and '" + dep + "'");
 						}
+						// 注册各个 bean 的依赖关系，方便进行销毁
 						registerDependentBean(dep, beanName);
 						try {
 							getBean(dep);
@@ -328,6 +335,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				// Create bean instance.
+				// 创建 bean 的实例对象
 				if (mbd.isSingleton()) {
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
@@ -343,7 +351,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					});
 					bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
 				}
-
+				// 原型模式的 bean 对象创建
 				else if (mbd.isPrototype()) {
 					// It's a prototype -> create a new instance.
 					Object prototypeInstance = null;

@@ -581,6 +581,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				// 12. 完成刷新
 				finishRefresh();
 			}
 
@@ -603,6 +604,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			finally {
 				// Reset common introspection caches in Spring's core, since we
 				// might not ever need metadata for singleton beans anymore...
+				// 13. 重置缓存
 				resetCommonCaches();
 			}
 		}
