@@ -65,6 +65,7 @@ public class ResourceEntityResolver extends DelegatingEntityResolver {
 	 * to load XML entity includes with
 	 */
 	public ResourceEntityResolver(ResourceLoader resourceLoader) {
+		// super 进去设置配置文件解析器（.xsd .dtd）
 		super(resourceLoader.getClassLoader());
 		this.resourceLoader = resourceLoader;
 	}

@@ -140,10 +140,14 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 		Collections.addAll(this.requiredProperties, requiredProperties);
 	}
 
+	/**
+	 * 验证环境变量中的属性值
+	 */
 	@Override
 	public void validateRequiredProperties() {
 		MissingRequiredPropertiesException ex = new MissingRequiredPropertiesException();
 		for (String key : this.requiredProperties) {
+			// 环境变量有属性值，校验属性值是否为空
 			if (this.getProperty(key) == null) {
 				ex.addMissingRequiredProperty(key);
 			}
