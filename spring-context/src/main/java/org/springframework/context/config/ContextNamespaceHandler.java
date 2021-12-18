@@ -30,6 +30,9 @@ import org.springframework.context.annotation.ComponentScanBeanDefinitionParser;
  */
 public class ContextNamespaceHandler extends NamespaceHandlerSupport {
 
+	/**
+	 * 初始化标签解析器，一个标签对应一个解析器
+	 */
 	@Override
 	public void init() {
 		registerBeanDefinitionParser("property-placeholder", new PropertyPlaceholderBeanDefinitionParser());

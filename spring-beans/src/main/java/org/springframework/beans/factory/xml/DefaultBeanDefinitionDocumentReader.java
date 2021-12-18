@@ -181,11 +181,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					// 不需要额外导入的命名空间（默认命名空间） <bean> <import> <description> 等
-					// 需要导入的 <aop> <context> 等
 					if (delegate.isDefaultNamespace(ele)) {
 						parseDefaultElement(ele, delegate);
 					}
 					else {
+						// 需要导入的 <aop> <tx> <context> 等标签
 						delegate.parseCustomElement(ele);
 					}
 				}
