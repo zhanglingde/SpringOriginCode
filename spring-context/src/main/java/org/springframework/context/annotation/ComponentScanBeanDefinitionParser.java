@@ -80,14 +80,20 @@ public class ComponentScanBeanDefinitionParser implements BeanDefinitionParser {
 	@Override
 	@Nullable
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
+		// 获取 <context:component-scan> 节点的 base-package 属性值
 		String basePackage = element.getAttribute(BASE_PACKAGE_ATTRIBUTE);
+		// 解析占位符
 		basePackage = parserContext.getReaderContext().getEnvironment().resolvePlaceholders(basePackage);
+		// 解析 base-package(允许通过,;\t\n 中的任一符号填写多个)
 		String[] basePackages = StringUtils.tokenizeToStringArray(basePackage,
 				ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
 
 		// Actually scan for bean definitions and register them.
+		// 构建和配置 ClassPathBeanDefinitionScanner
 		ClassPathBeanDefinitionScanner scanner = configureScanner(parserContext, element);
+		// 使用 scanner 在执行的 basePackages 包中执行扫描，返回已注册的 bean 定义
 		Set<BeanDefinitionHolder> beanDefinitions = scanner.doScan(basePackages);
+		// 组建注册（包括注册一些内部的注解后置处理器，触发注册事件）
 		registerComponents(parserContext.getReaderContext(), beanDefinitions, element);
 
 		return null;

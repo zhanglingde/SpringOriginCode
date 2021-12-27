@@ -58,6 +58,7 @@ public class SpelExpressionParser extends TemplateAwareExpressionParser {
 
 	@Override
 	protected SpelExpression doParseExpression(String expressionString, @Nullable ParserContext context) throws ParseException {
+		// 表达式解析
 		return new InternalSpelExpressionParser(this.configuration).doParseExpression(expressionString, context);
 	}
 

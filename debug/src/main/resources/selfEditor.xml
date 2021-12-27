@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 自定义编辑器 -->
+	<bean id="customer" class="com.ling.test07.customEditor.Customer">
+		<property name="name" value="zhangling"></property>
+		<property name="address" value="浙江省_杭州市_钱塘区"></property>
+	</bean>
+
+	<!-- 方式一 -->
+	<!--<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">-->
+	<!--	<property name="propertyEditorRegistrars">-->
+	<!--		&lt;!&ndash; address 是一个数组 &ndash;&gt;-->
+	<!--		<list>-->
+	<!--			<bean class="com.ling.test07.customEditor.AddressPropertyEditorRegistrar"></bean>-->
+	<!--		</list>-->
+	<!--	</property>-->
+	<!--</bean>-->
+
+	<!-- 方式二 -->
+	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<entry key="com.ling.test07.customEditor.Address">
+					<value>com.ling.test07.customEditor.AddressPropertyEditor</value>
+				</entry>
+			</map>
+		</property>
+
+	</bean>
+</beans>
