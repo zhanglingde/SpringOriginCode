@@ -53,6 +53,11 @@ final class PostProcessorRegistrationDelegate {
 	}
 
 
+	/**
+	 *
+	 * @param beanFactory
+	 * @param beanFactoryPostProcessors 默认为空，可以自己添加值
+	 */
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
@@ -78,6 +83,7 @@ final class PostProcessorRegistrationDelegate {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
 							(BeanDefinitionRegistryPostProcessor) postProcessor;
+					// 直接执行 BeanDefinitionRegistryPostProcessor 接口中的 postProcessBeanDefinitionRegistry 方法
 					registryProcessor.postProcessBeanDefinitionRegistry(registry);
 					// 添加到 registryProcessors，用于后续执行 postProcessBeanFactory 方法
 					registryProcessors.add(registryProcessor);
@@ -154,6 +160,7 @@ final class PostProcessorRegistrationDelegate {
 				}
 				sortPostProcessors(currentRegistryProcessors, beanFactory);
 				registryProcessors.addAll(currentRegistryProcessors);
+				// 遍历 currentRegistryProcessors，执行 postProcessBeanDefinitionRegistry 方法
 				invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 				currentRegistryProcessors.clear();
 			}
@@ -171,32 +178,44 @@ final class PostProcessorRegistrationDelegate {
 			invokeBeanFactoryPostProcessors(beanFactoryPostProcessors, beanFactory);
 		}
 
+		// 到这里为止，入参 beanFactoryPostProcessors 和容器中所有 BeanDefinitionRegistryPostProcessors 已全部处理完毕，接下来处理容器中所有的 BeanFactoryPostProcessors
+
 		// Do not initialize FactoryBeans here: We need to leave all regular beans
 		// uninitialized to let the bean factory post-processors apply to them!
+		// 找到所有实现 BeanFactoryPostProcessor 接口的类
 		String[] postProcessorNames =
 				beanFactory.getBeanNamesForType(BeanFactoryPostProcessor.class, true, false);
 
 		// Separate between BeanFactoryPostProcessors that implement PriorityOrdered,
 		// Ordered, and the rest.
+		// 用于存放实现了 PriorityOrdered 接口的 BeanFactoryPostProcessors
 		List<BeanFactoryPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
+		// 用于存放实现了 Ordered 接口的 BeanFactoryPostProcessor 的 beanName
 		List<String> orderedPostProcessorNames = new ArrayList<>();
+		// 用于存放普通 BeanFactoryPostProcessor 的 beanName
 		List<String> nonOrderedPostProcessorNames = new ArrayList<>();
+		// 遍历 postProcessorNames,将 BeanFactoryPostProcessor 按实现 PriorityOrdered、实现 Ordered 接口、普通三种区分开
 		for (String ppName : postProcessorNames) {
+			// 跳过已经执行过的 BeanFactoryPostProcessor
 			if (processedBeans.contains(ppName)) {
 				// skip - already processed in first phase above
 			}
+			// 添加实现了 PriorityOrdered 接口的 BeanFactoryPostProcessor
 			else if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
 				priorityOrderedPostProcessors.add(beanFactory.getBean(ppName, BeanFactoryPostProcessor.class));
 			}
+			// 添加实现了 Ordered 接口的 BeanFactoryPostProcessor 的 beanName
 			else if (beanFactory.isTypeMatch(ppName, Ordered.class)) {
 				orderedPostProcessorNames.add(ppName);
 			}
 			else {
+				// 添加普通无序的 BeanFactoryPostProcessor 的 beanName
 				nonOrderedPostProcessorNames.add(ppName);
 			}
 		}
 
 		// First, invoke the BeanFactoryPostProcessors that implement PriorityOrdered.
+		// 对实现 PriorityOrdered 接口的 BeanFactoryPostProcessor 进行排序，遍历并进行调用 postProcessBeanFactory 方法
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
 		invokeBeanFactoryPostProcessors(priorityOrderedPostProcessors, beanFactory);
 
@@ -290,17 +309,20 @@ final class PostProcessorRegistrationDelegate {
 	}
 
 	private static void sortPostProcessors(List<?> postProcessors, ConfigurableListableBeanFactory beanFactory) {
-		// Nothing to sort?
+		// Nothing to sort? 不做排序
 		if (postProcessors.size() <= 1) {
 			return;
 		}
 		Comparator<Object> comparatorToUse = null;
 		if (beanFactory instanceof DefaultListableBeanFactory) {
+			// 获取设置的比较器
 			comparatorToUse = ((DefaultListableBeanFactory) beanFactory).getDependencyComparator();
 		}
 		if (comparatorToUse == null) {
+			// 默认使用 OrderComparator 比较器
 			comparatorToUse = OrderComparator.INSTANCE;
 		}
+		// 使用比较器对 postProcessors 进行排序
 		postProcessors.sort(comparatorToUse);
 	}
 

@@ -151,16 +151,19 @@ public class ComponentScanBeanDefinitionParser implements BeanDefinitionParser {
 		// Register annotation config processors, if necessary.
 		boolean annotationConfig = true;
 		if (element.hasAttribute(ANNOTATION_CONFIG_ATTRIBUTE)) {
+			// 获取 component-scan 标签的 annotation-config 属性值，默认为 true
 			annotationConfig = Boolean.parseBoolean(element.getAttribute(ANNOTATION_CONFIG_ATTRIBUTE));
 		}
 		if (annotationConfig) {
+			// 如果 annotation-config 属性值为 true，在给定的注册表中注册所有用于注解的 bean 后置处理器
 			Set<BeanDefinitionHolder> processorDefinitions =
 					AnnotationConfigUtils.registerAnnotationConfigProcessors(readerContext.getRegistry(), source);
 			for (BeanDefinitionHolder processorDefinition : processorDefinitions) {
+				// 将注册的后置处理器的 BeanDefinition 添加到 compositeDef 的 nestedComponents 属性中
 				compositeDef.addNestedComponent(new BeanComponentDefinition(processorDefinition));
 			}
 		}
-
+		// 触发组件注册事件，默认实现为 EmptyReaderEventListener
 		readerContext.fireComponentRegistered(compositeDef);
 	}
 

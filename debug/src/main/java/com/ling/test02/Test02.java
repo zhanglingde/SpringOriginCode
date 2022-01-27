@@ -7,7 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * @author zhangling  2021/9/1 17:35
  */
-public class Test {
+public class Test02 {
 	public static void main(String[] args) {
 
 		MyClassPathXmlApplicationContext ac = new MyClassPathXmlApplicationContext("bean.xml");

@@ -50,6 +50,11 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 
 /**
+ * 此类用来对 @EventListener 提供支持
+ * 1、解析 @EventListener,获取拦截方法
+ * 2、对拦截方法进行转换，编程 ApplicationListener
+ * 3、对转换的 ApplicationListener 方法 Spring 容器中
+ *
  * Registers {@link EventListener} methods as individual {@link ApplicationListener} instances.
  * Implements {@link BeanFactoryPostProcessor} (as of 5.1) primarily for early retrieval,
  * avoiding AOP checks for this processor bean and its {@link EventListenerFactory} delegates.
