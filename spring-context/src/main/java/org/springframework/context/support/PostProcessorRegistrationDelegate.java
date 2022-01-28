@@ -129,6 +129,7 @@ final class PostProcessorRegistrationDelegate {
 			// 后执行父类 Ordered 排序的
 			// 调用所有实现 Ordered 接口的 BeanDefinitionRegistryPostProcessor 实现类
 			// 找到所有实现 BeanDefinitionRegistryPostProcessor 接口bean 的 beanName，
+			// 此处需要重复查找的原因在于上面执行过程中可能会新增其他的 BeanDefinitionRegistryPostProcessor
 			postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
 				// 检测是否实现 Ordered 接口，并且还未被执行过

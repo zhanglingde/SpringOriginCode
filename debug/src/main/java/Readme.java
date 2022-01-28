@@ -29,6 +29,8 @@ import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
 import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.context.event.EventListenerMethodProcessor;
 
+import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
+
 import java.util.Set;
 
 
@@ -177,8 +179,20 @@ public class Readme {
 	 *       <li> 用于解析 bean 定义中属性值里面的占位符 					{@link PlaceholderConfigurerSupport } </li>
 	 * </ul>
 	 */
-	void read08() {
-	}
+	void read08() {}
+
+
+	/**
+	 * 9. BeanFactoryPostProcessor 的执行过程
+	 * <p>
+	 *     1. 自定义 BeanDefinitionRegistryPostProcessor，分别实现 PriorityOrdered、Ordered 接口和不实现接口，BDRPP 被扫描执行的顺序不同
+	 *     																{@link MyBeanDefinitionRegistryPostProcessor}
+	 *     2. 没个阶段执行 BDRPP ，每次需要重新获取 BeanDefinitionRegistryPostProcessor
+	 * </p>
+	 */
+	void read09() {}
+
+
 }
 
 
