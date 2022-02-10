@@ -187,7 +187,7 @@ public class Readme {
 	 * <p>
 	 *     1. 自定义 BeanDefinitionRegistryPostProcessor，分别实现 PriorityOrdered、Ordered 接口和不实现接口，BDRPP 被扫描执行的顺序不同
 	 *     																{@link MyBeanDefinitionRegistryPostProcessor}
-	 *     2. 没个阶段执行 BDRPP ，每次需要重新获取 BeanDefinitionRegistryPostProcessor
+	 *     2. 每个阶段执行 BDRPP ，每次需要重新获取 BeanDefinitionRegistryPostProcessor
 	 * </p>
 	 */
 	void read09() {}
