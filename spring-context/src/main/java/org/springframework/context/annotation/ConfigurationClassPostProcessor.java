@@ -228,6 +228,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 */
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
+		// 根据对应的 registry 对象生成 hashcode 值，此对象只会操作一次，如果之前处理过则抛出异常
 		int registryId = System.identityHashCode(registry);
 		if (this.registriesPostProcessed.contains(registryId)) {
 			throw new IllegalStateException(
@@ -237,8 +238,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			throw new IllegalStateException(
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
+		// 将马上要进行处理的 registry 对象的 id 值放到已经处理的集合对象中
 		this.registriesPostProcessed.add(registryId);
 
+		// 处理配置类的 bean 定义信息
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -266,10 +269,21 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 	/**
 	 * Build and validate a configuration model based on the registry of
+	 * 构建和验证一个类是否被 @Configuration 修饰，并做相关的解析工作
+	 * SringBoot 自动装配原理
+	 * 会进行常用注解的扫描
+	 * <ul>
+	 *     <li> @Configuration </li>
+	 *     <li> @Bean </li>
+	 *     <li> @Import </li>
+	 *     <li> @Component </li>
+	 *     <li> @ComponentScan </li>
+	 *     <li> @ComponentScans </li>
+	 * </ul>
 	 * {@link Configuration} classes.
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
-		// 存放 BeanDefinitionHolder 的对象集合
+		// 存放 BeanDefinitionHolder 的对象集合（Holder 相当于 BeanDefinition 的包装类）
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
 		// 当 registry 就是 DefaultListableBeanFactory ，获取所有已经注册的 BeanDefinition 的 beanName
 		String[] candidateNames = registry.getBeanDefinitionNames();
@@ -284,7 +298,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
 			}
-			// 判断当前 BeanDefinition 是否加了 @Configuration 注解的类
+			// 判断当前 BeanDefinition 是否加了 @Configuration 注解的类或其他 @Bean、@Component、@ComponentScan、@Import、@ImportSource 等注解
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
 				// 添加到对应的集合对象中
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
@@ -315,9 +329,11 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				// 获取 beanName 生成器
 				BeanNameGenerator generator = (BeanNameGenerator) sbr.getSingleton(
 						AnnotationConfigUtils.CONFIGURATION_BEAN_NAME_GENERATOR);
+				// 如果有自定义的名称生成策略
 				if (generator != null) {
-					// 如果 Spring 有默认的 beanName  生成器，则重新赋值
+					// 设置组件扫描的 beanName 生成策略
 					this.componentScanBeanNameGenerator = generator;
+					// 设置 import bean name 生成策略
 					this.importBeanNameGenerator = generator;
 				}
 			}
@@ -333,6 +349,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				this.metadataReaderFactory, this.problemReporter, this.environment,
 				this.resourceLoader, this.componentScanBeanNameGenerator, registry);
 
+		// 创建两个集合对象
 		// candidates 用于将之前加入的 configCandidates 去重
 		// alreadyParsed 用于判断是否已经处理过了
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);

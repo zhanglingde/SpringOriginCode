@@ -6,32 +6,35 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.*;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.AbstractRefreshableApplicationContext;
 
 import com.ling.test02.MyClassPathXmlApplicationContext;
 import org.springframework.context.support.AbstractXmlApplicationContext;
 import org.springframework.core.io.Resource;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-import org.springframework.context.annotation.ComponentScanBeanDefinitionParser;
 import org.springframework.context.expression.StandardBeanExpressionResolver;
 import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.config.PlaceholderConfigurerSupport;
-import org.springframework.context.annotation.AnnotationConfigUtils;
-import org.springframework.context.annotation.ConfigurationClassPostProcessor;
 import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
 import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.context.event.EventListenerMethodProcessor;
+import org.springframework.beans.factory.support.BeanNameGenerator;
+import org.springframework.context.annotation.ConfigurationClassParser;
+
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
 
 public class Readme {
@@ -61,19 +64,25 @@ public class Readme {
 
 	/**
 	 * 05. xml 配置文件加载过程 -> beanDefinition(一个标签解析成一个 BeanDefinition)
+	 * <ul>
+	 *     <li> GenericBeanDefinition </li>
+	 *     <li> RootBeanDefinition </li>
+	 *     <li> ScannedGenericBeanDefinition（扫描的 Bean） </li>
+	 *     <li> AnnotatedBeanDefinition </li>
+	 * </ul>
+	 *
 	 * 1. 从网络加载配置文件，本地定义的文件 spring-bean/META-iNF  spring.schemas
 	 * <p>
-	 * 2. 获取配置文件路径：
-	 * {@link AbstractXmlApplicationContext#loadBeanDefinitions(XmlBeanDefinitionReader)}
-	 * 3. 读取xml 配置文件，生成document对象
-	 * {@link XmlBeanDefinitionReader#doLoadBeanDefinitions(InputSource, Resource)}
-	 * 4. 解析过程
-	 * {@link DefaultBeanDefinitionDocumentReader#doRegisterBeanDefinitions(Element)}
-	 * 解析 bean标签 {@link DefaultBeanDefinitionDocumentReader#processBeanDefinition}
-	 * 5. 将xml解析成 beanDefinition对象后，将 BeanDefinition 对象放入 BeanFactory
-	 * beanDefinitionMap<beanName,BeanDefinition>
-	 * beanDefinitionNames<beanName>
-	 * {@link BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder, BeanDefinitionRegistry)}
+	 * 2. 获取配置文件路径：						{@link AbstractXmlApplicationContext#loadBeanDefinitions(XmlBeanDefinitionReader)}
+	 *
+	 * 3. 读取xml 配置文件，生成document对象   		{@link XmlBeanDefinitionReader#doLoadBeanDefinitions(InputSource, Resource)}
+	 *
+	 * 4. 解析过程								{@link DefaultBeanDefinitionDocumentReader#doRegisterBeanDefinitions(Element)}
+	 * 		解析 bean标签 						{@link DefaultBeanDefinitionDocumentReader#processBeanDefinition}
+	 * 5. 将xml解析成 beanDefinition 对象后，将 BeanDefinition 对象放入 BeanFactory
+	 * 		beanDefinitionMap<beanName,BeanDefinition>
+	 * 		beanDefinitionNames<beanName>
+	 * 		{@link BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder, BeanDefinitionRegistry)}
 	 */
 	void readme05() {
 	}
@@ -188,7 +197,30 @@ public class Readme {
 	 *     1. 自定义 BeanDefinitionRegistryPostProcessor，分别实现 PriorityOrdered、Ordered 接口和不实现接口，BDRPP 被扫描执行的顺序不同
 	 *     																{@link MyBeanDefinitionRegistryPostProcessor}
 	 *     2. 每个阶段执行 BDRPP ，每次需要重新获取 BeanDefinitionRegistryPostProcessor
+	 *
 	 * </p>
+	 * BedefinitionRegistry :对 bean 进行增删改查操作
+	 * 
+	 * 扫描 @Component 注册的Bean 								{@link ComponentScanBeanDefinitionParser#registerComponents(XmlReaderContext, Set, Element)}
+	 *
+	 * <p>
+	 *     注解的扫描												{@link ConfigurationClassPostProcessor#processConfigBeanDefinitions(BeanDefinitionRegistry)}
+	 *     <li> @Configuration </li>
+	 *     <li> @Bean </li>
+	 *     <li> @Import </li>
+	 * </p>
+	 *
+	 *
+	 * <p>
+	 * 		@Import、@ComponentScan、@ComponentScans、@ImportResource 等注解的解析
+	 * 	<ul>
+	 * 	    <li> 该类的子类实现是 BeanName 的生成方式 					{@link BeanNameGenerator}  		</li>
+	 * 	    <li> @Conditional 注解处理								{@link ConditionEvaluator#shouldSkip(AnnotatedTypeMetadata)} 	</li>
+	 * 	    <li> 	{@link ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)} 	</li>
+	 *
+	 * 	</ul>
+	 * </p>
+	 *
 	 */
 	void read09() {}
 
