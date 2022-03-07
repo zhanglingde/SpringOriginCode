@@ -50,13 +50,17 @@ import org.springframework.stereotype.Component;
  */
 abstract class ConfigurationClassUtils {
 
+	// Configuration class 如果是@Configuration 注解标注的类，将属性标注为 full
 	public static final String CONFIGURATION_CLASS_FULL = "full";
 
+	// 非@Configuration 注解标注的类，将属性标注为 lite
 	public static final String CONFIGURATION_CLASS_LITE = "lite";
 
+	// ConfigurationClassPostProcessor.configurationClass 作为属性配置类型标记属性的 key
 	public static final String CONFIGURATION_CLASS_ATTRIBUTE =
 			Conventions.getQualifiedAttributeName(ConfigurationClassPostProcessor.class, "configurationClass");
 
+	// ConfigurationClassPostProcessor.order 配置属性配置类排序的属性 key
 	private static final String ORDER_ATTRIBUTE =
 			Conventions.getQualifiedAttributeName(ConfigurationClassPostProcessor.class, "order");
 
@@ -74,6 +78,11 @@ abstract class ConfigurationClassUtils {
 
 
 	/**
+	 * 判断当前 BeanDefinition 是否是一个配置类，并我 BeanDefinition 设置属性为 lite 或者 full，此处设置属性值是为了后续进行调用
+	 * 如果 Configuration 配置 proxyBeanMethods 代理为 true 则为 full
+	 * 如果包含 @Bean、@Compoent、@ComponentScan、@Import、@ImportSource 注解，则设置为 lite
+	 * 如果配置类上被 @Order 注解标注，则设置 BeanDefinition 的 order 属性值
+	 *
 	 * Check whether the given bean definition is a candidate for a configuration class
 	 * (or a nested component class declared within a configuration/component class,
 	 * to be auto-registered as well), and mark it accordingly.
@@ -90,6 +99,7 @@ abstract class ConfigurationClassUtils {
 			return false;
 		}
 
+		// 注解元数据信息，可以获取到对象上有哪些注解
 		AnnotationMetadata metadata;
 		// 通过注解注入的 db 都是 AnnotatedGenericBeanDefinition,实现了 AnnotatedBeanDefinition
 		// Spring 内部的 bd 是 RootBeanDefinition,实现了 AbstractBeanDefinition
@@ -106,6 +116,7 @@ abstract class ConfigurationClassUtils {
 			// since we possibly can't even load the class file for this Class.
 			// 获取当前 bean 对象的 class 对象
 			Class<?> beanClass = ((AbstractBeanDefinition) beanDef).getBeanClass();
+			// class 对象是下面四种类或接口的子类、父接口等任一情况，直接返回
 			if (BeanFactoryPostProcessor.class.isAssignableFrom(beanClass) ||
 					BeanPostProcessor.class.isAssignableFrom(beanClass) ||
 					AopInfrastructureBean.class.isAssignableFrom(beanClass) ||
@@ -117,7 +128,7 @@ abstract class ConfigurationClassUtils {
 		}
 		else {
 			try {
-				// 获取元数据读取器
+				// 获取元数据读取器（获取 className 的 MetadataReader 实例）
 				MetadataReader metadataReader = metadataReaderFactory.getMetadataReader(className);
 				// 通过元数据读取器获取注解元数据
 				metadata = metadataReader.getAnnotationMetadata();
@@ -133,11 +144,11 @@ abstract class ConfigurationClassUtils {
 
 		// 判断当前 BeanDefinition 是否存在 @Configuration 注解
 		Map<String, Object> config = metadata.getAnnotationAttributes(Configuration.class.getName());
-		// 如果包含 @Configuration 注解，同时包含 proxyBeanMethod 属性，那么设置 configurationClass 属性为 full
+		// 如果包含 @Configuration 注解，同时 proxyBeanMethod 属性为 true（使用代理模式），那么设置 configurationClass 属性为 full
 		if (config != null && !Boolean.FALSE.equals(config.get("proxyBeanMethods"))) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
-		// 如果包含 @Bean、@Compoent、@ComponentScan、@Import、@ImportSource 注解，则设置为 lite
+		// 如果bean 被 @Configuration 注解标注，或被包含 @Bean、@Component、@ComponentScan、@Import、@ImportSource 注解，则将 bean定义标记为 lite
 		else if (config != null || isConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
@@ -169,14 +180,14 @@ abstract class ConfigurationClassUtils {
 			return false;
 		}
 
-		// Any of the typical annotations found?   包含 @Bean 等注解
+		// Any of the typical annotations found?   包含 @Component、@ComponentScan 等注解
 		for (String indicator : candidateIndicators) {
 			if (metadata.isAnnotated(indicator)) {
 				return true;
 			}
 		}
 
-		// Finally, let's look for @Bean methods...
+		// Finally, let's look for @Bean methods... 检查是否有 @Bean 标注的方法
 		try {
 			return metadata.hasAnnotatedMethods(Bean.class.getName());
 		}

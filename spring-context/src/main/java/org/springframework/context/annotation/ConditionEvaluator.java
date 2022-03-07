@@ -100,6 +100,7 @@ class ConditionEvaluator {
 		}
 
 		List<Condition> conditions = new ArrayList<>();
+		// 遍历条件集合
 		for (String[] conditionClasses : getConditionClasses(metadata)) {
 			for (String conditionClass : conditionClasses) {
 				// 提供 @Conditional 注解后面的 value 数组

@@ -93,6 +93,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		PriorityOrdered, ResourceLoaderAware, BeanClassLoaderAware, EnvironmentAware {
 
 	/**
+	 * 使用类的全限定类名作为 bean 的默认生成策略
+	 *p
 	 * A {@code BeanNameGenerator} using fully qualified class names as default bean names.
 	 * <p>This default for configuration-level import purposes may be overridden through
 	 * {@link #setBeanNameGenerator}. Note that the default for component scanning purposes
@@ -288,7 +290,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		// 当 registry 就是 DefaultListableBeanFactory ，获取所有已经注册的 BeanDefinition 的 beanName
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
-		// 遍历所有要处理的 beanDefinition 的名称
+		// 遍历所有要处理的 beanDefinition 的名称(筛选判断 beanDefinition 是否被注解修饰)
 		for (String beanName : candidateNames) {
 			// 获取指定名称的 BeanDefinition 对象
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
@@ -320,7 +322,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		});
 
 		// Detect any custom bean name generation strategy supplied through the enclosing application context
-		// bean 是 SingletonBeanRegistry 类型
+		// 单例的 Bean 				{了解 beanName 生成器 @link BeanNameGenerator}
 		SingletonBeanRegistry sbr = null;
 		if (registry instanceof SingletonBeanRegistry) {
 			sbr = (SingletonBeanRegistry) registry;
@@ -351,23 +353,21 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 		// 创建两个集合对象
 		// candidates 用于将之前加入的 configCandidates 去重
-		// alreadyParsed 用于判断是否已经处理过了
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
+		// alreadyParsed 用于判断是否已经处理过了(存放扫描包下的所有 bean)
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
-			/**
-			 * 解析配置类，在此处会解析配置类上的注解（@ComponentScan 扫描的类、@Import 注册的类、@Bean 方法定义的类）
-			 * 这一步只会将添加了 @Configuration 注解以及通过 ComponentScan 注解扫描的类才会加入到 BeanDefinitionMap 中
-			 * 通过其他注解（@Import,@Bean）的方式在 parse() 方法这一步并不会将其解析为 BeanDefinition 放到 BeanDefinitionMap 中
-			 * 真正实现方式是在 this.reader.loadBeanDefinitions() 方法中实现
-			 */
+			// 解析带有 @Controller、@Import、@ImportResource、@ComponentScan、@ComponentScans、@Bean 的 BeanDefinition
 			parser.parse(candidates);
 			parser.validate();
 
+			// 获取所有的 bean，包括扫描的 bean 对象，@Import 导入的 bean 对象
 			Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());
+			// 清除已经解析处理过的配置类
 			configClasses.removeAll(alreadyParsed);
 
 			// Read the model and create bean definitions based on its content
+			// 为空创建完全填充好的 ConfigurationClass 实例的读取器
 			if (this.reader == null) {
 				this.reader = new ConfigurationClassBeanDefinitionReader(
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,

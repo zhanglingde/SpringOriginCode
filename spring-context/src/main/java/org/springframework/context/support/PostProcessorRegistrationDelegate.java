@@ -66,18 +66,15 @@ final class PostProcessorRegistrationDelegate {
 		// 将已经执行过的 BFPP 存储在 processedBeans，防止重复执行
 		Set<String> processedBeans = new HashSet<>();
 
-		// 判断 beanFactory 是否是 BeanDefinitionRegistry 类型，此处是 DefaultListableBeanFactory，实现了 BeanDefinitionRegistry 接口，所以为 true
+		// 1. 实现 BeanDefinitionRegistry 类型的处理（ DefaultListableBeanFactory 为子类）
 		if (beanFactory instanceof BeanDefinitionRegistry) {
-			// 类型转换
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
-			// 存在 BeanFactoryPostProcessor 的集合
 			// BeanDefinitionRegistryPostProcessor 是 BeanDefinitionRegistry 的子集
 			// BeanFactoryPostProcessor 针对的操作对象是 BeanFactory，BeanDefinitionRegistryPostProcessor 针对的操作对象是 BeanDefinition
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
-			// 存放 BeanDefinitionRegistryPostProcessor 的集合
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
-			// 首先处理入参中的 beanFactoryPostProcessors
+			// 2. 首先处理入参中的 beanFactoryPostProcessors
 			// 遍历所有 beanFactoryPostProcessors，将 BeanDefinitionRegistryPostProcessor 和 BeanFactoryPostProcessor 区分开
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
@@ -120,7 +117,7 @@ final class PostProcessorRegistrationDelegate {
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			// 添加到 registryProcessors 中，用于最后执行 postProcessBeanFactory 方法
 			registryProcessors.addAll(currentRegistryProcessors);
-			// 遍历 currentRegistryProcessors，执行 postProcessBeanDefinitionRegistry 方法
+			// 遍历 currentRegistryProcessors，执行 postProcessBeanDefinitionRegistry 方法（ConfigurationClassPostProcessor 处理的入口）
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			// 执行完毕后，清空 currentRegistryProcessors
 			currentRegistryProcessors.clear();
@@ -328,11 +325,13 @@ final class PostProcessorRegistrationDelegate {
 	}
 
 	/**
+	 *
+	 *
 	 * Invoke the given BeanDefinitionRegistryPostProcessor beans.
 	 */
 	private static void invokeBeanDefinitionRegistryPostProcessors(
 			Collection<? extends BeanDefinitionRegistryPostProcessor> postProcessors, BeanDefinitionRegistry registry) {
-
+		// 遍历 currentRegistryProcessors，执行 postProcessBeanDefinitionRegistry 方法
 		for (BeanDefinitionRegistryPostProcessor postProcessor : postProcessors) {
 			postProcessor.postProcessBeanDefinitionRegistry(registry);
 		}

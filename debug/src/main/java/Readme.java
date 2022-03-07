@@ -12,6 +12,7 @@ import org.springframework.context.support.AbstractRefreshableApplicationContext
 
 import com.ling.test02.MyClassPathXmlApplicationContext;
 import org.springframework.context.support.AbstractXmlApplicationContext;
+import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.io.Resource;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.w3c.dom.Element;
@@ -28,7 +29,7 @@ import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
 import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.context.event.EventListenerMethodProcessor;
 import org.springframework.beans.factory.support.BeanNameGenerator;
-import org.springframework.context.annotation.ConfigurationClassParser;
+// import org.springframework.context.annotation.ConfigurationClassParser;
 
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
@@ -70,19 +71,19 @@ public class Readme {
 	 *     <li> ScannedGenericBeanDefinition（扫描的 Bean） </li>
 	 *     <li> AnnotatedBeanDefinition </li>
 	 * </ul>
-	 *
+	 * <p>
 	 * 1. 从网络加载配置文件，本地定义的文件 spring-bean/META-iNF  spring.schemas
 	 * <p>
 	 * 2. 获取配置文件路径：						{@link AbstractXmlApplicationContext#loadBeanDefinitions(XmlBeanDefinitionReader)}
-	 *
+	 * <p>
 	 * 3. 读取xml 配置文件，生成document对象   		{@link XmlBeanDefinitionReader#doLoadBeanDefinitions(InputSource, Resource)}
-	 *
+	 * <p>
 	 * 4. 解析过程								{@link DefaultBeanDefinitionDocumentReader#doRegisterBeanDefinitions(Element)}
 	 * 		解析 bean标签 						{@link DefaultBeanDefinitionDocumentReader#processBeanDefinition}
 	 * 5. 将xml解析成 beanDefinition 对象后，将 BeanDefinition 对象放入 BeanFactory
 	 * 		beanDefinitionMap<beanName,BeanDefinition>
 	 * 		beanDefinitionNames<beanName>
-	 * 		{@link BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder, BeanDefinitionRegistry)}
+	 *        {@link BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder, BeanDefinitionRegistry)}
 	 */
 	void readme05() {
 	}
@@ -155,8 +156,8 @@ public class Readme {
 	 * 8. BeanFactoryPostProcessor 的执行过程
 	 * <p>
 	 * 1. 获取到 beanFactory ,就可以对 工厂中所有属性进行操作
-	 * 		postProcessBeanFactory 扩展
-	 * 		{@link AbstractApplicationContext#postProcessBeanFactory(ConfigurableListableBeanFactory) }
+	 * postProcessBeanFactory 扩展
+	 * {@link AbstractApplicationContext#postProcessBeanFactory(ConfigurableListableBeanFactory) }
 	 * <ol>
 	 *     <li>1）先执行 BeanDefinitionRegistry 类型的 beanFactory;先遍历实现 PriorityOrdered 接口的，然后是实现 Order 接口的，最后是无序的</li>
 	 *    <li> 2) 然后执行不属于 BeanDefinitionRegistry 类型的，直接执行 postProcessBeanFactory 方法</li>
@@ -180,7 +181,7 @@ public class Readme {
 	 * <ul>
 	 *       <li>  最重要的后置处理器 例：@Configuration 是后置处理器进行处理的 {@link  ConfigurationClassPostProcessor}
 	 *       	打开 <context:component-scan></context:component-scan> 才会被扫描到
-	 *       															{@link ComponentScanBeanDefinitionParser#registerComponents(XmlReaderContext, Set, Element)}
+	 *                                                                {@link ComponentScanBeanDefinitionParser#registerComponents(XmlReaderContext, Set, Element)}
 	 *       </li>
 	 *       <li>  自定义自动注入 										{@link  CustomAutowireConfigurer} </li>
 	 *       <li>  自定义编辑器 											{@link  CustomEditorConfigurer} </li>
@@ -188,31 +189,33 @@ public class Readme {
 	 *       <li> 用于解析 bean 定义中属性值里面的占位符 					{@link PlaceholderConfigurerSupport } </li>
 	 * </ul>
 	 */
-	void read08() {}
+	void read08() {
+	}
 
 
 	/**
-	 * 9. BeanFactoryPostProcessor 的执行过程
+	 * 9. BeanFactoryPostProcessor 的执行过程2
 	 * <p>
-	 *     1. 自定义 BeanDefinitionRegistryPostProcessor，分别实现 PriorityOrdered、Ordered 接口和不实现接口，BDRPP 被扫描执行的顺序不同
-	 *     																{@link MyBeanDefinitionRegistryPostProcessor}
-	 *     2. 每个阶段执行 BDRPP ，每次需要重新获取 BeanDefinitionRegistryPostProcessor
+	 * 1. 自定义 BeanDefinitionRegistryPostProcessor，分别实现 PriorityOrdered、Ordered 接口和不实现接口，BDRPP 被扫描执行的顺序不同
+	 * {@link MyBeanDefinitionRegistryPostProcessor}
+	 * 2. 每个阶段执行 BDRPP ，每次需要重新获取 BeanDefinitionRegistryPostProcessor
 	 *
 	 * </p>
 	 * BedefinitionRegistry :对 bean 进行增删改查操作
-	 * 
+	 * <p>
 	 * 扫描 @Component 注册的Bean 								{@link ComponentScanBeanDefinitionParser#registerComponents(XmlReaderContext, Set, Element)}
 	 *
 	 * <p>
-	 *     注解的扫描												{@link ConfigurationClassPostProcessor#processConfigBeanDefinitions(BeanDefinitionRegistry)}
-	 *     <li> @Configuration </li>
-	 *     <li> @Bean </li>
-	 *     <li> @Import </li>
+	 * 注解的扫描												{@link ConfigurationClassPostProcessor#processConfigBeanDefinitions(BeanDefinitionRegistry)}
+	 * <li> @Configuration </li>
+	 * <li> @Bean </li>
+	 * <li> @Import </li>
 	 * </p>
 	 *
 	 *
 	 * <p>
-	 * 		@Import、@ComponentScan、@ComponentScans、@ImportResource 等注解的解析
+	 *
+	 * @Import、@ComponentScan、@ComponentScans、@ImportResource 等注解的解析
 	 * 	<ul>
 	 * 	    <li> 该类的子类实现是 BeanName 的生成方式 					{@link BeanNameGenerator}  		</li>
 	 * 	    <li> @Conditional 注解处理								{@link ConditionEvaluator#shouldSkip(AnnotatedTypeMetadata)} 	</li>
@@ -220,9 +223,42 @@ public class Readme {
 	 *
 	 * 	</ul>
 	 * </p>
-	 *
 	 */
-	void read09() {}
+	void read09() {
+	}
+
+	/**
+	 * 10. ConfigurationClassPostProcessor
+	 *<ol>
+	 *
+	 * <li>		@Component、@PropertySource、@ComponentScan、@Import、@ImportResource、@Bean 等注解的解析
+	 * 		{@link ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)}
+	 * </li>
+	 * <li> @Component 注解解析 {@link com.ling.test10.MyComponentScan}
+	 * 		{@link ConfigurationClassParser#processMemberClasses(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)}
+	 * </li>
+	 * <li> @PropertySource 注解 @Value 注解 spel 表达式解析
+	 * 		{@link com.ling.test10.MyPropertySource}
+	 * 		{@link ConfigurationClassParser#processPropertySource(AnnotationAttributes)}
+	 * </li>
+	 * <li> @Bean 注解解析 和 @Conditional 条件标签
+	 * 		{@link com.ling.test10.BeanConfig}
+	 * 		{@link ConfigurationClassParser#processConfigurationClass(ConfigurationClass, Predicate)}
+	 * 		this.conditionEvaluator.shouldSkip
+	 *
+	 * </li>
+	 * <li> 注解修饰的类解析成 BeanDefinition
+	 * 		{@link ConfigurationClassParser#parse(Set)}
+	 *     
+	 * </li>
+	 * <li> asm
+	 * 		{@link ConfigurationClassParser#retrieveBeanMethodMetadata(ConfigurationClassParser.SourceClass)}
+	 *
+	 * </li>
+	 *</ol>
+	 */
+	void read10() {
+	}
 
 
 }
