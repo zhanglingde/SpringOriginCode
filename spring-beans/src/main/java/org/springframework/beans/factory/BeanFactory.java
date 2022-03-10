@@ -21,7 +21,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
- * 定义获取bean及bean的各种属性
+ * 定义获取 bean 及 bean 的各种属性
  *
  * The root interface for accessing a Spring bean container.
  *

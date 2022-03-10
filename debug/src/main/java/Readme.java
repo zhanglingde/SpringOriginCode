@@ -231,27 +231,31 @@ public class Readme {
 	 * 10. ConfigurationClassPostProcessor
 	 *<ol>
 	 *
-	 * <li>		@Component、@PropertySource、@ComponentScan、@Import、@ImportResource、@Bean 等注解的解析
+	 * <li>		@Component、@PropertySource、@ComponentScan、@Import、@ImportResource、@Bean 等注解的解析  <br>
 	 * 		{@link ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)}
 	 * </li>
-	 * <li> @Component 注解解析 {@link com.ling.test10.MyComponentScan}
+	 * <li> @Component 注解解析 			<br>
+	 * 		{@link com.ling.test10.MyComponentScan}  <br>
 	 * 		{@link ConfigurationClassParser#processMemberClasses(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)}
 	 * </li>
-	 * <li> @PropertySource 注解 @Value 注解 spel 表达式解析
-	 * 		{@link com.ling.test10.MyPropertySource}
+	 * <li> @PropertySource 注解 @Value 注解 spel 表达式解析    <br>
+	 * 		{@link com.ling.test10.MyPropertySource}    <br>
 	 * 		{@link ConfigurationClassParser#processPropertySource(AnnotationAttributes)}
 	 * </li>
-	 * <li> @Bean 注解解析 和 @Conditional 条件标签
-	 * 		{@link com.ling.test10.BeanConfig}
+	 * <li> @Bean 注解解析 和 @Conditional 条件标签  <br>
+	 * 		{@link com.ling.test10.BeanConfig}   <br>
 	 * 		{@link ConfigurationClassParser#processConfigurationClass(ConfigurationClass, Predicate)}
 	 * 		this.conditionEvaluator.shouldSkip
 	 *
 	 * </li>
-	 * <li> 注解修饰的类解析成 BeanDefinition
+	 * <li> 注解修饰的类解析成 BeanDefinition   <br>
 	 * 		{@link ConfigurationClassParser#parse(Set)}
 	 *     
 	 * </li>
-	 * <li> asm
+	 * <li> @Import 注解解析  todo SpringBootz 自动装配
+	 *
+	 * </li>
+	 * <li> asm   <br>
 	 * 		{@link ConfigurationClassParser#retrieveBeanMethodMetadata(ConfigurationClassParser.SourceClass)}
 	 *
 	 * </li>
@@ -259,6 +263,27 @@ public class Readme {
 	 */
 	void read10() {
 	}
+
+	/**
+	 * 11. 注册 BeanPostProcessor
+	 * 
+	 * <ol>
+	 *     <li> @Resource 注解处理（JSR-250）
+	 *         {@link AnnotationConfigUtils#registerAnnotationConfigProcessors(BeanDefinitionRegistry, Object)} )}
+	 *     </li>
+	 *     <li>
+	 *         {@link ComponentScanBeanDefinitionParser}
+	 *     </li>
+	 *     <li> BeanPostProcessor 的子类：   <br>
+	 *        销毁相关，BeanFactory 注释生命周期上： {@link org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor DestructionAwareBeanPostProcessor}  <br>
+	 *        合并BeanDefinition， {@link org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor MergedBeanDefinitionPostProcessor}  <br>
+	 * 		  bean 实例化相关： {@link org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor InstantiationAwareBeanPostProcessor}  <br>
+	 * 		  循环依赖： {@link org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor SmartInstantiationAwareBeanPostProcessor}
+	 *     </li>
+	 * </ol>
+	 *
+	 */
+	void read11(){}
 
 
 }

@@ -87,6 +87,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 /**
+ * 后置处理器类，主要功能是参与 BeanFactory 的构造：
+ * 	1. 解析了 @Configuration 注解的类
+ * 	2. 解析 @ComponentScan 扫描的包
+ * 	3. 解析 @ComponentScans 扫描的包
+ * 	4. 解析 @Import 注解
+ *
  * Parses a {@link Configuration} class definition, populating a collection of
  * {@link ConfigurationClass} objects (parsing a single Configuration class may result in
  * any number of ConfigurationClass objects because one Configuration class may import

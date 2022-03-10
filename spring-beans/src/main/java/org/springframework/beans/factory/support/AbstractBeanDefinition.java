@@ -100,18 +100,24 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	public static final int AUTOWIRE_AUTODETECT = AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT;
 
 	/**
+	 * 默认不检查
+	 *
 	 * Constant that indicates no dependency check at all.
 	 * @see #setDependencyCheck
 	 */
 	public static final int DEPENDENCY_CHECK_NONE = 0;
 
 	/**
+	 * 对依赖对象检查
+	 *
 	 * Constant that indicates dependency checking for object references.
 	 * @see #setDependencyCheck
 	 */
 	public static final int DEPENDENCY_CHECK_OBJECTS = 1;
 
 	/**
+	 * 对原始类型检查
+	 *
 	 * Constant that indicates dependency checking for "simple" properties.
 	 * @see #setDependencyCheck
 	 * @see org.springframework.beans.BeanUtils#isSimpleProperty
@@ -119,6 +125,8 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	public static final int DEPENDENCY_CHECK_SIMPLE = 2;
 
 	/**
+	 * 对所有属性检查
+	 *
 	 * Constant that indicates dependency checking for all properties
 	 * (object references as well as "simple" properties).
 	 * @see #setDependencyCheck
@@ -141,65 +149,144 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private volatile Object beanClass;
 
+	/**
+	 * bean 的作用范围
+	 */
 	@Nullable
 	private String scope = SCOPE_DEFAULT;
 
+	/**
+	 * 是否是抽象
+	 */
 	private boolean abstractFlag = false;
 
+	/**
+	 * 是否延迟加载
+	 */
 	@Nullable
 	private Boolean lazyInit;
 
+	/**
+	 * 自动注入模式
+	 */
 	private int autowireMode = AUTOWIRE_NO;
 
+	/**
+	 * 依赖检查
+	 */
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
+	/**
+	 * 用来表示一个 bean 的实例化依靠另一个 bean 先实例化，对应 bean 属性 depend-on
+	 */
 	@Nullable
 	private String[] dependsOn;
 
+	/**
+	 * autowire-candidate 属性设置为 false，这样容器在查找自动装配对象时，将不考虑该 bean，即它不会被考虑作为其他 bean 自动装配的候选者
+	 * 但是该 bean 本身还是可以使用自动装配来注入其他 bean 的
+	 */
 	private boolean autowireCandidate = true;
 
+	/**
+	 * 自动装配时当出现多个 bean 候选者时，将作为首选者
+	 */
 	private boolean primary = false;
 
+	/**
+	 * 用于记录 qualifier
+	 */
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
 
 	@Nullable
 	private Supplier<?> instanceSupplier;
 
+	/**
+	 * 允许访问非公开的构造器和方法
+	 */
 	private boolean nonPublicAccessAllowed = true;
 
+	/**
+	 * 是否以一种宽松的模式解析构造函数，默认是true
+	 * 如果是false，则在如下情况
+	 * interface ITest{}
+	 * class ITestImpl implements ITest{};
+	 * class Main{
+	 *     Main(ITest i){}
+	 *     Main(ITestImpl i){}
+	 * }
+	 * 抛出异常，因为spring无法准确定位哪个构造函数
+	 */
 	private boolean lenientConstructorResolution = true;
 
+	/**
+	 * 对应 factory-bean 属性
+	 */
 	@Nullable
 	private String factoryBeanName;
 
 	@Nullable
 	private String factoryMethodName;
 
+	/**
+	 * 记录构造函数注入属性
+	 */
 	@Nullable
 	private ConstructorArgumentValues constructorArgumentValues;
 
+	/**
+	 * 普通属性集合
+	 */
 	@Nullable
 	private MutablePropertyValues propertyValues;
 
+	/**
+	 * 方法重写的持有者，记录 lookup-method，replaced-method 元素
+	 */
 	private MethodOverrides methodOverrides = new MethodOverrides();
 
+	/**
+	 * 初始化方法
+	 */
 	@Nullable
 	private String initMethodName;
 
+	/**
+	 * 销毁方法
+	 */
 	@Nullable
 	private String destroyMethodName;
 
+	/**
+	 * 是否执行 init-method 方法
+	 */
 	private boolean enforceInitMethod = true;
 
+	/**
+	 * 是否执行 destory-method 方法
+	 */
 	private boolean enforceDestroyMethod = true;
 
+	/**
+	 * 是否是应用程序本身定义的而不是用户定义的，创建 aop 的值是 true
+	 */
 	private boolean synthetic = false;
 
+	/**
+	 * 定义这个bean的应用，application：用户，infrastructure：完全内部使用，与用户无关
+	 * support:某些复杂配置的一部分
+	 */
 	private int role = BeanDefinition.ROLE_APPLICATION;
 
+	/**
+	 * bean 的描述信息
+	 */
 	@Nullable
 	private String description;
 
+	/**
+	 * 这个bean定义的资源
+	 */
 	@Nullable
 	private Resource resource;
 
