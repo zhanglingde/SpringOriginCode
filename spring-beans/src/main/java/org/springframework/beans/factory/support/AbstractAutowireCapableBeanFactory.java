@@ -123,17 +123,27 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory
 		implements AutowireCapableBeanFactory {
 
-	/** Strategy for creating bean instances. */
+	/**
+	 * bean 的生成策略，默认是 cglib
+	 * Strategy for creating bean instances. */
 	private InstantiationStrategy instantiationStrategy = new CglibSubclassingInstantiationStrategy();
 
-	/** Resolver strategy for method parameter names. */
+	/**
+	 * 解析策略的方法参数
+	 *
+	 * Resolver strategy for method parameter names. */
 	@Nullable
 	private ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
-	/** Whether to automatically try to resolve circular references between beans. */
+	/**
+	 * 尝试解析循环引用
+	 *
+	 * Whether to automatically try to resolve circular references between beans. */
 	private boolean allowCircularReferences = true;
 
 	/**
+	 * 在循环引用的情况下，是否需要注入一个原始的 bean 实例
+	 *
 	 * Whether to resort to injecting a raw bean instance in case of circular reference,
 	 * even if the injected bean eventually got wrapped.
 	 */
@@ -486,13 +496,17 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Make sure bean class is actually resolved at this point, and
 		// clone the bean definition in case of a dynamically resolved Class
 		// which cannot be stored in the shared merged bean definition.
+		// 锁定 class，根据设置的 class 属性或者根据 className 来解析 class（反射获取 Class）
 		Class<?> resolvedClass = resolveBeanClass(mbd, beanName);
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
+			// 重新创建一个 RootBeanDefinition 对象
 			mbdToUse = new RootBeanDefinition(mbd);
+			// 设置 BeanClass 属性值
 			mbdToUse.setBeanClass(resolvedClass);
 		}
 
 		// Prepare method overrides.
+		// 验证及准备覆盖方法，lookup-method,replace-method，当需要创建的bean对象中包含了lookup-method和replace-method标签的时候，会产生覆盖操作
 		try {
 			mbdToUse.prepareMethodOverrides();
 		}
@@ -503,6 +517,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+			// 给 BeanPostProcessors 一个机会来返回代理来替代真正的实例，应用实例化的前置处理器
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -560,13 +575,17 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			// 使用对应的策略创建新的实例（反射创建 bean 实例），如：工厂方法，构造函数注入、简单初始化
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
+		// 从包装类中获取实例
 		Object bean = instanceWrapper.getWrappedInstance();
+		// 获取具体的 bean 对象的 class 属性
 		Class<?> beanType = instanceWrapper.getWrappedClass();
+		// 如果不等于 NullBean 类型，那么修改目标类型
 		if (beanType != NullBean.class) {
 			mbd.resolvedTargetType = beanType;
 		}
 
 		// Allow post-processors to modify the merged bean definition.
+		// 允许 beanPostProcessor 去修改合并的 beanDefinition
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
 				try {
@@ -1172,13 +1191,16 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
 		// Make sure bean class is actually resolved at this point.
+		// 确认需要创建的 bean 实例的类可以实例化
 		Class<?> beanClass = resolveBeanClass(mbd, beanName);
 
+		// 确保 class 不为空，并且访问权限是 public
 		if (beanClass != null && !Modifier.isPublic(beanClass.getModifiers()) && !mbd.isNonPublicAccessAllowed()) {
 			throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 					"Bean class isn't public, and non-public access not allowed: " + beanClass.getName());
 		}
 
+		// 判断当前 beanDefinition 中是否包含实例供应器，此处相当于一个回调方法，利用回调方法来创建 bean
 		Supplier<?> instanceSupplier = mbd.getInstanceSupplier();
 		if (instanceSupplier != null) {
 			return obtainFromSupplier(instanceSupplier, beanName);
@@ -1190,6 +1212,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Shortcut when re-creating the same bean...
+		// 一个类中可能有多个构造函数，所以 Spring 需要根据参数个数，类型确定需要调用的构造函数
+		// 在使用构造函数创建实例后，Spring 会将解析过后确定下来的构造器或工厂方法保存在缓存，避免再次创建相同 bean 时再次解析
 		boolean resolved = false;
 		boolean autowireNecessary = false;
 		if (args == null) {
@@ -1322,7 +1346,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			Object beanInstance;
 			if (System.getSecurityManager() != null) {
-				// getInstantiationStrategy 获取实例化策略
+				// getInstantiationStrategy 获取实例化策略并进行实例化操作
 				beanInstance = AccessController.doPrivileged(
 						(PrivilegedAction<Object>) () -> getInstantiationStrategy().instantiate(mbd, beanName, this),
 						getAccessControlContext());

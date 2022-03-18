@@ -281,6 +281,7 @@ public abstract class ClassUtils {
 			clToUse = getDefaultClassLoader();
 		}
 		try {
+			// 反射
 			return Class.forName(name, false, clToUse);
 		}
 		catch (ClassNotFoundException ex) {

@@ -262,7 +262,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
-					// 开始进行 bean 对象的创建
+					// 开始进行 bean 对象的创建(ObjectFactory 的函数方法，createBean)
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
 				}
@@ -379,6 +379,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 * 判断 inCreationCheckExclusions 和 singletonsCurrentlyInCreation 集合中是否包含当前 beanName
+	 *
 	 * Callback before singleton creation.
 	 * <p>The default implementation register the singleton as currently in creation.
 	 * @param beanName the name of the singleton about to be created

@@ -1614,14 +1614,17 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			throws CannotLoadBeanClassException {
 
 		try {
+			// 判断 mdb 的定义信息中是否包含 beanClass，并且是 Class 类型的，如果是直接返回，否则的话进行详细的解析
 			if (mbd.hasBeanClass()) {
 				return mbd.getBeanClass();
 			}
+			// 判断是否有安全管理器（权限）
 			if (System.getSecurityManager() != null) {
 				return AccessController.doPrivileged((PrivilegedExceptionAction<Class<?>>)
 						() -> doResolveBeanClass(mbd, typesToMatch), getAccessControlContext());
 			}
 			else {
+				// 进行详细的处理解析器
 				return doResolveBeanClass(mbd, typesToMatch);
 			}
 		}
@@ -1641,10 +1644,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private Class<?> doResolveBeanClass(RootBeanDefinition mbd, Class<?>... typesToMatch)
 			throws ClassNotFoundException {
 
+		// 获取 bean 类加载器
 		ClassLoader beanClassLoader = getBeanClassLoader();
 		ClassLoader dynamicLoader = beanClassLoader;
 		boolean freshResolve = false;
 
+		// typesToMatch 不为空，使用临时类加载器进行加载
 		if (!ObjectUtils.isEmpty(typesToMatch)) {
 			// When just doing type checks (i.e. not creating an actual instance yet),
 			// use the specified temporary class loader (e.g. in a weaving scenario).
@@ -1661,14 +1666,19 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 		}
 
+		// 获取 bean 的 className
 		String className = mbd.getBeanClassName();
 		if (className != null) {
+			// 获取 BeanDefinition 中对应的 className
 			Object evaluated = evaluateBeanDefinitionString(className, mbd);
+			// 判断 className 是否等于计算出的表达式的结果，如果不等于，那么判断 evaluated 的类型
 			if (!className.equals(evaluated)) {
 				// A dynamically resolved expression, supported as of 4.2...
+				// 如果是 class 类型，直接返回
 				if (evaluated instanceof Class) {
 					return (Class<?>) evaluated;
 				}
+				// 如果是 String 类型，设置 freshResolve 为 true，并使用动态加载器进行加载
 				else if (evaluated instanceof String) {
 					className = (String) evaluated;
 					freshResolve = true;
@@ -1695,10 +1705,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 
 		// Resolve regularly, caching the result in the BeanDefinition...
+		// 定期检查，缓存 beanDefinition 的结果
 		return mbd.resolveBeanClass(beanClassLoader);
 	}
 
 	/**
+	 * 通过表达式处理器解析 BeanDefinition 中给定的字符串
+	 *
 	 * Evaluate the given String as contained in a bean definition,
 	 * potentially resolving it as an expression.
 	 * @param value the value to check

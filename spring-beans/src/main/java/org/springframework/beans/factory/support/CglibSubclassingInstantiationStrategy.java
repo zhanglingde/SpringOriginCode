@@ -40,6 +40,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ * beanFactory 中的对象默认实例化策略
+ *
  * Default object instantiation strategy for use in BeanFactories.
  *
  * <p>Uses CGLIB to generate subclasses dynamically if methods need to be
@@ -53,24 +55,37 @@ import org.springframework.util.StringUtils;
 public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationStrategy {
 
 	/**
+	 * 如果没有 override 方法覆盖的话，那么索引位置为 0
+	 *
 	 * Index in the CGLIB callback array for passthrough behavior,
 	 * in which case the subclass won't override the original class.
 	 */
 	private static final int PASSTHROUGH = 0;
 
 	/**
+	 * 如果有 lookup-method 的覆盖，那么索引位置为 1
+	 *
 	 * Index in the CGLIB callback array for a method that should
 	 * be overridden to provide <em>method lookup</em>.
 	 */
 	private static final int LOOKUP_OVERRIDE = 1;
 
 	/**
+	 * 如果有 replace-method 的覆盖，那么索引位置为 2
+	 *
 	 * Index in the CGLIB callback array for a method that should
 	 * be overridden using generic <em>method replacer</em> functionality.
 	 */
 	private static final int METHOD_REPLACER = 2;
 
 
+	/**
+	 * 子类重写 SimpleInstantiationStrategy 中的 instantiateWithMethodInjection 方法
+	 * @param bd
+	 * @param beanName
+	 * @param owner
+	 * @return
+	 */
 	@Override
 	protected Object instantiateWithMethodInjection(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner) {
 		return instantiateWithMethodInjection(bd, beanName, owner, null);
@@ -81,6 +96,7 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 			@Nullable Constructor<?> ctor, Object... args) {
 
 		// Must generate CGLIB subclass...
+		// 生成一个 cglib 的子类
 		return new CglibSubclassCreator(bd, owner).instantiate(ctor, args);
 	}
 
@@ -91,6 +107,7 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 	 */
 	private static class CglibSubclassCreator {
 
+		// 此处定义了一个回调类型的数组，后面 MethodOverrideCallbackFilter 通过指定下标获取对应的拦截
 		private static final Class<?>[] CALLBACK_TYPES = new Class<?>[]
 				{NoOp.class, LookupOverrideMethodInterceptor.class, ReplaceOverrideMethodInterceptor.class};
 
@@ -98,12 +115,15 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 
 		private final BeanFactory owner;
 
+		// 构造方法
 		CglibSubclassCreator(RootBeanDefinition beanDefinition, BeanFactory owner) {
 			this.beanDefinition = beanDefinition;
 			this.owner = owner;
 		}
 
 		/**
+		 * 实例化入口：动态构造子类
+		 *
 		 * Create a new instance of a dynamically generated subclass implementing the
 		 * required lookups.
 		 * @param ctor constructor to use. If this is {@code null}, use the
@@ -113,14 +133,18 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 		 * @return new instance of the dynamically generated subclass
 		 */
 		public Object instantiate(@Nullable Constructor<?> ctor, Object... args) {
+			// 根据 beanDefinition 来创建一个 cglib 的子类
 			Class<?> subclass = createEnhancedSubclass(this.beanDefinition);
 			Object instance;
+			// 如果构造器等于空，那么直接通过反射来实例化对象
 			if (ctor == null) {
 				instance = BeanUtils.instantiateClass(subclass);
 			}
 			else {
 				try {
+					// 通过 cglib 对象来根据参数类型获取对应的构造器
 					Constructor<?> enhancedSubclassConstructor = subclass.getConstructor(ctor.getParameterTypes());
+					// 通过构造器来获取对象
 					instance = enhancedSubclassConstructor.newInstance(args);
 				}
 				catch (Exception ex) {
@@ -142,6 +166,7 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 		 * definition, using CGLIB.
 		 */
 		private Class<?> createEnhancedSubclass(RootBeanDefinition beanDefinition) {
+			// cglib 规定用法，对原始 class 进行增强，并设置 callback
 			Enhancer enhancer = new Enhancer();
 			enhancer.setSuperclass(beanDefinition.getBeanClass());
 			enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
@@ -149,7 +174,9 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 				ClassLoader cl = ((ConfigurableBeanFactory) this.owner).getBeanClassLoader();
 				enhancer.setStrategy(new ClassLoaderAwareGeneratorStrategy(cl));
 			}
+			// 过滤，自定义逻辑来指定调用的 callback 下标
 			enhancer.setCallbackFilter(new MethodOverrideCallbackFilter(beanDefinition));
+			// 只是产生 class 就直接指定 callback 类型，跟上面指定的 callbackFilter 对应
 			enhancer.setCallbackTypes(CALLBACK_TYPES);
 			return enhancer.createClass();
 		}

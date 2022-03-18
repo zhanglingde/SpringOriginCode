@@ -2,39 +2,33 @@ import com.ling.test02.Test02;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.*;
 import org.springframework.beans.factory.xml.*;
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.AbstractRefreshableApplicationContext;
+import org.springframework.context.support.*;
 
 import com.ling.test02.MyClassPathXmlApplicationContext;
-import org.springframework.context.support.AbstractXmlApplicationContext;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.io.Resource;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.util.StringValueResolver;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import org.springframework.context.expression.StandardBeanExpressionResolver;
 import org.springframework.beans.PropertyEditorRegistrar;
-import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.config.PlaceholderConfigurerSupport;
 import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
 import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.context.event.EventListenerMethodProcessor;
-import org.springframework.beans.factory.support.BeanNameGenerator;
-// import org.springframework.context.annotation.ConfigurationClassParser;
 
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -323,6 +317,38 @@ public class Readme {
 	 *
 	 */
 	void read12(){}
+
+	/**
+	 * Spring Bean 的创建流程二
+	 * <br>
+	 * mergedBeanDefinitions 缓存的创建
+	 * <ol>
+	 *     <li>{@link AbstractApplicationContext#invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory)}</li>
+	 *     <li>{@link PostProcessorRegistrationDelegate#invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory, List)}</li>
+	 *     <li>{@link DefaultListableBeanFactory#getBeanNamesForType(Class, boolean, boolean)}</li>
+	 *     <li>{@link DefaultListableBeanFactory#doGetBeanNamesForType(ResolvableType, boolean, boolean)}</li>
+	 *     <li>{@link DefaultListableBeanFactory#getMergedLocalBeanDefinition(String)}</li>
+	 * </ol>
+	 *
+	 * 创建 bean 的流程：getBean -> doGetBean -> createBean -> createBean
+	 * <ol>
+	 *     <li> {@link AbstractApplicationContext#finishBeanFactoryInitialization(ConfigurableListableBeanFactory)} </li>
+	 *     <li> {@link AbstractBeanFactory#getBean(String, Class) } </li>
+	 *     <li> {@link AbstractBeanFactory#doGetBean(String, Class, Object[], boolean)  } </li>
+	 *     <li> {@link AbstractAutowireCapableBeanFactory#createBean(String, RootBeanDefinition, Object[])   } </li>
+	 *     <li> ObjectFactory.getObject 调用 doCreateBean {@link AbstractAutowireCapableBeanFactory#doCreateBean(String, RootBeanDefinition, Object[])    } </li>
+	 * </ol>
+	 *
+	 * bean 创建的四种方式
+	 *   <ol>
+	 *       <li> new、反射、 factoryMethod、supplier</li>
+	 *   </ol>
+	 *
+	 * lookup-method、replace-method ：单例引用原型
+	 */
+	void read13() {
+
+	}
 
 
 }
