@@ -350,6 +350,31 @@ public class Readme {
 
 	}
 
+	/**
+	 * Spring Bean 的创建流程三
+	 *
+	 * Spring 创建 bean 的方式：
+	 *
+	 * <ol>
+	 *     <li>BeanPostProcessor：createBean 中的 doCreateBean 并不一定会执行；取决于 BeanPostProcessor 中是否提前创建对象 <br>
+	 *     	   createBean：{@link AbstractAutowireCapableBeanFactory#resolveBeforeInstantiation(String, RootBeanDefinition)}
+	 *     </li>
+	 *     <li> supplier 创建 bean   mbd.getInstanceSupplier()  <br>
+	 *     		{@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])}    <br>
+	 *     		{@link com.ling.test14.supplier.SupplierBeanFactoryPostProcessor}
+	 *     </li>
+	 *     <li> 工厂方法创建 bean <br>
+	 *         {@link org.springframework.beans.factory.support.ConstructorResolver#instantiateUsingFactoryMethod(String, RootBeanDefinition, Object[])}
+	 *     </li>
+	 * </ol>
+	 *
+	 *
+	 * 工厂方法、构造函数注入、简单初始化
+	 * {@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])}
+	 * 
+	 */
+	void read14(){}
+
 
 }
 

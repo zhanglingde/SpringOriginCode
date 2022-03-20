@@ -91,8 +91,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * 二级缓存
-	 * 保存 BeanName和创建bean实例之间的关系，与singletonFactories 的不同之处在于，当一个单例bean被放到这里之后，那么当bean还在创建过程
-	 * 中，就可以通过getBean方法获取到，可以方便进行循环依赖的检测
+	 * 保存 BeanName 和创建 bean 实例之间的关系，与 singletonFactories 的不同之处在于，当一个单例 bean 被放到这里之后，那么当 bean 还在创建过程
+	 * 中，就可以通过 getBean 方法获取到，可以方便进行循环依赖的检测
 	 *
 	 * Cache of early singleton objects: bean name to bean instance.
 	 */

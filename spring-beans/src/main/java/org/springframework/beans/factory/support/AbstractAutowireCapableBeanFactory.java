@@ -432,6 +432,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return result;
 	}
 
+
+	/**
+	 * bean 实例化之后
+	 */
 	@Override
 	public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
 			throws BeansException {
@@ -517,7 +521,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-			// 给 BeanPostProcessors 一个机会来返回代理来替代真正的实例，应用实例化的前置处理器
+			// 给 BeanPostProcessors 一个机会来返回代理来替代真正的实例，应用实例化的前置处理器(默认情况下不处理)
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -1136,9 +1140,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	@Nullable
 	protected Object resolveBeforeInstantiation(String beanName, RootBeanDefinition mbd) {
 		Object bean = null;
+		// 如果 beforeInstantiationResolved 值为 null 或 true，表示尚未被处理，进行后续的处理
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
+			// 确认 beanClass 确实在此处进行处理
+			// 判断当前 mbd 是否是合成的，只有在实现 aop 的时候 synthetic 的值才为 true，并且是否实现了 InstantiationAwareBeanPostProcessors
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
+				// 获取类型
 				Class<?> targetType = determineTargetType(beanName, mbd);
 				if (targetType != null) {
 					bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
@@ -1147,12 +1155,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					}
 				}
 			}
+			// 是否解析了
 			mbd.beforeInstantiationResolved = (bean != null);
 		}
 		return bean;
 	}
 
 	/**
+	 * bean 实例化之前，调用的前置处理器的方法
+	 *
 	 * Apply InstantiationAwareBeanPostProcessors to the specified bean definition
 	 * (by class and name), invoking their {@code postProcessBeforeInstantiation} methods.
 	 * <p>Any returned object will be used as the bean instead of actually instantiating
@@ -1268,9 +1279,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected BeanWrapper obtainFromSupplier(Supplier<?> instanceSupplier, String beanName) {
 		Object instance;
 
+		// 获取原先创建的 beanName
 		String outerBean = this.currentlyCreatedBean.get();
+		// 用当前 beanName 做替换
 		this.currentlyCreatedBean.set(beanName);
 		try {
+			// 调用 supplier 的方法，调用 get 方法，实际上执行的是传进来的方法
 			instance = instanceSupplier.get();
 		}
 		finally {
@@ -1282,9 +1296,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 
+		// 如果没有创建对象，默认为 NullBean
 		if (instance == null) {
 			instance = new NullBean();
 		}
+		// 初始化 BeanWrapper 并返回
 		BeanWrapper bw = new BeanWrapperImpl(instance);
 		initBeanWrapper(bw);
 		return bw;
@@ -1379,10 +1395,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected BeanWrapper instantiateUsingFactoryMethod(
 			String beanName, RootBeanDefinition mbd, @Nullable Object[] explicitArgs) {
 
+		// 创建构造器处理器并使用 factoryMethod 进行实例化操作
 		return new ConstructorResolver(this).instantiateUsingFactoryMethod(beanName, mbd, explicitArgs);
 	}
 
 	/**
+	 * 自动装配的构造方法
+	 *
 	 * "autowire constructor" (with constructor arguments by type) behavior.
 	 * Also applied if explicit constructor argument values are specified,
 	 * matching all remaining arguments with beans from the bean factory.
