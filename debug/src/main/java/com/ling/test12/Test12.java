@@ -1,6 +1,6 @@
 package com.ling.test12;
 
-import com.ling.test.Person;
+import com.ling.Person;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

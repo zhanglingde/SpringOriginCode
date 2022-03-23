@@ -1,5 +1,6 @@
 package com.ling.test;
 
+import com.ling.Person;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

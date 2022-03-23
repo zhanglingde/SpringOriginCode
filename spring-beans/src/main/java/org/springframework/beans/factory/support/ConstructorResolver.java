@@ -129,16 +129,24 @@ class ConstructorResolver {
 	public BeanWrapper autowireConstructor(String beanName, RootBeanDefinition mbd,
 			@Nullable Constructor<?>[] chosenCtors, @Nullable Object[] explicitArgs) {
 
+		// 实例化 BeanWrapperImpl。是包装 bean 的容器
 		BeanWrapperImpl bw = new BeanWrapperImpl();
+		// 给包装对象设置一些属性
 		this.beanFactory.initBeanWrapper(bw);
 
+		// spring 对这个 bean 进行实例化使用的构造函数
 		Constructor<?> constructorToUse = null;
+		// spring 执行构造函数使用的是参数封装类
 		ArgumentsHolder argsHolderToUse = null;
+		// 参与构造函数实例化过程的参数
 		Object[] argsToUse = null;
 
+		// 如果有传入参数，就直接使用传入的参数
 		if (explicitArgs != null) {
+			// 参数引用 explicitArgs
 			argsToUse = explicitArgs;
 		}
+		// 没有传入参数
 		else {
 			Object[] argsToResolve = null;
 			synchronized (mbd.constructorArgumentLock) {

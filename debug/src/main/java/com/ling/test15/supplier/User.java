@@ -1,4 +1,4 @@
-package com.ling.test14.supplier;
+package com.ling.test15.supplier;
 
 public class User {
 

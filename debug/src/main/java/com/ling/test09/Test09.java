@@ -1,6 +1,6 @@
 package com.ling.test09;
 
-import com.ling.test.Person;
+import com.ling.Person;
 
 /**
  * @author zhangling

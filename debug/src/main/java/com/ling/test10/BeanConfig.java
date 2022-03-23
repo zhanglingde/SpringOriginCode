@@ -1,6 +1,6 @@
 package com.ling.test10;
 
-import com.ling.test.Person;
+import com.ling.Person;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;

@@ -83,9 +83,10 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 									(PrivilegedExceptionAction<Constructor<?>>) clazz::getDeclaredConstructor);
 						}
 						else {
-							// 获得构造器
+							// 获取默认的无参构造器
 							constructorToUse = clazz.getDeclaredConstructor();
 						}
+						// 将构造器赋值给 BeanDefinition 中的属性
 						bd.resolvedConstructorOrFactoryMethod = constructorToUse;
 					}
 					catch (Throwable ex) {
@@ -93,6 +94,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					}
 				}
 			}
+			// 通过反射生成具体的实例化对象
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {

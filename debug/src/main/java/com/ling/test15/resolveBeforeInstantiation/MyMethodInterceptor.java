@@ -1,4 +1,4 @@
-package com.ling.test14.resolveBeforeInstantiation;
+package com.ling.test15.resolveBeforeInstantiation;
 
 
 import org.springframework.cglib.proxy.MethodInterceptor;

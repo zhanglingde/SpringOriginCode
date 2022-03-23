@@ -7,7 +7,14 @@
 		http://www.springframework.org/schema/context
 	   http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- 使 Person @Autowire 生效 -->
+	<context:component-scan base-package="com.ling.test16"></context:component-scan>
 
-	<bean id="beforeInstantiation" class="com.ling.test14.resolveBeforeInstantiation.BeforeInstantiation"></bean>
-	<bean id="myInstantiationAwareBeanPostProcessor" class="com.ling.test14.resolveBeforeInstantiation.MyInstantiationAwareBeanPostProcessor"></bean>
+	<!-- 原型域 -->
+	<bean id="person" class="com.ling.test16.Person" scope="prototype">
+		<property name="id" value="18"></property>
+		<property name="name" value="zhangling"></property>
+	</bean>
+
+
 </beans>

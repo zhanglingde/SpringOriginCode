@@ -49,6 +49,8 @@ import java.beans.PropertyDescriptor;
 public interface BeanWrapper extends ConfigurablePropertyAccessor {
 
 	/**
+	 * 指定数组和集合自动增长的限制，在普通的 beanWrapper 上，默认值是无限的
+	 *
 	 * Specify a limit for array and collection auto-growing.
 	 * <p>Default is unlimited on a plain BeanWrapper.
 	 * @since 4.1

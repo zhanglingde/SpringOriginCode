@@ -1,4 +1,6 @@
-package com.ling.test;
+package com.ling.test16;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author zhangling  2021/9/2 0:08
@@ -11,10 +13,26 @@ public class Person {
 	public Person() {
 	}
 
+	// @Autowired
+	public Person(Integer id) {
+		this.id = id;
+	}
+
+	// @Autowired
 	public Person(Integer id, String name) {
 		this.id = id;
 		this.name = name;
 	}
+
+	public Person(String name, Integer id) {
+		this.id = id;
+		this.name = name;
+	}
+
+
+
+
+
 
 	public Integer getId() {
 		return id;

@@ -1,9 +1,6 @@
 package com.ling.test08;
 
-import com.ling.test.Person;
-import com.ling.test07.customEditor.Customer;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.ling.Person;
 
 /**
  * @author zhangling

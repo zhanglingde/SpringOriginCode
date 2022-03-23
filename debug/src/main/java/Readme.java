@@ -23,13 +23,13 @@ import org.springframework.beans.factory.config.PlaceholderConfigurerSupport;
 import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
 import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.context.event.EventListenerMethodProcessor;
-// import org.springframework.beans.factory.support.BeanNameGenerator;
+import org.springframework.beans.factory.support.BeanNameGenerator;
 // import org.springframework.context.annotation.ConfigurationClassParser;
 
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
 
-import java.util.Collection;
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -298,7 +298,20 @@ public class Readme {
 	}
 
 	/**
-	 * 12. Spring Bean 的创建流程
+	 * 12. spring 的消息资源和监听器的初始化
+	 *
+	 * <ol>
+	 *     <li> 消息资源（国际化 i18n）  <br>
+	 *         {@link AbstractApplicationContext#initMessageSource()}    <br>
+	 *         {@link org.springframework.context.MessageSource MessageSource}   <br>
+	 *         {@link org.springframework.context.support.DelegatingMessageSource DelegatingMessageSource}
+	 *     </li>
+	 * </ol>
+	 */
+	void read12(){}
+
+	/**
+	 * 13. Spring Bean 的创建流程一
 	 *
 	 * <p> 类型转换器
 	 * 		<ul>
@@ -334,21 +347,10 @@ public class Readme {
 	 */
 	void read13(){}
 
-	/**
-	 * 12. spring 的消息资源和监听器的初始化
-	 *
-	 * <ol>
-	 *     <li> 消息资源（国际化 i18n）  <br>
-	 *         {@link AbstractApplicationContext#initMessageSource()}    <br>
-	 *         {@link org.springframework.context.MessageSource MessageSource}   <br>
-	 *         {@link org.springframework.context.support.DelegatingMessageSource DelegatingMessageSource}
-	 *     </li>
-	 * </ol>
-	 */
-	void read12(){}
+
 
 	/**
-	 * Spring Bean 的创建流程二
+	 * 14. Spring Bean 的创建流程二
 	 * <br>
 	 * mergedBeanDefinitions 缓存的创建
 	 * <ol>
@@ -375,12 +377,12 @@ public class Readme {
 	 *
 	 * lookup-method、replace-method ：单例引用原型
 	 */
-	void read13() {
+	void read14() {
 
 	}
 
 	/**
-	 * Spring Bean 的创建流程三
+	 * 15. Spring Bean 的创建流程三
 	 *
 	 * Spring 创建 bean 的方式：
 	 *
@@ -390,7 +392,7 @@ public class Readme {
 	 *     </li>
 	 *     <li> supplier 创建 bean   mbd.getInstanceSupplier()  <br>
 	 *     		{@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])}    <br>
-	 *     		{@link com.ling.test14.supplier.SupplierBeanFactoryPostProcessor}
+	 *     		{@link com.ling.test15.supplier.SupplierBeanFactoryPostProcessor}
 	 *     </li>
 	 *     <li> 工厂方法创建 bean <br>
 	 *         {@link org.springframework.beans.factory.support.ConstructorResolver#instantiateUsingFactoryMethod(String, RootBeanDefinition, Object[])}
@@ -402,7 +404,28 @@ public class Readme {
 	 * {@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])}
 	 *
 	 */
-	void read14(){}
+	void read15(){}
+
+	/**
+	 * 16. Spring bean 创建流程四
+	 *
+	 * 反射创建对象：获取构造器（无参或有参），通过构造器实例化
+	 *
+	 * <ol>
+	 *     构造器选择
+	 *     <li>
+	 * 			{@link ConstructorResolver#autowireConstructor(String, RootBeanDefinition, Constructor[], Object[])}
+	 *     </li>
+	 * </ol>
+	 *
+	 */
+	void read16(){
+	}
+
+	void read17(){}
+
+
+	void read18(){}
 
 
 }

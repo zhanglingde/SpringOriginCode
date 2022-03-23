@@ -1,6 +1,5 @@
 package com.ling.test06;
 
-import com.ling.test.Person;
 import com.ling.test06.selftag.User;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

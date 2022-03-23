@@ -1,13 +1,14 @@
-package com.ling.test11;
+package com.ling.test18;
 
-import com.ling.Person;
+import com.ling.test18.populateBean.Person;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class Test11 {
+public class Test18 {
+
 	public static void main(String[] args) {
-		AbstractApplicationContext ac = new ClassPathXmlApplicationContext("bean10.xml");
-		Person person = ac.getBean(Person.class);
+		AbstractApplicationContext ac = new ClassPathXmlApplicationContext("bean18.xml");
+		Person person = ac.getBean("person", Person.class);
 		System.out.println("person = " + person);
 	}
 }

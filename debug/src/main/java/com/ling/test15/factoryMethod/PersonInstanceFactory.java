@@ -1,4 +1,4 @@
-package com.ling.test14.factoryMethod;
+package com.ling.test15.factoryMethod;
 
 
 /**

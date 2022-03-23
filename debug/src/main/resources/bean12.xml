@@ -20,7 +20,7 @@
 		</property>
 	</bean>
 
-	<bean id="person" class="com.ling.test.Person">
+	<bean id="person" class="com.ling.Person">
 		<property name="id" value="1"></property>
 		<property name="name" value="zhang"></property>
 	</bean>

@@ -1,7 +1,6 @@
 package com.ling.test10;
 
-import com.ling.test.Person;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import com.ling.Person;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
