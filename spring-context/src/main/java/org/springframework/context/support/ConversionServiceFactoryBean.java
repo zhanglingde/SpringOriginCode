@@ -50,9 +50,15 @@ import org.springframework.lang.Nullable;
  */
 public class ConversionServiceFactoryBean implements FactoryBean<ConversionService>, InitializingBean {
 
+	/**
+	 * 保存自定义的转换器
+	 */
 	@Nullable
 	private Set<?> converters;
 
+	/**
+	 * 如果没有自定义的 conversionService，那么默认使用的是 DefaultConversionService
+	 */
 	@Nullable
 	private GenericConversionService conversionService;
 
@@ -67,6 +73,9 @@ public class ConversionServiceFactoryBean implements FactoryBean<ConversionServi
 		this.converters = converters;
 	}
 
+	/**
+	 * bean 初始化结束之后，注册自定义的转换器进去
+	 */
 	@Override
 	public void afterPropertiesSet() {
 		this.conversionService = createConversionService();

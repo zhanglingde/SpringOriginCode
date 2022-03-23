@@ -76,6 +76,8 @@ public interface FactoryBean<T> {
 
 
 	/**
+	 * 直接返回对象
+	 *
 	 * Return an instance (possibly shared or independent) of the object
 	 * managed by this factory.
 	 * <p>As with a {@link BeanFactory}, this allows support for both the
@@ -96,6 +98,8 @@ public interface FactoryBean<T> {
 	T getObject() throws Exception;
 
 	/**
+	 * 返回类型
+	 *
 	 * Return the type of object that this FactoryBean creates,
 	 * or {@code null} if not known in advance.
 	 * <p>This allows one to check for specific types of beans without
@@ -118,6 +122,8 @@ public interface FactoryBean<T> {
 	Class<?> getObjectType();
 
 	/**
+	 * 是否单例
+	 *
 	 * Is the object managed by this factory a singleton? That is,
 	 * will {@link #getObject()} always return the same object
 	 * (a reference that can be cached)?
