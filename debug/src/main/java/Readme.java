@@ -15,6 +15,7 @@ import org.springframework.context.support.AbstractXmlApplicationContext;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.io.Resource;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.util.StringValueResolver;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -297,7 +298,45 @@ public class Readme {
 	 * </ol>
 	 *
 	 */
-	void read11(){}
+	void read11(){
+	}
+
+	/**
+	 * 12. Spring Bean 的创建流程
+	 *
+	 * <p> 类型转换器
+	 * 		<ul>
+	 * 		 	<li> {@link org.springframework.core.convert.converter.Converter Converter}
+	 * 		 	</li>
+	 * 		 	<li> {@link org.springframework.core.convert.converter.GenericConverter GenericConverter}
+	 *
+	 * 		 	</li>
+	 * 		 	<li> {@link org.springframework.core.convert.converter.ConverterFactory ConverterFactory}
+	 *
+	 * 		 	</li>
+	 * 		</ul>
+	 *
+	 * </p>
+	 * <p>
+	 *     值解析器   {@link PlaceholderConfigurerSupport#doProcessProperties(ConfigurableListableBeanFactory, StringValueResolver)} }
+	 * </p>
+	 * 
+	 * <p>
+	 *     mergedBeanDefinitions RootBeanDefinition 缓存的初始化
+	 *     <ol>
+	 *         <li> doGetBeanNamesForType {@link DefaultListableBeanFactory#getBeanNamesForType(Class)}</li>
+	 *         <li>从缓存中获取 BeanDefinition {@link org.springframework.beans.factory.support.AbstractBeanFactory#getMergedLocalBeanDefinition(String)}  <br>
+	 *         	   添加到缓存中 invokeBeanFactoryPostProcessors -> getBeanNamesForType -> doGetBeanNamesForType -> getMergedLocalBeanDefinition
+	 *         </li>
+	 *     </ol>
+	 * </p>
+	 *
+	 * <p> isFactoryBean
+	 *
+	 * </p>
+	 *
+	 */
+	void read12(){}
 
 	/**
 	 * 12. spring 的消息资源和监听器的初始化

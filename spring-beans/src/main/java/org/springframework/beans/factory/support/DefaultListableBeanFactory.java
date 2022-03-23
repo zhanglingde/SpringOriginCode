@@ -493,15 +493,23 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 	@Override
 	public String[] getBeanNamesForType(@Nullable Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
+		// 配置还未被冻结或者类型为 null 或者不允许早期初始化
 		if (!isConfigurationFrozen() || type == null || !allowEagerInit) {
 			return doGetBeanNamesForType(ResolvableType.forRawClass(type), includeNonSingletons, allowEagerInit);
 		}
+		/**
+		 * 值得注意的是，不管 type 是否为空，allowEagerInit 是否为 true
+		 * 只要 isConfigurationFrozen() 为 false 就一定不会走这里
+		 * 因为 isConfigurationFrozen() 为 false 的时候表示 BeanDefinition 可能还会发生更改和添加，所以不能进行缓存
+		 * 如果允许非单例的 bean，那么从保存所有 bean 的集合中获取，否则从单例 bean 中获取
+		 */
 		Map<Class<?>, String[]> cache =
 				(includeNonSingletons ? this.allBeanNamesByType : this.singletonBeanNamesByType);
 		String[] resolvedBeanNames = cache.get(type);
 		if (resolvedBeanNames != null) {
 			return resolvedBeanNames;
 		}
+		// 如果缓存中没有获取到，那么只能重新获取，获取到之后就存入缓存
 		resolvedBeanNames = doGetBeanNamesForType(ResolvableType.forRawClass(type), includeNonSingletons, true);
 		if (ClassUtils.isCacheSafe(type, getBeanClassLoader())) {
 			cache.put(type, resolvedBeanNames);
@@ -513,16 +521,27 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		List<String> result = new ArrayList<>();
 
 		// Check all bean definitions.
+		// 遍历 BeanDefinitionNames 集合
 		for (String beanName : this.beanDefinitionNames) {
 			// Only consider bean as eligible if the bean name is not defined as alias for some other bean.
+			// 如果是别名，直接跳过
 			if (!isAlias(beanName)) {
 				try {
+					// 获取合并的 BeanDefinition，合并的 BeanDefinition 指的是整合了父 BeanDefinition 的属性，然后属性值会转换为 RootBeanDefinition
 					RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 					// Only check bean definition if it is complete.
+					/**
+					 * 抽象 BeanDefinition 不做考虑，抽象是用来继承的
+					 * 如果允许早期初始化，那么直接短路，进入方法体
+					 * 如果不允许早期初始化，且 beanClass 已经被加载或者它是可以早期初始化的，那么如果当前 bean 是工厂 bean，并且指定的 bean 又是工厂
+					 * 那么这个 bean 就必须被早期初始化，即不符合制定的 allowEagerInit 为 false 的情况，直接跳过
+					 */
 					if (!mbd.isAbstract() && (allowEagerInit ||
 							(mbd.hasBeanClass() || !mbd.isLazyInit() || isAllowEagerClassLoading()) &&
 									!requiresEagerInitForType(mbd.getFactoryBeanName()))) {
+						// 判断当前 Bean 是否实现了 FactoryBean 接口
 						boolean isFactoryBean = isFactoryBean(beanName, mbd);
+						// 根据 RootBeanDefinition 来获取 BeanDefinitionHolder 对象
 						BeanDefinitionHolder dbd = mbd.getDecoratedDefinition();
 						boolean matchFound = false;
 						boolean allowFactoryBeanInit = (allowEagerInit || containsSingleton(beanName));
@@ -870,20 +889,24 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		// Iterate over a copy to allow for init methods which in turn register new bean definitions.
 		// While this may not be part of the regular factory bootstrap, it does otherwise work fine.
-		// 配置文件中的 bean 名称
+		// 配置文件中的 bean 名称(将所有 BeanDefinition 的名字创建一个集合)
 		List<String> beanNames = new ArrayList<>(this.beanDefinitionNames);
 
 		// Trigger initialization of all non-lazy singleton beans...
 		// 循环创建单例对象
 		for (String beanName : beanNames) {
-			//
+			// 合并父类 BeanDefinition
 			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
+			// 条件判断 抽象、单例、非懒加载
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
 				// 是否实现 FactoryBean 这个接口
 				if (isFactoryBean(beanName)) {
+					// 根据 &+beanName 来获取具体的对象
 					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);
+					// 进行类型转换
 					if (bean instanceof FactoryBean) {
 						FactoryBean<?> factory = (FactoryBean<?>) bean;
+						// 判断这个 FactoryBean 是否希望急切的初始化
 						boolean isEagerInit;
 						if (System.getSecurityManager() != null && factory instanceof SmartFactoryBean) {
 							isEagerInit = AccessController.doPrivileged(
@@ -894,6 +917,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							isEagerInit = (factory instanceof SmartFactoryBean &&
 									((SmartFactoryBean<?>) factory).isEagerInit());
 						}
+						// 如果需要急切的初始化，通过 beanName 获取 bean 实例
 						if (isEagerInit) {
 							getBean(beanName);
 						}
