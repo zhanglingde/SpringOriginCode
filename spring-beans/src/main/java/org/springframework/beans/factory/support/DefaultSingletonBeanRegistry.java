@@ -132,21 +132,34 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHashMap<>(64);
 
 
+	/**
+	 * 在给定的 bean 名称下，在 bean 注册器中将给定的现有对象注册为单例
+	 *
+	 * @param beanName the name of the bean
+	 * @param singletonObject the existing singleton object
+	 * @throws IllegalStateException
+	 */
 	@Override
 	public void registerSingleton(String beanName, Object singletonObject) throws IllegalStateException {
 		Assert.notNull(beanName, "Bean name must not be null");
 		Assert.notNull(singletonObject, "Singleton object must not be null");
+		// singletonObjects 作为锁，线程安全
 		synchronized (this.singletonObjects) {
+			// 根据 beanName 从一级缓存中获取单例对象
 			Object oldObject = this.singletonObjects.get(beanName);
 			if (oldObject != null) {
+				// 一级缓存获取到对象，报非法状态异常：不能注册对象，beanName 下已经有对象了
 				throw new IllegalStateException("Could not register object [" + singletonObject +
 						"] under bean name '" + beanName + "': there is already object [" + oldObject + "] bound");
 			}
+			// 将 beanName -- 单例对象 添加到一级缓存中
 			addSingleton(beanName, singletonObject);
 		}
 	}
 
 	/**
+	 * 将 beanName 和 singletonObject 的映射关系添加到该工厂的单例对象缓存中
+	 *
 	 * Add the given singleton object to the singleton cache of this factory.
 	 * <p>To be called for eager registration of singletons.
 	 * @param beanName the name of the bean
@@ -154,14 +167,20 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	protected void addSingleton(String beanName, Object singletonObject) {
 		synchronized (this.singletonObjects) {
+			// 放入一级缓存
 			this.singletonObjects.put(beanName, singletonObject);
+			// 从三级缓存中移除
 			this.singletonFactories.remove(beanName);
+			// 二级缓存中移除
 			this.earlySingletonObjects.remove(beanName);
+			// 将 beanName 添加到已注册的单例集中
 			this.registeredSingletons.add(beanName);
 		}
 	}
 
 	/**
+	 * 如果需要，添加给定的单例对象工厂来构建指定的单例对象
+	 *
 	 * Add the given singleton factory for building the specified singleton
 	 * if necessary.
 	 * <p>To be called for eager registration of singletons, e.g. to be able to

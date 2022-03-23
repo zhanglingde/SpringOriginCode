@@ -28,7 +28,7 @@ import org.springframework.beans.factory.config.PlaceholderConfigurerSupport;
 import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
 import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.context.event.EventListenerMethodProcessor;
-import org.springframework.beans.factory.support.BeanNameGenerator;
+// import org.springframework.beans.factory.support.BeanNameGenerator;
 // import org.springframework.context.annotation.ConfigurationClassParser;
 
 
@@ -155,26 +155,28 @@ public class Readme {
 	/**
 	 * 8. BeanFactoryPostProcessor 的执行过程
 	 * <p>
-	 * 1. 获取到 beanFactory ,就可以对 工厂中所有属性进行操作
-	 * postProcessBeanFactory 扩展
-	 * {@link AbstractApplicationContext#postProcessBeanFactory(ConfigurableListableBeanFactory) }
-	 * <ol>
-	 *     <li>1）先执行 BeanDefinitionRegistry 类型的 beanFactory;先遍历实现 PriorityOrdered 接口的，然后是实现 Order 接口的，最后是无序的</li>
-	 *    <li> 2) 然后执行不属于 BeanDefinitionRegistry 类型的，直接执行 postProcessBeanFactory 方法</li>
-	 *    <li> 3）找到所有实现 BeanFactoryPostProcessor 接口的类</li>
-	 * </ol>
+	 * 1. 获取到 beanFactory ,就可以对 工厂中所有属性进行操作  <br>
+	 * 		postProcessBeanFactory 扩展  <br>
+	 * 		{@link AbstractApplicationContext#postProcessBeanFactory(ConfigurableListableBeanFactory) }
+	 * 		<ol>
+	 * 		   <li>  先执行 BeanDefinitionRegistry 类型的 beanFactory;先遍历实现 PriorityOrdered 接口的，然后是实现 Order 接口的，最后是无序的</li>
+	 * 		   <li>  然后执行不属于 BeanDefinitionRegistry 类型的，直接执行 postProcessBeanFactory 方法</li>
+	 * 		   <li>  找到所有实现 BeanFactoryPostProcessor 接口的类</li>
+	 * 		</ol>
 	 * </p>
-	 * <p>
-	 * 2. BeanFactoryPostProcessor 与 BeanDefinitionRegistryPostProcessor 的区别
-	 * {@link AbstractApplicationContext#invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory) }
-	 * <ul>
-	 *     <li> 后置处理器，增强器：对 beanFactory 中属性进行修改 {@link BeanFactoryPostProcessor（BFPP） } </li>
-	 *     <li> BeanFactoryPostProcessor 子类， {@link BeanDefinitionRegistryPostProcessor } </li>
-	 *     <li> 提供 BeanDefinition 的增删改查 {@link BeanDefinitionRegistry} </li>
 	 *
-	 *     <li> @Configuration、@Autowired、JSR-250 中的 @Resource 等注解 {@link AnnotationConfigUtils#registerAnnotationConfigProcessors(BeanDefinitionRegistry, Object)   } </li>
-	 * </ul>
+	 * <p>
+	 * 		2. BeanFactoryPostProcessor 与 BeanDefinitionRegistryPostProcessor 的区别 <br>
+	 * 		{@link AbstractApplicationContext#invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory) }
+	 * 		<ul>
+	 * 		    <li> {@link BeanFactoryPostProcessor }：后置处理器（增强器），对 beanFactory 中属性进行修改 </li>
+	 * 		    <li> {@link BeanDefinitionRegistryPostProcessor }：BeanFactoryPostProcessor 子类，  </li>
+	 * 		    <li> {@link BeanDefinitionRegistry}：提供 BeanDefinition 的增删改查  </li>
+	 *
+	 * 		    <li> @Configuration、@Autowired、JSR-250 中的 @Resource 等注解 {@link AnnotationConfigUtils#registerAnnotationConfigProcessors(BeanDefinitionRegistry, Object)   } </li>
+	 * 		</ul>
 	 * </p>
+	 *
 	 * <p>
 	 * 3. 自带的 BeanFactoryPostProcessor 子类
 	 *
@@ -196,31 +198,42 @@ public class Readme {
 	/**
 	 * 9. BeanFactoryPostProcessor 的执行过程2
 	 * <p>
-	 * 1. 自定义 BeanDefinitionRegistryPostProcessor，分别实现 PriorityOrdered、Ordered 接口和不实现接口，BDRPP 被扫描执行的顺序不同
-	 * {@link MyBeanDefinitionRegistryPostProcessor}
-	 * 2. 每个阶段执行 BDRPP ，每次需要重新获取 BeanDefinitionRegistryPostProcessor
+	 *     <ol>
+	 *         <li>  自定义 BeanDefinitionRegistryPostProcessor，分别实现 PriorityOrdered、Ordered 接口和不实现接口，BDRPP 被扫描执行的顺序不同 <br>
 	 *
+	 *             {@link MyBeanDefinitionRegistryPostProcessor}
+	 *         </li>
+	 *         <li> 每个阶段执行 BDRPP ，每次需要重新获取 BeanDefinitionRegistryPostProcessor
+	 *
+	 *         </li>
+	 *     </ol>
 	 * </p>
-	 * BedefinitionRegistry :对 bean 进行增删改查操作
 	 * <p>
-	 * 扫描 @Component 注册的Bean 								{@link ComponentScanBeanDefinitionParser#registerComponents(XmlReaderContext, Set, Element)}
-	 *
-	 * <p>
-	 * 注解的扫描												{@link ConfigurationClassPostProcessor#processConfigBeanDefinitions(BeanDefinitionRegistry)}
-	 * <li> @Configuration </li>
-	 * <li> @Bean </li>
-	 * <li> @Import </li>
+	 *     BedefinitionRegistry :对 bean 进行增删改查操作
 	 * </p>
 	 *
-	 *
 	 * <p>
+	 * 		扫描 @Component 注册的Bean 	 <br>
+	 * 		{@link ComponentScanBeanDefinitionParser#registerComponents(XmlReaderContext, Set, Element)}
+	 * <p>
+	 * <p> 注解的扫描	 <br>
+	 *     {@link ConfigurationClassPostProcessor#processConfigBeanDefinitions(BeanDefinitionRegistry)}
 	 *
-	 * @Import、@ComponentScan、@ComponentScans、@ImportResource 等注解的解析
+	 * 		<li> @Configuration </li>
+	 * 		<li> @Bean </li>
+	 * 		<li> @Import </li>
+	 * </p>
+	 *
+	 * <p> @Import、@ComponentScan、@ComponentScans、@ImportResource 等注解的解析
 	 * 	<ul>
-	 * 	    <li> 该类的子类实现是 BeanName 的生成方式 					{@link BeanNameGenerator}  		</li>
-	 * 	    <li> @Conditional 注解处理								{@link ConditionEvaluator#shouldSkip(AnnotatedTypeMetadata)} 	</li>
-	 * 	    <li> 	{@link ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)} 	</li>
-	 *
+	 * 	    <li> 该类的子类实现是 BeanName 的生成方式  <br>
+	 * 	    	{@link BeanNameGenerator}
+	 * 	    </li>
+	 * 	    <li> @Conditional 注解处理	<br>
+	 * 	    	{@link ConditionEvaluator#shouldSkip(AnnotatedTypeMetadata)}
+	 * 	    </li>
+	 * 	    <li> 	{@link ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)}
+	 * 	    </li>
 	 * 	</ul>
 	 * </p>
 	 */
@@ -231,28 +244,29 @@ public class Readme {
 	 * 10. ConfigurationClassPostProcessor
 	 *<ol>
 	 *
-	 * <li>		@Component、@PropertySource、@ComponentScan、@Import、@ImportResource、@Bean 等注解的解析  <br>
-	 * 		{@link ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)}
+	 * <li>		@Component、@PropertySource、@ComponentScan、@Import、@ImportResource、@Bean 等注解的解析    <br>
+	 * 		{@link ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)  doProcessConfigurationClass}
 	 * </li>
-	 * <li> @Component 注解解析 			<br>
-	 * 		{@link com.ling.test10.MyComponentScan}  <br>
-	 * 		{@link ConfigurationClassParser#processMemberClasses(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)}
+	 * <li> @Component 注解解析  <br>
+	 * 		{@link com.ling.test10.MyComponentScan}   <br>
+	 * 		{@link ConfigurationClassParser#processMemberClasses(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)  processMemberClasses}
 	 * </li>
 	 * <li> @PropertySource 注解 @Value 注解 spel 表达式解析    <br>
-	 * 		{@link com.ling.test10.MyPropertySource}    <br>
+	 * 		{@link com.ling.test10.MyPropertySource}        <br>
 	 * 		{@link ConfigurationClassParser#processPropertySource(AnnotationAttributes)}
 	 * </li>
 	 * <li> @Bean 注解解析 和 @Conditional 条件标签  <br>
-	 * 		{@link com.ling.test10.BeanConfig}   <br>
-	 * 		{@link ConfigurationClassParser#processConfigurationClass(ConfigurationClass, Predicate)}
+	 * 		{@link com.ling.test10.BeanConfig}  <br>
+	 * 		{@link ConfigurationClassParser#processConfigurationClass(ConfigurationClass, Predicate)}  <br>
 	 * 		this.conditionEvaluator.shouldSkip
 	 *
 	 * </li>
-	 * <li> 注解修饰的类解析成 BeanDefinition   <br>
+	 * <li> 注解修饰的类解析成 BeanDefinition  <br>
 	 * 		{@link ConfigurationClassParser#parse(Set)}
 	 *     
 	 * </li>
-	 * <li> @Import 注解解析  todo SpringBootz 自动装配
+	 * <li> asm  <br>
+	 * <li> @Import 注解解析  todo SpringBoot 自动装配
 	 *
 	 * </li>
 	 * <li> asm   <br>
@@ -266,7 +280,7 @@ public class Readme {
 
 	/**
 	 * 11. 注册 BeanPostProcessor
-	 * 
+	 *
 	 * <ol>
 	 *     <li> @Resource 注解处理（JSR-250）
 	 *         {@link AnnotationConfigUtils#registerAnnotationConfigProcessors(BeanDefinitionRegistry, Object)} )}
@@ -285,6 +299,18 @@ public class Readme {
 	 */
 	void read11(){}
 
+	/**
+	 * 12. spring 的消息资源和监听器的初始化
+	 *
+	 * <ol>
+	 *     <li> 消息资源（国际化 i18n）  <br>
+	 *         {@link AbstractApplicationContext#initMessageSource()}    <br>
+	 *         {@link org.springframework.context.MessageSource MessageSource}   <br>
+	 *         {@link org.springframework.context.support.DelegatingMessageSource DelegatingMessageSource}
+	 *     </li>
+	 * </ol>
+	 */
+	void read12(){}
 
 }
 

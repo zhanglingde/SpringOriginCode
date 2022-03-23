@@ -54,6 +54,7 @@ final class PostProcessorRegistrationDelegate {
 
 
 	/**
+	 * 执行 BeanFactory 后置处理器
 	 *
 	 * @param beanFactory
 	 * @param beanFactoryPostProcessors 默认为空，可以自己添加值
@@ -63,7 +64,7 @@ final class PostProcessorRegistrationDelegate {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
 		// 无论是什么情况，优先执行 BeanDefinitionRegistryPostProcessors
-		// 将已经执行过的 BFPP 存储在 processedBeans，防止重复执行
+		// 存储已经执行过的 BeanFactoryPostProcessor，防止重复执行
 		Set<String> processedBeans = new HashSet<>();
 
 		// 1. 实现 BeanDefinitionRegistry 类型的处理（ DefaultListableBeanFactory 为子类）

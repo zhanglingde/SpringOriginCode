@@ -21,6 +21,8 @@ import java.util.Locale;
 import org.springframework.lang.Nullable;
 
 /**
+ * 此接口提供了处理消息的策略，包含了信息的国际化和包含参数的信息的替换
+ *
  * Strategy interface for resolving messages, with support for the parameterization
  * and internationalization of such messages.
  *
@@ -40,6 +42,13 @@ import org.springframework.lang.Nullable;
 public interface MessageSource {
 
 	/**
+	 * 解析 code 对应的信息进行返回，如果对应的 code 不能被解析，则返回默认信息的 defaultMessage
+	 *
+	 * @param code 需要进行解析的 code ，对应资源文件中的一个属性名
+	 * @param args 需要用来替换 code 对应的信息中包含参数的内容
+	 * @param defaultMessage 当对应 code 的信息不存在时需要返回的默认值
+	 * @param locale 对应 locale 对象
+	 *
 	 * Try to resolve the message. Return default message if no message was found.
 	 * @param code the message code to look up, e.g. 'calculator.noRateSet'.
 	 * MessageSource users are encouraged to base message names on qualified class
@@ -74,6 +83,8 @@ public interface MessageSource {
 	String getMessage(String code, @Nullable Object[] args, Locale locale) throws NoSuchMessageException;
 
 	/**
+	 * 通过传递的 MessageSourceResolvable 对应来解析对应的信息
+	 *
 	 * Try to resolve the message using all the attributes contained within the
 	 * {@code MessageSourceResolvable} argument that was passed in.
 	 * <p>NOTE: We must throw a {@code NoSuchMessageException} on this method

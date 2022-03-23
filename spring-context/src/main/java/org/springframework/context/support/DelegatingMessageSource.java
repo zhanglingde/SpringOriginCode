@@ -77,6 +77,15 @@ public class DelegatingMessageSource extends MessageSourceSupport implements Hie
 		}
 	}
 
+	/**
+	 * 解析消息，父消息解析源不为空时，则采用父消息源解析消息，否则由自身解析
+	 *
+	 * @param resolvable the value object storing attributes required to resolve a message
+	 * (may include a default message)
+	 * @param locale the locale in which to do the lookup
+	 * @return
+	 * @throws NoSuchMessageException
+	 */
 	@Override
 	public String getMessage(MessageSourceResolvable resolvable, Locale locale) throws NoSuchMessageException {
 		if (this.parentMessageSource != null) {
