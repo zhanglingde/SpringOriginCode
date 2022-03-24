@@ -1,4 +1,6 @@
 import com.ling.test02.Test02;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -425,6 +427,12 @@ public class Readme {
 	void read17(){}
 
 
+	/**
+	 * 18. Spring Bean 创建流程
+	 * bean 属性值设置  
+	 * {@link AbstractAutowireCapableBeanFactory#populateBean(String, RootBeanDefinition, BeanWrapper)}
+	 * {@link AbstractAutowireCapableBeanFactory#applyPropertyValues(String, BeanDefinition, BeanWrapper, PropertyValues)}
+	 */
 	void read18(){}
 
 
