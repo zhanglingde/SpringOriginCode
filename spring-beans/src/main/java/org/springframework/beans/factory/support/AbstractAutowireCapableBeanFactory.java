@@ -668,7 +668,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
 				try {
-					// MergedBeanDefinitionPostProcessor 后纸处理器修改合并 bean 定义
+					// MergedBeanDefinitionPostProcessor 后置处理器修改合并 bean 定义
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
@@ -682,7 +682,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Eagerly cache singletons to be able to resolve circular references
 		// even when triggered by lifecycle interfaces like BeanFactoryAware.
 		/**
-		 * 判断当前 bean 是否需要提前曝光，单例 & 是否允许循环依赖 & 当前 bean 正在创建中，检测循环依赖
+		 * 判断当前 bean 是否需要提前曝光：是否是单例 && 是否允许循环依赖 && 当前 bean 正在创建中，检测循环依赖
 		 *
 		 * 解决循环依赖，提前暴露（完成实例化，未完成初始化）
 		 *  1. 构造器循环依赖（无法解决）
@@ -1342,7 +1342,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
-	 * bean 实例化之前，调用的前置处理器的方法(InstantiationAwareBeanPostProcessors 类型的后置处理器)
+	 * bean 实例化之前，调用的前置处理器的方法(InstantiationAwareBeanPostProcessors 类型的前置处理器)
 	 *
 	 * @return 返回一个 Object，即此处可以做代理的事，如果发现有一个处理器返回的不是 null，就直接返回了
 	 *
@@ -1414,7 +1414,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (args == null) {
 			synchronized (mbd.constructorArgumentLock) {
 				// 一个类中有多个构造函数，每个构造函数都有不同的参数，所以调用前需要先根据参数锁定构造函数或对应的工厂方法
-				// 因为判断过程会比较，所以 SPring 会将解析、确定好的构造函数缓存到 BeanDefinition 中的 resolvedConstructorOrFactoryMethod 字段
+				// 因为判断过程会比较，所以 Spring 会将解析、确定好的构造函数缓存到 BeanDefinition 中的 resolvedConstructorOrFactoryMethod 字段
 				// 在下次创建相同 bean 时，直接从 RootBeanDefinition 中的属性 resolvedConstructorOrFactoryMethod 值获取，避免再次解析
 				if (mbd.resolvedConstructorOrFactoryMethod != null) {
 					resolved = true;
@@ -1535,6 +1535,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected Constructor<?>[] determineConstructorsFromBeanPostProcessors(@Nullable Class<?> beanClass, String beanName)
 			throws BeansException {
 
+		//
 		if (beanClass != null && hasInstantiationAwareBeanPostProcessors()) {
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {
