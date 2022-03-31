@@ -325,14 +325,22 @@ public class Readme {
 	 * 		 	<li> {@link org.springframework.core.convert.converter.ConverterFactory ConverterFactory}
 	 *
 	 * 		 	</li>
+	 * 		 	<li> {@link AbstractApplicationContext#finishBeanFactoryInitialization(ConfigurableListableBeanFactory) finishBeanFactoryInitialization}  自定义类型转换器</li>
 	 * 		</ul>
 	 *
 	 * </p>
 	 * <p>
-	 *     值解析器   {@link PlaceholderConfigurerSupport#doProcessProperties(ConfigurableListableBeanFactory, StringValueResolver)} }
+	 *     值解析器
+	 *     <ul>
+	 *         <li>
+	 *             {@link PlaceholderConfigurerSupport#doProcessProperties(ConfigurableListableBeanFactory, StringValueResolver) PlaceholderConfigurerSupport#doProcessProperties }
+	 *         </li>
+	 *     </ul>
+	 *
 	 * </p>
 	 * 
 	 * <p>
+	 *     RootBeanDefinition：将 beanDefinition 与父类合并（SpringMVC）   <br>
 	 *     mergedBeanDefinitions RootBeanDefinition 缓存的初始化
 	 *     <ol>
 	 *         <li> doGetBeanNamesForType {@link DefaultListableBeanFactory#getBeanNamesForType(Class)}</li>
@@ -429,6 +437,7 @@ public class Readme {
 
 	/**
 	 * 18. Spring Bean 创建流程
+	 *
 	 * bean 属性值设置  
 	 * {@link AbstractAutowireCapableBeanFactory#populateBean(String, RootBeanDefinition, BeanWrapper)}
 	 * {@link AbstractAutowireCapableBeanFactory#applyPropertyValues(String, BeanDefinition, BeanWrapper, PropertyValues)}

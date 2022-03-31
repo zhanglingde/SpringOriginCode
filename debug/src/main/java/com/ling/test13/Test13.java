@@ -1,7 +1,9 @@
 package com.ling.test13;
 
-import com.ling.test13.methodOverrides.lookup.FruitPlate;
+import com.ling.test13.factorybean.MyFactoryBean;
+import com.ling.test13.factorybean.Student;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -16,10 +18,26 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Test13 {
 	public static void main(String[] args) {
 		// 改成原型模式 prototype
-		ApplicationContext ac = new ClassPathXmlApplicationContext("methodOverride.xml");
-		FruitPlate fruitPlate1 = (FruitPlate) ac.getBean("fruitplate1");
-		fruitPlate1.getFruit();
-		FruitPlate fruitPlate2 = (FruitPlate) ac.getBean("fruitplate2");
-		fruitPlate2.getFruit();
+		// ApplicationContext ac = new ClassPathXmlApplicationContext("bean13.xml");
+		// FruitPlate fruitPlate1 = (FruitPlate) ac.getBean("fruitplate1");
+		// fruitPlate1.getFruit();
+		// FruitPlate fruitPlate2 = (FruitPlate) ac.getBean("fruitplate2");
+		// fruitPlate2.getFruit();
+		//
+
+		// factory-bean
+		AbstractApplicationContext ac = new ClassPathXmlApplicationContext("bean13.xml");
+
+		// 获取 FactoryBean 对象，transformedBeanName 将 beanName 加上 &
+		MyFactoryBean bean1 = (MyFactoryBean) ac.getBean("&myFactoryBean");
+		System.out.println("bean1 = " + bean1);
+		// MyFactoryBean bean2 = ac.getBean(MyFactoryBean.class);
+		// System.out.println("bean2 = " + bean2);
+
+		Student student1 = (Student) ac.getBean("myFactoryBean");
+		System.out.println("student1 = " + student1);
+		// 获取 FactoryBean 创建的对象
+		Student student = ac.getBean(Student.class);
+		System.out.println("student = " + student);
 	}
 }
