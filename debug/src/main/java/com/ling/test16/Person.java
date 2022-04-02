@@ -3,6 +3,8 @@ package com.ling.test16;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
+ * 3 个构造函数
+ *
  * @author zhangling  2021/9/2 0:08
  */
 public class Person {

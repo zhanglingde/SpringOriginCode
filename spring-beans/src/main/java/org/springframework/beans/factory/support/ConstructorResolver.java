@@ -180,7 +180,7 @@ class ConstructorResolver {
 				// 获取 mbd 的Bean类
 				Class<?> beanClass = mbd.getBeanClass();
 				try {
-					// 使用 public 的构造器或者所有构造器
+					// 使用 public 的构造器或者获取所有构造器
 					candidates = (mbd.isNonPublicAccessAllowed() ?
 							beanClass.getDeclaredConstructors() : beanClass.getConstructors());
 				}
@@ -238,7 +238,7 @@ class ConstructorResolver {
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
 			}
 
-			// 对候选的构造函数进行排序，先是访问权限后是参数个数
+			// 对候选的构造函数进行排序，先根据访问权限后根据参数个数进行排序
 			// public 权限参数数量由多到少
 			AutowireUtils.sortConstructors(candidates);
 			// 定义一个差异变量，变量的大小决定着构造函数是否能够被使用
@@ -328,19 +328,19 @@ class ConstructorResolver {
 					argsToUse = argsHolder.arguments;
 					// 差异值更换
 					minTypeDiffWeight = typeDiffWeight;
-					// 不明确的构造函数列表清空为null
+					// 不明确的构造函数列表清空为 null
 					ambiguousConstructors = null;
 				}
 				// 差异值相等，则表明构造函数不正常，放入异常集合
 				else if (constructorToUse != null && typeDiffWeight == minTypeDiffWeight) {
-					// 如果ambiguousFactoryMethods为null
+					// 如果 ambiguousFactoryMethods 为 null
 					if (ambiguousConstructors == null) {
-						// 初始化ambiguousFactoryMethods为LinkedHashSet实例
+						// 初始化 ambiguousFactoryMethods 为 LinkedHashSet 实例
 						ambiguousConstructors = new LinkedHashSet<>();
-						// 将constructorToUse添加到ambiguousFactoryMethods中
+						// 将 constructorToUse 添加到 ambiguousFactoryMethods 中
 						ambiguousConstructors.add(constructorToUse);
 					}
-					// 将candidate添加到ambiguousFactoryMethods中
+					// 将 candidate 添加到 ambiguousFactoryMethods 中
 					ambiguousConstructors.add(candidate);
 				}
 			}
@@ -368,9 +368,9 @@ class ConstructorResolver {
 			}
 
 			/**
-			 * 没有传入参与构造函数参数列表的参数时，对构造函数缓存到BeanDefinition中
-			 * 	1、缓存BeanDefinition进行实例化时使用的构造函数
-			 * 	2、缓存BeanDefinition代表的Bean的构造函数已解析完标识
+			 * 没有传入参与构造函数参数列表的参数时，对构造函数缓存到 BeanDefinition 中
+			 * 	1、缓存 BeanDefinition 进行实例化时使用的构造函数
+			 * 	2、缓存 BeanDefinition 代表的 Bean 的构造函数已解析完标识
 			 * 	3、缓存参与构造函数参数列表值的参数列表
 			 */
 			if (explicitArgs == null && argsHolderToUse != null) {
@@ -493,6 +493,9 @@ class ConstructorResolver {
 	}
 
 	/**
+	 *
+	 * @param explicitArgs 显示的参数
+	 *
 	 * Instantiate the bean using a named factory method. The method may be static, if the
 	 * bean definition parameter specifies a class, rather than a "factory-bean", or
 	 * an instance variable on a factory object itself configured using Dependency Injection.

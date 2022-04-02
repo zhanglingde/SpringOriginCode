@@ -1,4 +1,4 @@
-package com.ling.test13.methodOverrides.lookup;
+package com.ling.test14.methodOverrides.lookup;
 
 public abstract class FruitPlate{
     // 抽象方法获取新鲜水果

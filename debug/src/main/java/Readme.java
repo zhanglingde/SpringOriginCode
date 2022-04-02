@@ -1,9 +1,7 @@
 import com.ling.test02.Test02;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyValues;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.*;
 import org.springframework.beans.factory.support.*;
 import org.springframework.beans.factory.xml.*;
 import org.springframework.context.annotation.*;
@@ -20,13 +18,11 @@ import org.xml.sax.InputSource;
 
 import org.springframework.context.expression.StandardBeanExpressionResolver;
 import org.springframework.beans.PropertyEditorRegistrar;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.PlaceholderConfigurerSupport;
 import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
-import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.context.event.EventListenerMethodProcessor;
 import org.springframework.beans.factory.support.BeanNameGenerator;
 // import org.springframework.context.annotation.ConfigurationClassParser;
+import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
@@ -350,8 +346,8 @@ public class Readme {
 	 *     </ol>
 	 * </p>
 	 *
-	 * <p> isFactoryBean
-	 *
+	 * <p> FactoryBean
+	 *		{@link  AbstractBeanFactory#getObjectForBeanInstance(Object, String, String, RootBeanDefinition) getObjectForBeanInstance}
 	 * </p>
 	 *
 	 */
@@ -386,6 +382,12 @@ public class Readme {
 	 *   </ol>
 	 *
 	 * lookup-method、replace-method ：单例引用原型
+	 *
+	 * <ol>
+	 *     <li>	{@link AbstractAutowireCapableBeanFactory#createBean(String, RootBeanDefinition, Object[])  mbdToUse.prepareMethodOverrides()}
+	 *
+	 *     </li>
+	 * </ol>
 	 */
 	void read14() {
 
@@ -405,28 +407,81 @@ public class Readme {
 	 *     		{@link com.ling.test15.supplier.SupplierBeanFactoryPostProcessor}
 	 *     </li>
 	 *     <li> 工厂方法创建 bean <br>
+	 *			可能有多个 getPerson 方法，而配置文件中只配置了  getPerson,所以会有许多判断（对参数值进行解析判断），判断逻辑比较复杂 <br>
 	 *         {@link org.springframework.beans.factory.support.ConstructorResolver#instantiateUsingFactoryMethod(String, RootBeanDefinition, Object[])}
 	 *     </li>
 	 * </ol>
 	 *
 	 *
-	 * 工厂方法、构造函数注入、简单初始化
-	 * {@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])}
+	 *
 	 *
 	 */
 	void read15(){}
 
 	/**
-	 * 16. Spring bean 创建流程四
+	 * 16. Spring bean 创建流程四 - 构造方法获取   <br>
+	 *
+	 *
+	 * 构造函数注入、简单初始化
+	 * <ul>
+	 * 		<li>
+	 * 			{@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])  createBeanInstance}
+	 * 		</li>
+	 * </ul>
+	 *
 	 *
 	 * 反射创建对象：获取构造器（无参或有参），通过构造器实例化
 	 *
 	 * <ol>
-	 *     构造器选择
+	 *     构造器选择：如果有设置构造方法参数，根据参数选择有参构造器；如果没有设置构造器，则使用默认的无参构造（对构造器排序，减少构造器匹配操作）
 	 *     <li>
+	 *         {@link AbstractAutowireCapableBeanFactory#autowireConstructor(String, RootBeanDefinition, Constructor[], Object[]) autowireConstructor}
+	 *     </li>
+	 *     <li> 
 	 * 			{@link ConstructorResolver#autowireConstructor(String, RootBeanDefinition, Constructor[], Object[])}
 	 *     </li>
 	 * </ol>
+	 *
+	 *
+	 * Autowired 在构造方法上的处理
+	 *
+	 * <ol>
+	 *     <li>
+	 *         {@link AbstractAutowireCapableBeanFactory#determineConstructorsFromBeanPostProcessors(Class, String)}
+	 *     </li>
+	 *     <li>
+	 *         {@link SmartInstantiationAwareBeanPostProcessor}
+	 *     </li>
+	 *     <li>
+	 *         {@link AutowiredAnnotationBeanPostProcessor#determineCandidateConstructors(Class, String)}
+	 *     </li>
+	 *     <li>  @Primary  {@link  RootBeanDefinition#getPreferredConstructors() }
+	 *     </li>
+	 * </ol>
+	 *
+	 * 实例化策略
+	 * <ul>
+	 *     <li>无参、有参、工厂方法{@link SimpleInstantiationStrategy}</li>
+	 *     <li>动态代理对象无参、有参 {@link CglibSubclassingInstantiationStrategy}</li>
+	 * </ul>
+	 *
+	 * BeanWrapper 包装类：{@link BeanWrapper}
+	 * <ul>
+	 *     <li> 类型转换：TypeConverter</li>
+	 *     <li> 属性编辑：PropertyEditorRegistry</li>
+	 * </ul>
+	 *
+	 * todo @ PostConstruct 和 @PreDestroy 的处理
+	 * <ul>
+	 *     <li>
+	 *			{@link AbstractAutowireCapableBeanFactory#applyMergedBeanDefinitionPostProcessors }
+	 *     </li>
+	 *     <li>
+	 *         {@link MergedBeanDefinitionPostProcessor}
+	 *     </li>
+	 * </ul>
+	 *
+	 *
 	 *
 	 */
 	void read16(){

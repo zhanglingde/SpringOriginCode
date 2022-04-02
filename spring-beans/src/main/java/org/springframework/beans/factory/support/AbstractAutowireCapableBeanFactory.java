@@ -664,8 +664,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Allow post-processors to modify the merged bean definition.
-		// 允许 beanPostProcessor 去修改合并的 beanDefinition
+		// 允许 beanPostProcessor 去修改合并的 beanDefinition（@PostConstruct 和 @PreDestroy）
 		synchronized (mbd.postProcessingLock) {
+			// 判断 beanDefinition 是否被处理过
 			if (!mbd.postProcessed) {
 				try {
 					// MergedBeanDefinitionPostProcessor 后置处理器修改合并 bean 定义
@@ -1324,7 +1325,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
 			// 确认 beanClass 确实在此处进行处理
-			// 判断当前 mbd 是否是合成的，只有在实现 aop 的时候 synthetic 的值才为 true，并且是否实现了 InstantiationAwareBeanPostProcessors
+			// 判断当前 mbd 是否是合成的，(只有在实现 aop 的时候 synthetic 的值才为 true) && 是否实现了 InstantiationAwareBeanPostProcessors
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 				// 获取类型
 				Class<?> targetType = determineTargetType(beanName, mbd);
@@ -1567,10 +1568,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 						getAccessControlContext());
 			}
 			else {
-				// 实例化（在堆中创建空间，值为默认值，还未初始化）
+				// 获取实例化策略进行实例化（在堆中创建空间，值为默认值，还未初始化）
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, this);
 			}
-			// 包装成 BeanWrapper（包装类可以进行编辑：类型转换）
+			// 包装成 BeanWrapper（包装类可以进行编辑：类型转换、属性编辑）
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
 			initBeanWrapper(bw);
 			return bw;

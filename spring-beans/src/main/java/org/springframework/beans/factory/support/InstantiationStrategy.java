@@ -36,7 +36,7 @@ import org.springframework.lang.Nullable;
 public interface InstantiationStrategy {
 
 	/**
-	 * 使用默认的构造方法进行实例化
+	 * 使用默认的无参构造方法进行实例化
 	 *
 	 * Return an instance of the bean with the given name in this factory.
 	 * @param bd the bean definition

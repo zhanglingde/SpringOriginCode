@@ -7,23 +7,6 @@
 		http://www.springframework.org/schema/context
 	   http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- 单例对象	-->
-	<!--<bean id="apple" class="com.ling.test13.methodOverrides.lookup.Apple">-->
-	<!--</bean>-->
-	<!--&lt;!&ndash; 单例对象	&ndash;&gt;-->
-	<!--<bean id="banana" class="com.ling.test13.methodOverrides.lookup.Banana">-->
-	<!--</bean>-->
-
-	<!--&lt;!&ndash; 单例中持有的对象被 lookup-method标记，为原型对象	&ndash;&gt;-->
-	<!--<bean id="fruitplate1" class="com.ling.test13.methodOverrides.lookup.FruitPlate">-->
-	<!--	<lookup-method name="getFruit" bean="apple"></lookup-method>-->
-	<!--</bean>-->
-
-	<!--<bean id="fruitplate2" class="com.ling.test13.methodOverrides.lookup.FruitPlate">-->
-	<!--	<lookup-method name="getFruit" bean="banana"></lookup-method>-->
-	<!--</bean>-->
-
-
 	<!-- factoryBean -->
 	<bean id="myFactoryBean" class="com.ling.test13.factorybean.MyFactoryBean"></bean>
 

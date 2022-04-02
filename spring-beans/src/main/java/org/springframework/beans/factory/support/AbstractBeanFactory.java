@@ -1631,7 +1631,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						() -> doResolveBeanClass(mbd, typesToMatch), getAccessControlContext());
 			}
 			else {
-				// 进行详细的处理解析器
+				// 进行详细的处理解析器（Class.forName 将 String 转换成 Class 对象）
 				return doResolveBeanClass(mbd, typesToMatch);
 			}
 		}

@@ -19,6 +19,8 @@ package org.springframework.beans.factory;
 import org.springframework.beans.BeansException;
 
 /**
+ * 函数式接口，当调用其中 getObject 方法的时候，才会执行实际传递过来的匿名内部类中的实现逻辑
+ *
  * Defines a factory which can return an Object instance
  * (possibly shared or independent) when invoked.
  *

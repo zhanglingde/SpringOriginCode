@@ -4,7 +4,7 @@ package com.ling.test15.factoryMethod;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 
 /**
- * 静态工厂：可能有多个 getPerson 方法，而配置文件中只配置了  getPerson,所以会有许多判断
+ * 静态工厂：可能有多个 getPerson 方法，而配置文件中只配置了  getPerson,所以会有许多判断（对参数值进行解析判断），判断逻辑比较复杂
  *
  * {@link org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#instantiateUsingFactoryMethod(String, RootBeanDefinition, Object[])}
  */

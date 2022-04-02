@@ -12,8 +12,15 @@
 
 	<!-- 原型域 -->
 	<bean id="person" class="com.ling.test16.Person" scope="prototype">
-		<property name="id" value="18"></property>
-		<property name="name" value="zhangling"></property>
+		<!--<property name="id" value="18"></property>-->
+		<!--<property name="name" value="zhangling"></property>-->
+		<constructor-arg name="id" value="18"></constructor-arg>
+		<constructor-arg name="name" value="zhangling"></constructor-arg>
+	</bean>
+
+	<bean id="student" class="com.ling.test16.Student">
+		<constructor-arg name="id" value="18"></constructor-arg>
+		<constructor-arg name="name" value="zhangling"></constructor-arg>
 	</bean>
 
 
