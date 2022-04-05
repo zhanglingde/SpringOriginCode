@@ -434,7 +434,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 				}
 			});
 
-			// 处理方法
+			// 处理方法上是否有注解
 			ReflectionUtils.doWithLocalMethods(targetClass, method -> {
 				// 找出我们在代码中定义的方法而非编译器为我们生成的方法
 				Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
@@ -484,6 +484,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 			elements.addAll(0, currElements);
 			targetClass = targetClass.getSuperclass();
 		}
+		// do... while 遍历父类，直到父类是 Object 不再进行遍历
 		while (targetClass != null && targetClass != Object.class);
 
 		return InjectionMetadata.forElements(elements, clazz);

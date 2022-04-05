@@ -584,6 +584,8 @@ public abstract class BeanUtils {
 	}
 
 	/**
+	 * 判断 bean 类型是否是简单类型（）
+	 *
 	 * Check if the given type represents a "simple" property: a simple value
 	 * type or an array of simple value types.
 	 * <p>See {@link #isSimpleValueType(Class)} for the definition of <em>simple
@@ -597,6 +599,7 @@ public abstract class BeanUtils {
 	 */
 	public static boolean isSimpleProperty(Class<?> type) {
 		Assert.notNull(type, "'type' must not be null");
+		// type 是简单值类型  || （ type 是数组 && type 的元素类型是否是简单值类型  ）
 		return isSimpleValueType(type) || (type.isArray() && isSimpleValueType(type.getComponentType()));
 	}
 

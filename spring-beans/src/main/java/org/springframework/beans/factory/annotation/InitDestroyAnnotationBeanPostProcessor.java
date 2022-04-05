@@ -237,7 +237,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 
 
 	/**
-	 * 构造生命周期元数据（解析带 @PostConstruct 和 @PreDestroy 注解的方法），当其构造完成后会将元数据缓存到 lifecycleMetadataCache 集合中并返回
+	 * 构造生命周期元数据（遍历所有方法，包括父类的方法，解析带 @PostConstruct 和 @PreDestroy 注解的方法），当其构造完成后会将元数据缓存到 lifecycleMetadataCache 集合中并返回
 	 * 此时就完成了相关方法（初始化方法和销毁方法）的扫描解析和缓存工作
 	 *
 	 * @param clazz

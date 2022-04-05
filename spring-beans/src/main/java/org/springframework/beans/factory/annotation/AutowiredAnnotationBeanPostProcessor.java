@@ -176,6 +176,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		this.autowiredAnnotationTypes.add(Autowired.class);
 		this.autowiredAnnotationTypes.add(Value.class);
 		try {
+			// @Inject 注解
 			this.autowiredAnnotationTypes.add((Class<? extends Annotation>)
 					ClassUtils.forName("javax.inject.Inject", AutowiredAnnotationBeanPostProcessor.class.getClassLoader()));
 			logger.trace("JSR-330 'javax.inject.Inject' annotation found and supported for autowiring");
@@ -584,16 +585,17 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 			// 遍历类中的每个属性，判断属性是否包含指定的属性(通过 findAutowiredAnnotation 方法)
 			// 如果存在则保存，这里注意，属性保存的类型是 AutowiredFieldElement
 			ReflectionUtils.doWithLocalFields(targetClass, field -> {
+				// 寻找字段上的 @Autowired 或 @Value 注解
 				MergedAnnotation<?> ann = findAutowiredAnnotation(field);
 				if (ann != null) {
-					// @Autowired 注解不支持静态方法
+					// @Autowired 注解不支持静态方法（校验字段修饰符是否是静态的）
 					if (Modifier.isStatic(field.getModifiers())) {
 						if (logger.isInfoEnabled()) {
 							logger.info("Autowired annotation is not supported on static fields: " + field);
 						}
 						return;
 					}
-					// 查看是否是 requierd 的
+					// 查看是否是 required 的
 					boolean required = determineRequiredStatus(ann);
 					currElements.add(new AutowiredFieldElement(field, required));
 				}
@@ -634,7 +636,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		}
 		while (targetClass != null && targetClass != Object.class);
 
-		// InjectionMetadata 就是对 clazz 和 elements 的一个包装而已
+		// InjectionMetadata 是对 clazz 和 elements 的一个包装
 		return InjectionMetadata.forElements(elements, clazz);
 	}
 
@@ -647,6 +649,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	@Nullable
 	private MergedAnnotation<?> findAutowiredAnnotation(AccessibleObject ao) {
 		MergedAnnotations annotations = MergedAnnotations.from(ao);
+		// autowiredAnnotationTypes 中包含 @Autowired 和 @Value
 		for (Class<? extends Annotation> type : this.autowiredAnnotationTypes) {
 			MergedAnnotation<?> annotation = annotations.get(type);
 			if (annotation.isPresent()) {
@@ -778,7 +781,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				TypeConverter typeConverter = beanFactory.getTypeConverter();
 				try {
 					// 获取依赖的 value 值的工作  最终还是委托给 beanFactory.resolveDependency() 去完成的
-					// 这个接口方法由 AutowireCapableBeanFactory 提供，它提供了从 bean 工厂里获取依赖值的能力
+					// 这个接口方法由 AutowireCapableBeanFactory 提供，它提供了从 bean 工厂里获取依赖值的能力(循环依赖)
 					value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);
 				}
 				catch (BeansException ex) {

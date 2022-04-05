@@ -11,15 +11,23 @@
 	<context:component-scan base-package="com.ling.test16"></context:component-scan>
 
 	<!-- 原型域 -->
-	<bean id="person" class="com.ling.test16.Person" scope="prototype">
-		<!--<property name="id" value="18"></property>-->
-		<!--<property name="name" value="zhangling"></property>-->
-		<constructor-arg name="id" value="18"></constructor-arg>
-		<constructor-arg name="name" value="zhangling"></constructor-arg>
-	</bean>
+	<!--<bean id="person" class="com.ling.test16.Person" scope="prototype">-->
+	<!--	&lt;!&ndash;<property name="id" value="18"></property>&ndash;&gt;-->
+	<!--	&lt;!&ndash;<property name="name" value="zhangling"></property>&ndash;&gt;-->
+	<!--	<constructor-arg name="id" value="18"></constructor-arg>-->
+	<!--	<constructor-arg name="name" value="zhangling"></constructor-arg>-->
+	<!--</bean>-->
 
-	<bean id="student" class="com.ling.test16.Student">
-		<constructor-arg name="id" value="18"></constructor-arg>
+	<!--<bean id="student" class="com.ling.test16.Student">-->
+	<!--	<constructor-arg name="id" value="18"></constructor-arg>-->
+	<!--	<constructor-arg name="name" value="zhangling"></constructor-arg>-->
+	<!--</bean>-->
+
+
+	<!-- @PostConstruct 和 @PreDestroy	-->
+	<!--<bean id="life" class="com.ling.test16.Life" init-method="init" destroy-method="destroy">-->
+	<bean id="life" class="com.ling.test16.Life">
+		<constructor-arg name="id" value="1"></constructor-arg>
 		<constructor-arg name="name" value="zhangling"></constructor-arg>
 	</bean>
 

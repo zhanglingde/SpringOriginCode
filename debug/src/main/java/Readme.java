@@ -23,6 +23,7 @@ import org.springframework.context.event.EventListenerMethodProcessor;
 import org.springframework.beans.factory.support.BeanNameGenerator;
 // import org.springframework.context.annotation.ConfigurationClassParser;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor;
 
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
@@ -471,7 +472,9 @@ public class Readme {
 	 *     <li> 属性编辑：PropertyEditorRegistry</li>
 	 * </ul>
 	 *
-	 * todo @ PostConstruct 和 @PreDestroy 的处理
+	 * <p>
+	 *     @ PostConstruct 和 @PreDestroy 和 @Resource 的处理
+	 * </p>
 	 * <ul>
 	 *     <li>
 	 *			{@link AbstractAutowireCapableBeanFactory#applyMergedBeanDefinitionPostProcessors }
@@ -479,6 +482,13 @@ public class Readme {
 	 *     <li>
 	 *         {@link MergedBeanDefinitionPostProcessor}
 	 *     </li>
+	 *     <li>
+	 *         {@link CommonAnnotationBeanPostProcessor#postProcessMergedBeanDefinition(RootBeanDefinition, Class, String)}
+	 *     </li>
+	 *     <li>
+	 *         {@link InitDestroyAnnotationBeanPostProcessor}
+	 *     </li>
+	 *     <li> 构建生命周期元数据： {@link InitDestroyAnnotationBeanPostProcessor#buildLifecycleMetadata(Class)}</li>
 	 * </ul>
 	 *
 	 *
@@ -487,6 +497,17 @@ public class Readme {
 	void read16(){
 	}
 
+
+	/**
+	 * 17. Spring bean 创建流程五
+	 *
+	 * <p> @Autowired、@Value、@Inject </p>
+	 * <ul>
+	 *     <li> 解析 @Autowired、@Value 注解 {@link AutowiredAnnotationBeanPostProcessor }  </li>
+	 *     <li>  {@link org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.AutowiredFieldElement AutowiredFieldElement }  </li>
+	 *     <li>  {@link org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.AutowiredMethodElement AutowiredMethodElement }  </li>
+	 * </ul>
+	 */
 	void read17(){}
 
 

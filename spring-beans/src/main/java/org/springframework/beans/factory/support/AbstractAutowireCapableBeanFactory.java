@@ -1710,7 +1710,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
 					// postProcessProperties：在工厂将给定的属性值应用到给定 Bean 之前，对它们进行后处理，不需要任何属性扫描符。该回调方法在未来的版本会被删掉。
 					// -- 取而代之的是 postProcessPropertyValues 回调方法。
-					// 让ibp对pvs增加对bw的Bean对象的propertyValue，或编辑pvs的proertyValue
+					// 让 ibp 对 pvs 增加对 bw 的 Bean 对象的 propertyValue，或编辑 pvs 的 propertyValue
 					PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
 					if (pvsToUse == null) {
 						if (filteredPds == null) {
@@ -1767,7 +1767,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
 		// 遍历属性名
 		for (String propertyName : propertyNames) {
-			// 如果该 bean 工厂有 propertyName 的 beanDefinition 或外部注册的 singleton 实例
+			// 如果该 bean 工厂有 propertyName 的 beanDefinition 或外部注册的 singleton 实例（配置文件或注解有定义 bean 信息）
 			if (containsBean(propertyName)) {
 				// 递归初始化相关的 bean（获取该工厂中 propertyName 的 bean 对象）
 				Object bean = getBean(propertyName);
@@ -1824,7 +1824,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				PropertyDescriptor pd = bw.getPropertyDescriptor(propertyName);
 				// Don't try autowiring by type for type Object: never makes sense,
 				// even if it technically is a unsatisfied, non-simple property.
-				// 不要尝试按类型自动装配对象：永远是有意义的，即使它在技术上是一个不满意，复杂属性
+				// 不要尝试为 Object 类型按类型自动装配：永远没有意义；即使它在技术上是一个不令人满意的、非简单的属性
 				// 如果 pd的属性值类型不是 Object
 				if (Object.class != pd.getPropertyType()) {
 					// 获取 pd 属性的 setter 方法的方法参数包装对象
@@ -1877,7 +1877,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @see org.springframework.beans.BeanUtils#isSimpleProperty
 	 */
 	protected String[] unsatisfiedNonSimpleProperties(AbstractBeanDefinition mbd, BeanWrapper bw) {
-		// TreeSet:TreeSet 底层是二叉树，可以对对象元素进行排序，但是自定义类需要实现 comparable 接口，重写 comparaTo() 方法。
+		// TreeSet: 底层是二叉树，可以对对象元素进行排序，但是自定义类需要实现 comparable 接口，重写 compareTo() 方法。
 		Set<String> result = new TreeSet<>();
 		// 获取 mbd 的所有属性值
 		PropertyValues pvs = mbd.getPropertyValues();
@@ -1885,10 +1885,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		PropertyDescriptor[] pds = bw.getPropertyDescriptors();
 		// 遍历属性描述对象
 		for (PropertyDescriptor pd : pds) {
-			// 如果 pd 有写入属性方法 && 该 pd 不是被排除在依赖项检查之外 && pvs 没有该 pd的属性名 && pd 的属性类型不是"简单值类型"
+			/**
+			 * pd 有 set 方法 &&
+			 * pd 不是被排除在依赖项检查之外 &&
+			 * pvs 没有该 pd的属性名	&&
+			 * pd 的属性类型不是 简单值类型
+			 */
 			if (pd.getWriteMethod() != null && !isExcludedFromDependencyCheck(pd) && !pvs.contains(pd.getName()) &&
 					!BeanUtils.isSimpleProperty(pd.getPropertyType())) {
-				// 将 pd 的属性名添加到 result 中
+				// 将 pd 的属性名添加到 result 中（引用类型会添加）
 				result.add(pd.getName());
 			}
 		}
@@ -2062,19 +2067,23 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			else {
 				// 获取属性名字
 				String propertyName = pv.getName();
+				// 获取未经类型转换的值
 				Object originalValue = pv.getValue();
+				// AutowiredPropertyMarker.INSTANCE：自动生成标记的规范实例
 				if (originalValue == AutowiredPropertyMarker.INSTANCE) {
+					// 获取 propertyName 属性在 bw 中的 setter 方法
 					Method writeMethod = bw.getPropertyDescriptor(propertyName).getWriteMethod();
 					if (writeMethod == null) {
 						throw new IllegalArgumentException("Autowire marker for property without write method: " + pv);
 					}
+					// 将 setter 方法封装到 DependencyDescriptor 对象中
 					originalValue = new DependencyDescriptor(new MethodParameter(writeMethod, 0), true);
 				}
-				// 交由
+				// valueResolver 根据 pv 解析出 originalValue 所封装的对象
 				Object resolvedValue = valueResolver.resolveValueIfNecessary(pv, originalValue);
 				// 默认转换后的值是刚解析出来的值
 				Object convertedValue = resolvedValue;
-				// 可转换标记：propertyName 是否 bw 中的可读属性 && propertyName 不是表示索引属性或嵌套属性（）
+				// 可转换标记：propertyName 是否是 bw 中的可写属性 && propertyName 不是表示索引属性或嵌套属性（如果 propertyName 中有 '.' 或 '[' 就认为是索引属性或嵌套属性）
 				boolean convertible = bw.isWritableProperty(propertyName) &&
 						!PropertyAccessorUtils.isNestedOrIndexedProperty(propertyName);
 				if (convertible) {
@@ -2085,7 +2094,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				// in order to avoid re-conversion for every created bean instance.
 				// 可以将转换后的值存储合并后 BeanDefinition 中，以避免对没个创建的 Bean 实例进行重新转换
 				if (resolvedValue == originalValue) {
-					// resolvedValue，originalValue 是同一个对象，且可转换
+					// resolvedValue，originalValue 是同一个对象，且可转换；将转换后的值设置到 pv 中
+
+
 					if (convertible) {
 						pv.setConvertedValue(convertedValue);
 					}

@@ -10,8 +10,15 @@ public class Test16 {
 		// Person person1 = (Person) ac.getBean("person");
 		// Person person2 = ac.getBean("person", Person.class);
 
-		Student bean = ac.getBean(Student.class);
+		// Autowire
+		// Student bean = ac.getBean(Student.class);
+		// System.out.println("bean = " + bean);
+
+		// 生命周期
+		Life bean = ac.getBean(Life.class);
 		System.out.println("bean = " + bean);
+		ac.close();
+
 
 
 	}

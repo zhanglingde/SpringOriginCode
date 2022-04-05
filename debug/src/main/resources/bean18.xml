@@ -8,18 +8,18 @@
 	   http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- 根据名字注入 -->
-	<bean id="person" class="com.ling.test18.populateBean.Person" autowire="byName"></bean>
+	<!--<bean id="person" class="com.ling.test18.populateBean.Person" autowire="byName"></bean>-->
+	<!--&lt;!&ndash; 根据类型注入 &ndash;&gt;-->
+	<!--<bean id="person2" class="com.ling.test18.populateBean.Person" autowire="byType"></bean>-->
 
-	<bean id="person2" class="com.ling.test18.populateBean.Person" autowire="byType"></bean>
-
-	<bean id="address" class="com.ling.test18.populateBean.Address">
-		<property name="province" value="浙江省"></property>
-		<property name="city" value="杭州市"></property>
-		<property name="town" value="钱塘区"></property>
-	</bean>
+	<!--<bean id="address" class="com.ling.test18.populateBean.Address">-->
+	<!--	<property name="province" value="浙江省"></property>-->
+	<!--	<property name="city" value="杭州市"></property>-->
+	<!--	<property name="town" value="钱塘区"></property>-->
+	<!--</bean>-->
 
 	<!-- @Autowired 注解注入属性，AnnotationBeanPostProcessor -->
-	<!--<context:component-scan base-package="com.ling.test18.populateBean.annotation"></context:component-scan>-->
+	<context:component-scan base-package="com.ling.test18.populateBean.annotation"></context:component-scan>
 
 
 </beans>
