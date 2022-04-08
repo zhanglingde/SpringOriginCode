@@ -1,14 +1,14 @@
 package com.ling.test16;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
+// import javax.annotation.PostConstruct;
+// import javax.annotation.PreDestroy;
+// import javax.annotation.Resource;
 
 public class Life {
 
-	@Resource
+	// @Resource
 	private int id;
-	@Resource
+	// @Resource
 	private String name;
 
 	public Life() {
@@ -19,12 +19,12 @@ public class Life {
 		this.name = name;
 	}
 
-	@PostConstruct
+	// @PostConstruct
 	public void init(){
 		System.out.println("init......");
 	}
 
-	@PreDestroy
+	// @PreDestroy
 	public void destroy(){
 		System.out.println("destroy...");
 	}
@@ -34,7 +34,7 @@ public class Life {
 		return id;
 	}
 
-	@Resource
+	// @Resource
 	public void setId(int id) {
 		this.id = id;
 	}
