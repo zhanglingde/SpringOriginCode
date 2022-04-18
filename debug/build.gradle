@@ -38,5 +38,6 @@ dependencies {
     compile("com.alibaba:druid:1.2.4")
     compile("mysql:mysql-connector-java:5.1.48")
     implementation group: 'cglib', name: 'cglib', version: '3.3.0'
+    implementation group: 'javax.annotation', name: 'jsr250-api', version: '1.0'
 
 }

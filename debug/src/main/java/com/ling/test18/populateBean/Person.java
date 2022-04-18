@@ -1,7 +1,7 @@
 package com.ling.test18.populateBean;
 
-// import javax.annotation.PostConstruct;
-// import javax.annotation.PreDestroy;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.*;
 
 public class Person {
@@ -121,15 +121,16 @@ public class Person {
         this.sets = sets;
     }
 
-    // @PostConstruct
+    @PostConstruct
     public void init(){
         System.out.println("init---person");
     }
 
-    // @PreDestroy
+    @PreDestroy
     public void destroy(){
         System.out.println("destroy---person");
     }
+
     @Override
     public String toString() {
         return "Person{" +
