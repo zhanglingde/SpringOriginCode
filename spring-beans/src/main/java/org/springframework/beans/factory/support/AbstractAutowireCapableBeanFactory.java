@@ -1652,7 +1652,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 给任何实现了 InstantiationAwareBeanPostProcessors 的子类机会去修改 bean 的状态再设置属性之前，可以被用来支持类型的字段注入
 
 		// synthetic：一般只有 AOP 相关的 pointCut 配置或 Advice 配置才会将 synthetic 设置为 true
-		// mbd 不是 synthetic  &&  工厂拥有 InstantiationAwareBeanPostProcessors
+		// mbd 不是 synthetic（合成的）  &&  工厂拥有 InstantiationAwareBeanPostProcessors
 		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 			// 遍历 BeanFactory 中的 BeanPostProcessor
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
@@ -1693,7 +1693,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 后置处理器已经初始化（工厂是否拥有 InstantiationAwareBeanPostProcessor）
 		boolean hasInstAwareBpps = hasInstantiationAwareBeanPostProcessors();
 		// mbd.getDependencyCheck()，默认返回 DEPENDENCY_CHECK_NONE，表示 不检查
-		// 是否需要检查依赖
+		// 是否需要检查依赖（默认返回 DEPENDENCY_CHECK_NONE，表示 不检查）
 		boolean needsDepCheck = (mbd.getDependencyCheck() != AbstractBeanDefinition.DEPENDENCY_CHECK_NONE);
 
 		// 经过筛选的 PropertyDescriptor 数组,存放着排除忽略的依赖项或忽略项上的定义的属性
