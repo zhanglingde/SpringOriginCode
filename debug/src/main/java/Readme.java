@@ -1,5 +1,6 @@
 import com.ling.test02.Test02;
 import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.config.*;
 import org.springframework.beans.factory.support.*;
@@ -40,6 +41,7 @@ public class Readme {
 	 * 1. 流程概述 {@link com.ling.test.Test}
 	 * 2. 启动流程细节    {@link Test02}
 	 * spel 表达式（${username}）解析：配置文件，环境变量都是通过同样的方式进行解析的 <br>
+	 * {@link AbstractApplicationContext#prepareBeanFactory(ConfigurableListableBeanFactory)}
 	 * <p>
 	 * <p>
 	 * 设置配置路径：
@@ -512,13 +514,44 @@ public class Readme {
 
 
 	/**
-	 * 18. Spring Bean 创建流程
+	 * 18. Spring Bean 创建流程六    <br>
+	 * <p></p>
+	 * bean 属性值设置：
+	 * {@link AbstractAutowireCapableBeanFactory#populateBean(String, RootBeanDefinition, BeanWrapper) populateBean}
+	 * <ol>
+	 *     <li>按名称注入： {@link AbstractAutowireCapableBeanFactory#autowireByName(String, AbstractBeanDefinition, BeanWrapper, MutablePropertyValues) autowireByName} </li>
+	 *     <ul>
+	 *     		<li>寻找 bean 中需要依赖注入的属性： {@link AbstractAutowireCapableBeanFactory#unsatisfiedNonSimpleProperties(AbstractBeanDefinition, BeanWrapper)  unsatisfiedNonSimpleProperties} </li>
+	 *     		<li>注册依赖： {@link AbstractAutowireCapableBeanFactory#registerDependentBean(String, String)  registerDependentBean} </li>
+	 *     </ul>
 	 *
-	 * bean 属性值设置  
-	 * {@link AbstractAutowireCapableBeanFactory#populateBean(String, RootBeanDefinition, BeanWrapper)}
-	 * {@link AbstractAutowireCapableBeanFactory#applyPropertyValues(String, BeanDefinition, BeanWrapper, PropertyValues)}
+	 *     <li>按类型注入： {@link AbstractAutowireCapableBeanFactory#autowireByType(String, AbstractBeanDefinition, BeanWrapper, MutablePropertyValues) autowireByType} </li>
+	 *     <ul>
+	 *     		<li>寻找 bean 中需要依赖注入的属性： {@link AbstractAutowireCapableBeanFactory#unsatisfiedNonSimpleProperties(AbstractBeanDefinition, BeanWrapper)   unsatisfiedNonSimpleProperties} </li>
+	 *     		<li>寻找 bean 中需要依赖注入的属性： {@link AbstractAutowireCapableBeanFactory#resolveDependency(DependencyDescriptor, String)}   resolveDependency} </li>
+	 *     		<li>寻找 bean 中需要依赖注入的属性： {@link AbstractAutowireCapableBeanFactory#registerDependentBean(String, String)}    registerDependentBean} </li>
+	 *     </ul>
+	 * </ol>
+	 *
+	 * 将属性应用到 bean 中：
+	 * {@link AbstractAutowireCapableBeanFactory#applyPropertyValues(String, BeanDefinition, BeanWrapper, PropertyValues) applyPropertyValues }
 	 */
 	void read18(){}
+
+	/**
+	 * 忽略三个 Aware 接口
+	 * <ol>
+	 *     <li> {@link AbstractRefreshableApplicationContext#refreshBeanFactory()}</li>
+	 *     <li>忽略三个 Aware 接口： {@link AbstractRefreshableApplicationContext#createBeanFactory()} ()}</li>
+	 * </ol>
+	 * 忽略 Aware 接口：
+	 * <ol>
+	 *     <li> {@link AbstractApplicationContext#refresh()}</li>
+	 *     <li>忽略 Aware 接口： {@link AbstractApplicationContext#prepareBeanFactory(ConfigurableListableBeanFactory)}</li>
+	 *     <li>处理 Aware 接口： {@link ApplicationContextAwareProcessor#postProcessBeforeInitialization(Object, String) }  </li>
+	 * </ol>
+	 */
+	void read19(){}
 
 
 }

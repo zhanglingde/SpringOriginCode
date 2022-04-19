@@ -1295,7 +1295,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			// 新建一个专门用于构建 javax.inject.Provider 对象的工厂来构建创建 Jsr330Provider 对象
 			return new Jsr330Factory().createDependencyProvider(descriptor, requestingBeanName);
 		} else {
-			// 尝试获取延迟加载代理对象
+			// 尝试获取延迟加载代理对象（@Lazy）
 			Object result = getAutowireCandidateResolver().getLazyResolutionProxyIfNecessary(
 					descriptor, requestingBeanName);
 			if (result == null) {
