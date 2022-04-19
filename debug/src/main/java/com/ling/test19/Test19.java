@@ -1,9 +1,9 @@
 package com.ling.test19;
 
-import com.ling.test18.populateBean.Person;
+import com.ling.test19.populateBean.Person;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.format.number.PercentStyleFormatter;
+
 
 public class Test19 {
 	public static void main(String[] args) {

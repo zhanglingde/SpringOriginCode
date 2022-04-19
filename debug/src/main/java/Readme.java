@@ -38,7 +38,7 @@ import java.util.function.Predicate;
 public class Readme {
 
 	/**
-	 * 1. 流程概述 {@link com.ling.test.Test}
+	 * 1. 流程概述： {@link com.ling.test.Test}
 	 * 2. 启动流程细节    {@link Test02}
 	 * spel 表达式（${username}）解析：配置文件，环境变量都是通过同样的方式进行解析的 <br>
 	 * {@link AbstractApplicationContext#prepareBeanFactory(ConfigurableListableBeanFactory)}

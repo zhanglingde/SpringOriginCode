@@ -1290,7 +1290,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 		// javaxInjectProviderClass 有可能导致空指针，不过一般情况下，我们引用 Spring 包的时候都有引入该类以防止空指针
 		else if (javaxInjectProviderClass == descriptor.getDependencyType()) {
-			// Jsr330Provider:javax.inject.Provider实现类.与 DependencyObjectProvider 作用一样，也是用于延迟解析依赖项，
+			// Jsr330 Provider:javax.inject.Provider实现类.与 DependencyObjectProvider 作用一样，也是用于延迟解析依赖项，
 			// 但它是使用 javax.inject.Provider 作为依赖 对象，以减少与 Spring 的耦合
 			// 新建一个专门用于构建 javax.inject.Provider 对象的工厂来构建创建 Jsr330Provider 对象
 			return new Jsr330Factory().createDependencyProvider(descriptor, requestingBeanName);
@@ -1299,7 +1299,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			Object result = getAutowireCandidateResolver().getLazyResolutionProxyIfNecessary(
 					descriptor, requestingBeanName);
 			if (result == null) {
-				// 解析出与 descriptor 所包装的对象匹配的候选Bean对象
+				// 解析出与 descriptor 所包装的对象匹配的候选 Bean 对象
 				result = doResolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter);
 			}
 			// 将与 descriptor 所包装的对象匹配的候选 Bean 对象【result】返回出去
@@ -1420,7 +1420,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				autowiredBeanNames.add(autowiredBeanName);
 			}
 			if (instanceCandidate instanceof Class) {
-				// instanceCandidate 引用 descriptor对autowiredBeanName解析为该工厂的Bean实例
+				// instanceCandidate 引用 descriptor 对 autowiredBeanName 解析为该工厂的 Bean 实例
 				instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, this);
 			}
 			// result 存储最佳候选 bean 对象
@@ -1462,7 +1462,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		// 获取包装的参数/字段的声明的(非通用)类型
 		Class<?> type = descriptor.getDependencyType();
 
-		// 如果描述符是Stream依赖项描述符
+		// 如果描述符是 Stream 依赖项描述符
 		if (descriptor instanceof StreamDependencyDescriptor) {
 			// 查找与valueType匹配的候选bean对象;构建成Map，key=bean名,val=Bean对象
 			Map<String, Object> matchingBeans = findAutowireCandidates(beanName, type, descriptor);
@@ -1522,7 +1522,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 			return result;
 		}
-		// 如果依赖类型属于Collection类型且依赖类型是否接口
+		// 如果依赖类型属于 Collection 类型 && 依赖类型是接口
 		else if (Collection.class.isAssignableFrom(type) && type.isInterface()) {
 			// 将descriptor所包装的参数/字段构建出来的ResolvableType对象解析成Collection类型，然后解析出其泛型参数的Class对象
 			Class<?> elementType = descriptor.getResolvableType().asCollection().resolveGeneric();
@@ -1581,7 +1581,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			// 返回候选 bean 对象 Map
 			return matchingBeans;
 		} else {
-			// 返回null，表示获取不到候选bean对象
+			// 返回null，表示获取不到候选 bean 对象
 			return null;
 		}
 	}
@@ -1669,10 +1669,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	protected Map<String, Object> findAutowireCandidates(
 			@Nullable String beanName, Class<?> requiredType, DependencyDescriptor descriptor) {
 
-		// 获取requiredType的所有bean名,包括父级工厂中定义的名称
+		// 获取 requiredType 的所有 bean 名,包括父级工厂中定义的名称
 		String[] candidateNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 				this, requiredType, true, descriptor.isEager());
-		// 定义用于保存匹配requiredType的bean名和其实例对象的Map，即匹配成功的候选Map
+		// 定义用于保存匹配 requiredType 的 bean 名和其实例对象的 Map，即匹配成功的候选 Map
 		Map<String, Object> result = new LinkedHashMap<>(candidateNames.length);
 		// 从存放着手动显示注册的依赖项类型-相应的自动装配值的缓存中匹配候选
 		// 遍历从依赖项类型映射到相应的自动装配值缓存
@@ -1696,9 +1696,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 		// 常规匹配候选
 		for (String candidate : candidateNames) {
-			// 如果 beanName 与 candidateName 所对应的 Bean 对象不是同一个且 candidate 可以自动注入
+			// 如果 beanName 与 candidateName 所对应的 Bean 对象不是同一个 && candidate 可以自动注入
 			if (!isSelfReference(beanName, candidate) && isAutowireCandidate(candidate, descriptor)) {
-				// 添加一个条目在result中:一个bean实例(如果可用)或仅一个已解析的类型
+				// 添加一个条目在 resul t中:一个 bean 实例(如果可用)或仅一个已解析的类型
 				addCandidateEntry(result, candidate, descriptor, requiredType);
 			}
 		}
