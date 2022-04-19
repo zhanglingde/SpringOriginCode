@@ -544,7 +544,7 @@ public class Readme {
 	 *     <li> {@link AbstractRefreshableApplicationContext#refreshBeanFactory()}</li>
 	 *     <li>忽略三个 Aware 接口： {@link AbstractRefreshableApplicationContext#createBeanFactory()} ()}</li>
 	 * </ol>
-	 * 忽略 Aware 接口：
+	 * 忽略其他 Aware 接口：
 	 * <ol>
 	 *     <li> {@link AbstractApplicationContext#refresh()}</li>
 	 *     <li>忽略 Aware 接口： {@link AbstractApplicationContext#prepareBeanFactory(ConfigurableListableBeanFactory)}</li>

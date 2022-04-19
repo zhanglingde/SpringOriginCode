@@ -1,149 +1,176 @@
 package com.ling.test19.populateBean;
 
+import org.springframework.beans.factory.BeanClassLoaderAware;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.Ordered;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.*;
 
-public class Person {
-    private int id;
-    private String name;
-    private int age;
-    private String gender;
-    private Address address;
-    private String[] hobbies;
-    private List<Book> books;
-    private Set<Integer> sets;
-    private Map<String,Object> maps;
-    private Properties properties;
 
-    public Person(int id, String name, int age, String gender) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        System.out.println("有参构造器");
-    }
+/**
+ * 实现 InitializingBean 接口，在所有属性赋值完成后，会调用 afterPropertiesSet 方法
+ */
+public class Person implements BeanClassLoaderAware, Ordered, InitializingBean {
+	private int id;
+	private String name;
+	private int age;
+	private String gender;
+	private Address address;
+	private String[] hobbies;
+	private List<Book> books;
+	private Set<Integer> sets;
+	private Map<String, Object> maps;
+	private Properties properties;
 
-    public Person(int id, String name, int age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        System.out.println("Age");
-    }
+	public Person(int id, String name, int age, String gender) {
+		this.id = id;
+		this.name = name;
+		this.age = age;
+		this.gender = gender;
+		System.out.println("有参构造器");
+	}
 
-    public Person(int id, String name, String gender) {
-        this.id = id;
-        this.name = name;
-        this.gender = gender;
-        System.out.println("gender");
-    }
+	public Person(int id, String name, int age) {
+		this.id = id;
+		this.name = name;
+		this.age = age;
+		System.out.println("Age");
+	}
 
-    public Person() {
-    }
+	public Person(int id, String name, String gender) {
+		this.id = id;
+		this.name = name;
+		this.gender = gender;
+		System.out.println("gender");
+	}
 
-    public int getId() {
-        return id;
-    }
+	public Person() {
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public int getAge() {
-        return age;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+	public int getAge() {
+		return age;
+	}
 
-    public String getGender() {
-        return gender;
-    }
+	public void setAge(int age) {
+		this.age = age;
+	}
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
+	public String getGender() {
+		return gender;
+	}
 
-    public Address getAddress() {
-        return address;
-    }
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+	public Address getAddress() {
+		return address;
+	}
 
-    public List<Book> getBooks() {
-        return books;
-    }
+	public void setAddress(Address address) {
+		this.address = address;
+	}
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
+	public List<Book> getBooks() {
+		return books;
+	}
 
-    public Map<String, Object> getMaps() {
-        return maps;
-    }
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
 
-    public void setMaps(Map<String, Object> maps) {
-        this.maps = maps;
-    }
+	public Map<String, Object> getMaps() {
+		return maps;
+	}
 
-    public Properties getProperties() {
-        return properties;
-    }
+	public void setMaps(Map<String, Object> maps) {
+		this.maps = maps;
+	}
 
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-    }
+	public Properties getProperties() {
+		return properties;
+	}
 
-    public String[] getHobbies() {
-        return hobbies;
-    }
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
 
-    public void setHobbies(String[] hobbies) {
-        this.hobbies = hobbies;
-    }
+	public String[] getHobbies() {
+		return hobbies;
+	}
 
-    public Set<Integer> getSets() {
-        return sets;
-    }
+	public void setHobbies(String[] hobbies) {
+		this.hobbies = hobbies;
+	}
 
-    public void setSets(Set<Integer> sets) {
-        this.sets = sets;
-    }
+	public Set<Integer> getSets() {
+		return sets;
+	}
 
-    @PostConstruct
-    public void init(){
-        System.out.println("init---person");
-    }
+	public void setSets(Set<Integer> sets) {
+		this.sets = sets;
+	}
 
-    @PreDestroy
-    public void destroy(){
-        System.out.println("destroy---person");
-    }
+	@PostConstruct
+	public void init() {
+		System.out.println("init---person");
+	}
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", gender='" + gender + '\'' +
-                ", address=" + address +
-                ", hobbies=" + Arrays.toString(hobbies) +
-                ", books=" + books +
-                ", sets=" + sets +
-                ", maps=" + maps +
-                ", properties=" + properties +
-                '}';
-    }
+	@PreDestroy
+	public void destroy() {
+		System.out.println("destroy---person");
+	}
+
+	@Override
+	public String toString() {
+		return "Person{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", age=" + age +
+				", gender='" + gender + '\'' +
+				", address=" + address +
+				", hobbies=" + Arrays.toString(hobbies) +
+				", books=" + books +
+				", sets=" + sets +
+				", maps=" + maps +
+				", properties=" + properties +
+				'}';
+	}
+
+	@Override
+	public void setBeanClassLoader(ClassLoader classLoader) {
+
+	}
+
+	@Override
+	public int getOrder() {
+		return 0;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (this.name.length() < 10) {
+			this.name = "ling";
+		} else {
+
+		}
+	}
 }
