@@ -200,7 +200,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		}
 	}
 
-
+	// 资源加载器，主要应用于根据给定的资源文件地址返回对应的 Resource
 	private final ResourceLoader resourceLoader;
 
 	// 创建 ant 方式的路径匹配器

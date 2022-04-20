@@ -22,9 +22,10 @@ import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
 import org.springframework.context.event.EventListenerMethodProcessor;
 import org.springframework.beans.factory.support.BeanNameGenerator;
-// import org.springframework.context.annotation.ConfigurationClassParser;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor;
+import org.springframework.core.env.PropertyResolver;
+import org.springframework.context.support.AbstractRefreshableConfigApplicationContext;
 
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
@@ -38,25 +39,40 @@ import java.util.function.Predicate;
 public class Readme {
 
 	/**
-	 * 1. 流程概述： {@link com.ling.test.Test}
-	 * 2. 启动流程细节    {@link Test02}
-	 * spel 表达式（${username}）解析：配置文件，环境变量都是通过同样的方式进行解析的 <br>
-	 * {@link AbstractApplicationContext#prepareBeanFactory(ConfigurableListableBeanFactory)}
-	 * <p>
-	 * <p>
-	 * 设置配置路径：
-	 * {@link org.springframework.context.support.AbstractRefreshableConfigApplicationContext#setConfigLocations(String...)}
-	 * <p>
-	 * refresh():
-	 * {@link AbstractApplicationContext#refresh()}
-	 * 1. 初始化属性值扩展,自定义环境变量，重写该方法
-	 * {@link AbstractApplicationContext#initPropertySources}
-	 * {@link MyClassPathXmlApplicationContext#initPropertySources()} (DefaultListableBeanFactory)}
-	 * 2. 监听器初始化： this.earlyApplicationListeners  (SpringBoot 启动配合理解,SpringBoot 启动时会有很多监听器，放到 earlyApplicationListeners容器中)
-	 * 3. 设置 bean 允许被覆盖，允许循环依赖，重写方法
-	 * {@link AbstractRefreshableApplicationContext#customizeBeanFactory(DefaultListableBeanFactory)}
-	 * 4. 初始化 documentReader，为 xml 文件解析做准备
-	 * {@link AbstractRefreshableApplicationContext#loadBeanDefinitions}
+	 * 1. 流程概述： {@link com.ling.test01.Test}  <br>
+	 * 2. 启动流程细节    {@link Test02}			<br>
+	 *
+	 * <ul>
+	 *     <li> 调用父类方法初始化资源： {@link AbstractApplicationContext#AbstractApplicationContext()} </li>
+	 *     <li> 设置配置文件路径：
+	 * 	         {@link AbstractRefreshableConfigApplicationContext#setConfigLocations(String...)}</li>
+	 *     <li> spel 表达式（${username}）解析：配置文件，环境变量都是通过同样的方式进行解析的 {@link PropertyResolver#resolveRequiredPlaceholders(String)}</li>
+	 *     <li> 设置表达式解析器：{@link AbstractApplicationContext#prepareBeanFactory(ConfigurableListableBeanFactory)} </li>
+	 * </ul>
+	 *
+	 *
+	 * <ol>
+	 *     <li>
+	 *         refresh()：{@link AbstractApplicationContext#refresh()}
+	 *     </li>
+	 *     <li>
+	 *         	初始化属性值扩展,自定义环境变量，重写该方法
+	 *         	<ul>
+	 * 	 			<li> {@link AbstractApplicationContext#initPropertySources } </li>
+	 * 	 			<li> {@link MyClassPathXmlApplicationContext#initPropertySources() DefaultListableBeanFactory } </li>
+	 * 	   		</ul>
+	 *     </li>
+	 *     <li>
+	 *         监听器初始化： this.earlyApplicationListeners  (SpringBoot 启动配合理解,SpringBoot 启动时会有很多监听器，放到 earlyApplicationListeners容器中)
+	 *     </li>
+	 *     <li>
+	 *         设置 bean 允许被覆盖，允许循环依赖，重写方法
+	 *         {@link AbstractRefreshableApplicationContext#customizeBeanFactory(DefaultListableBeanFactory)}
+	 *     </li>
+	 *     <li>
+	 *         初始化 documentReader，为 xml 文件解析做准备：{@link AbstractRefreshableApplicationContext#loadBeanDefinitions}
+	 *     </li>
+	 * </ol>
 	 */
 	void readme01() {
 	}
@@ -69,19 +85,27 @@ public class Readme {
 	 *     <li> ScannedGenericBeanDefinition（扫描的 Bean） </li>
 	 *     <li> AnnotatedBeanDefinition </li>
 	 * </ul>
-	 * <p>
-	 * 1. 从网络加载配置文件，本地定义的文件 spring-bean/META-iNF  spring.schemas
-	 * <p>
-	 * 2. 获取配置文件路径：						{@link AbstractXmlApplicationContext#loadBeanDefinitions(XmlBeanDefinitionReader)}
-	 * <p>
-	 * 3. 读取xml 配置文件，生成document对象   		{@link XmlBeanDefinitionReader#doLoadBeanDefinitions(InputSource, Resource)}
-	 * <p>
-	 * 4. 解析过程								{@link DefaultBeanDefinitionDocumentReader#doRegisterBeanDefinitions(Element)}
-	 * 		解析 bean标签 						{@link DefaultBeanDefinitionDocumentReader#processBeanDefinition}
-	 * 5. 将xml解析成 beanDefinition 对象后，将 BeanDefinition 对象放入 BeanFactory
-	 * 		beanDefinitionMap<beanName,BeanDefinition>
-	 * 		beanDefinitionNames<beanName>
-	 *        {@link BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder, BeanDefinitionRegistry)}
+	 * <ol>
+	 *     <li> 从网络加载配置文件，本地定义的文件 spring-bean/META-iNF  spring.schemas
+	 *                {@link AbstractXmlApplicationContext#loadBeanDefinitions(XmlBeanDefinitionReader)}
+	 *     </li>
+	 *     <li>
+	 *         获取配置文件路径：
+	 *     </li>
+	 *     <li>
+	 *         读取xml 配置文件，生成document对象   		{@link XmlBeanDefinitionReader#doLoadBeanDefinitions(InputSource, Resource)}
+	 *     </li>
+	 *     <li>
+	 *         解析过程								{@link DefaultBeanDefinitionDocumentReader#doRegisterBeanDefinitions(Element)}  <br>
+	 *         解析 bean标签 						{@link DefaultBeanDefinitionDocumentReader#processBeanDefinition}
+	 *     </li>
+	 *     <li>
+	 *         将xml解析成 beanDefinition 对象后，将 BeanDefinition 对象放入 BeanFactory
+	 *         beanDefinitionMap<beanName,BeanDefinition>
+	 *             beanDefinitionNames<beanName>
+	 *                 {@link BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder, BeanDefinitionRegistry)}
+	 *     </li>
+	 * </ol>
 	 */
 	void readme05() {
 	}
@@ -154,8 +178,8 @@ public class Readme {
 	 * 8. BeanFactoryPostProcessor 的执行过程
 	 * <p>
 	 * 1. 获取到 beanFactory ,就可以对 工厂中所有属性进行操作  <br>
-	 * 		postProcessBeanFactory 扩展  <br>
-	 * 		{@link AbstractApplicationContext#postProcessBeanFactory(ConfigurableListableBeanFactory) }
+	 * postProcessBeanFactory 扩展  <br>
+	 * {@link AbstractApplicationContext#postProcessBeanFactory(ConfigurableListableBeanFactory) }
 	 * 		<ol>
 	 * 		   <li>  先执行 BeanDefinitionRegistry 类型的 beanFactory;先遍历实现 PriorityOrdered 接口的，然后是实现 Order 接口的，最后是无序的</li>
 	 * 		   <li>  然后执行不属于 BeanDefinitionRegistry 类型的，直接执行 postProcessBeanFactory 方法</li>
@@ -165,7 +189,7 @@ public class Readme {
 	 *
 	 * <p>
 	 * 		2. BeanFactoryPostProcessor 与 BeanDefinitionRegistryPostProcessor 的区别 <br>
-	 * 		{@link AbstractApplicationContext#invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory) }
+	 *        {@link AbstractApplicationContext#invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory) }
 	 * 		<ul>
 	 * 		    <li> {@link BeanFactoryPostProcessor }：后置处理器（增强器），对 beanFactory 中属性进行修改 </li>
 	 * 		    <li> {@link BeanDefinitionRegistryPostProcessor }：BeanFactoryPostProcessor 子类，  </li>
@@ -198,7 +222,7 @@ public class Readme {
 	 * <p>
 	 *     <ol>
 	 *         <li>  自定义 BeanDefinitionRegistryPostProcessor，分别实现 PriorityOrdered、Ordered 接口和不实现接口，BDRPP 被扫描执行的顺序不同 <br>
-	 *
+	 * <p>
 	 *             {@link MyBeanDefinitionRegistryPostProcessor}
 	 *         </li>
 	 *         <li> 每个阶段执行 BDRPP ，每次需要重新获取 BeanDefinitionRegistryPostProcessor
@@ -207,12 +231,12 @@ public class Readme {
 	 *     </ol>
 	 * </p>
 	 * <p>
-	 *     BedefinitionRegistry :对 bean 进行增删改查操作
+	 *     BeanDefinitionRegistry :对 bean 进行增删改查操作
 	 * </p>
 	 *
 	 * <p>
 	 * 		扫描 @Component 注册的Bean 	 <br>
-	 * 		{@link ComponentScanBeanDefinitionParser#registerComponents(XmlReaderContext, Set, Element)}
+	 *        {@link ComponentScanBeanDefinitionParser#registerComponents(XmlReaderContext, Set, Element)}
 	 * <p>
 	 * <p> 注解的扫描	 <br>
 	 *     {@link ConfigurationClassPostProcessor#processConfigBeanDefinitions(BeanDefinitionRegistry)}
@@ -225,10 +249,10 @@ public class Readme {
 	 * <p> @Import、@ComponentScan、@ComponentScans、@ImportResource 等注解的解析
 	 * 	<ul>
 	 * 	    <li> 该类的子类实现是 BeanName 的生成方式  <br>
-	 * 	    	{@link BeanNameGenerator}
+	 *            {@link BeanNameGenerator}
 	 * 	    </li>
 	 * 	    <li> @Conditional 注解处理	<br>
-	 * 	    	{@link ConditionEvaluator#shouldSkip(AnnotatedTypeMetadata)}
+	 *            {@link ConditionEvaluator#shouldSkip(AnnotatedTypeMetadata)}
 	 * 	    </li>
 	 * 	    <li> 	{@link ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)}
 	 * 	    </li>
@@ -240,38 +264,38 @@ public class Readme {
 
 	/**
 	 * 10. ConfigurationClassPostProcessor
-	 *<ol>
+	 * <ol>
 	 *
 	 * <li>		@Component、@PropertySource、@ComponentScan、@Import、@ImportResource、@Bean 等注解的解析    <br>
-	 * 		{@link ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)  doProcessConfigurationClass}
+	 *        {@link ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)  doProcessConfigurationClass}
 	 * </li>
 	 * <li> @Component 注解解析  <br>
-	 * 		{@link com.ling.test10.MyComponentScan}   <br>
-	 * 		{@link ConfigurationClassParser#processMemberClasses(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)  processMemberClasses}
+	 *        {@link com.ling.test10.MyComponentScan}   <br>
+	 *        {@link ConfigurationClassParser#processMemberClasses(ConfigurationClass, ConfigurationClassParser.SourceClass, Predicate)  processMemberClasses}
 	 * </li>
 	 * <li> @PropertySource 注解 @Value 注解 spel 表达式解析    <br>
-	 * 		{@link com.ling.test10.MyPropertySource}        <br>
-	 * 		{@link ConfigurationClassParser#processPropertySource(AnnotationAttributes)}
+	 *        {@link com.ling.test10.MyPropertySource}        <br>
+	 *        {@link ConfigurationClassParser#processPropertySource(AnnotationAttributes)}
 	 * </li>
 	 * <li> @Bean 注解解析 和 @Conditional 条件标签  <br>
-	 * 		{@link com.ling.test10.BeanConfig}  <br>
-	 * 		{@link ConfigurationClassParser#processConfigurationClass(ConfigurationClass, Predicate)}  <br>
+	 *        {@link com.ling.test10.BeanConfig}  <br>
+	 *        {@link ConfigurationClassParser#processConfigurationClass(ConfigurationClass, Predicate)}  <br>
 	 * 		this.conditionEvaluator.shouldSkip
 	 *
 	 * </li>
 	 * <li> 注解修饰的类解析成 BeanDefinition  <br>
-	 * 		{@link ConfigurationClassParser#parse(Set)}
-	 *     
+	 *        {@link ConfigurationClassParser#parse(Set)}
+	 *
 	 * </li>
 	 * <li> asm  <br>
 	 * <li> @Import 注解解析  todo SpringBoot 自动装配
 	 *
 	 * </li>
 	 * <li> asm   <br>
-	 * 		{@link ConfigurationClassParser#retrieveBeanMethodMetadata(ConfigurationClassParser.SourceClass)}
+	 *        {@link ConfigurationClassParser#retrieveBeanMethodMetadata(ConfigurationClassParser.SourceClass)}
 	 *
 	 * </li>
-	 *</ol>
+	 * </ol>
 	 */
 	void read10() {
 	}
@@ -293,9 +317,8 @@ public class Readme {
 	 * 		  循环依赖： {@link org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor SmartInstantiationAwareBeanPostProcessor}
 	 *     </li>
 	 * </ol>
-	 *
 	 */
-	void read11(){
+	void read11() {
 	}
 
 	/**
@@ -309,7 +332,8 @@ public class Readme {
 	 *     </li>
 	 * </ol>
 	 */
-	void read12(){}
+	void read12() {
+	}
 
 	/**
 	 * 13. Spring Bean 的创建流程一
@@ -337,7 +361,7 @@ public class Readme {
 	 *     </ul>
 	 *
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 *     RootBeanDefinition：将 beanDefinition 与父类合并（SpringMVC）   <br>
 	 *     mergedBeanDefinitions RootBeanDefinition 缓存的初始化
@@ -350,12 +374,11 @@ public class Readme {
 	 * </p>
 	 *
 	 * <p> FactoryBean
-	 *		{@link  AbstractBeanFactory#getObjectForBeanInstance(Object, String, String, RootBeanDefinition) getObjectForBeanInstance}
+	 *        {@link  AbstractBeanFactory#getObjectForBeanInstance(Object, String, String, RootBeanDefinition) getObjectForBeanInstance}
 	 * </p>
-	 *
 	 */
-	void read13(){}
-
+	void read13() {
+	}
 
 
 	/**
@@ -369,7 +392,7 @@ public class Readme {
 	 *     <li>{@link DefaultListableBeanFactory#doGetBeanNamesForType(ResolvableType, boolean, boolean)}</li>
 	 *     <li>{@link DefaultListableBeanFactory#getMergedLocalBeanDefinition(String)}</li>
 	 * </ol>
-	 *
+	 * <p>
 	 * 创建 bean 的流程：getBean -> doGetBean -> createBean -> createBean
 	 * <ol>
 	 *     <li> {@link AbstractApplicationContext#finishBeanFactoryInitialization(ConfigurableListableBeanFactory)} </li>
@@ -378,12 +401,12 @@ public class Readme {
 	 *     <li> {@link AbstractAutowireCapableBeanFactory#createBean(String, RootBeanDefinition, Object[])   } </li>
 	 *     <li> ObjectFactory.getObject 调用 doCreateBean {@link AbstractAutowireCapableBeanFactory#doCreateBean(String, RootBeanDefinition, Object[])    } </li>
 	 * </ol>
-	 *
+	 * <p>
 	 * bean 创建的四种方式
 	 *   <ol>
 	 *       <li> new、反射、 factoryMethod、supplier</li>
 	 *   </ol>
-	 *
+	 * <p>
 	 * lookup-method、replace-method ：单例引用原型
 	 *
 	 * <ol>
@@ -398,7 +421,7 @@ public class Readme {
 
 	/**
 	 * 15. Spring Bean 的创建流程三
-	 *
+	 * <p>
 	 * Spring 创建 bean 的方式：
 	 *
 	 * <ol>
@@ -406,33 +429,30 @@ public class Readme {
 	 *     	   createBean：{@link AbstractAutowireCapableBeanFactory#resolveBeforeInstantiation(String, RootBeanDefinition)}
 	 *     </li>
 	 *     <li> supplier 创建 bean   mbd.getInstanceSupplier()  <br>
-	 *     		{@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])}    <br>
-	 *     		{@link com.ling.test15.supplier.SupplierBeanFactoryPostProcessor}
+	 *            {@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])}    <br>
+	 *            {@link com.ling.test15.supplier.SupplierBeanFactoryPostProcessor}
 	 *     </li>
 	 *     <li> 工厂方法创建 bean <br>
-	 *			可能有多个 getPerson 方法，而配置文件中只配置了  getPerson,所以会有许多判断（对参数值进行解析判断），判断逻辑比较复杂 <br>
+	 * 			可能有多个 getPerson 方法，而配置文件中只配置了  getPerson,所以会有许多判断（对参数值进行解析判断），判断逻辑比较复杂 <br>
 	 *         {@link org.springframework.beans.factory.support.ConstructorResolver#instantiateUsingFactoryMethod(String, RootBeanDefinition, Object[])}
 	 *     </li>
 	 * </ol>
-	 *
-	 *
-	 *
-	 *
 	 */
-	void read15(){}
+	void read15() {
+	}
 
 	/**
 	 * 16. Spring bean 创建流程四 - 构造方法获取   <br>
-	 *
-	 *
+	 * <p>
+	 * <p>
 	 * 构造函数注入、简单初始化
 	 * <ul>
 	 * 		<li>
-	 * 			{@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])  createBeanInstance}
+	 *            {@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])  createBeanInstance}
 	 * 		</li>
 	 * </ul>
-	 *
-	 *
+	 * <p>
+	 * <p>
 	 * 反射创建对象：获取构造器（无参或有参），通过构造器实例化
 	 *
 	 * <ol>
@@ -440,12 +460,12 @@ public class Readme {
 	 *     <li>
 	 *         {@link AbstractAutowireCapableBeanFactory#autowireConstructor(String, RootBeanDefinition, Constructor[], Object[]) autowireConstructor}
 	 *     </li>
-	 *     <li> 
-	 * 			{@link ConstructorResolver#autowireConstructor(String, RootBeanDefinition, Constructor[], Object[])}
+	 *     <li>
+	 *            {@link ConstructorResolver#autowireConstructor(String, RootBeanDefinition, Constructor[], Object[])}
 	 *     </li>
 	 * </ol>
-	 *
-	 *
+	 * <p>
+	 * <p>
 	 * Autowired 在构造方法上的处理
 	 *
 	 * <ol>
@@ -461,13 +481,13 @@ public class Readme {
 	 *     <li>  @Primary  {@link  RootBeanDefinition#getPreferredConstructors() }
 	 *     </li>
 	 * </ol>
-	 *
+	 * <p>
 	 * 实例化策略
 	 * <ul>
 	 *     <li>无参、有参、工厂方法{@link SimpleInstantiationStrategy}</li>
 	 *     <li>动态代理对象无参、有参 {@link CglibSubclassingInstantiationStrategy}</li>
 	 * </ul>
-	 *
+	 * <p>
 	 * BeanWrapper 包装类：{@link BeanWrapper}
 	 * <ul>
 	 *     <li> 类型转换：TypeConverter</li>
@@ -479,7 +499,7 @@ public class Readme {
 	 * </p>
 	 * <ul>
 	 *     <li>
-	 *			{@link AbstractAutowireCapableBeanFactory#applyMergedBeanDefinitionPostProcessors }
+	 *            {@link AbstractAutowireCapableBeanFactory#applyMergedBeanDefinitionPostProcessors }
 	 *     </li>
 	 *     <li>
 	 *         {@link MergedBeanDefinitionPostProcessor}
@@ -492,11 +512,8 @@ public class Readme {
 	 *     </li>
 	 *     <li> 构建生命周期元数据： {@link InitDestroyAnnotationBeanPostProcessor#buildLifecycleMetadata(Class)}</li>
 	 * </ul>
-	 *
-	 *
-	 *
 	 */
-	void read16(){
+	void read16() {
 	}
 
 
@@ -510,7 +527,8 @@ public class Readme {
 	 *     <li>  {@link org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.AutowiredMethodElement AutowiredMethodElement }  </li>
 	 * </ul>
 	 */
-	void read17(){}
+	void read17() {
+	}
 
 
 	/**
@@ -532,11 +550,12 @@ public class Readme {
 	 *     		<li>寻找 bean 中需要依赖注入的属性： {@link AbstractAutowireCapableBeanFactory#registerDependentBean(String, String)}    registerDependentBean} </li>
 	 *     </ul>
 	 * </ol>
-	 *
+	 * <p>
 	 * 将属性应用到 bean 中：
 	 * {@link AbstractAutowireCapableBeanFactory#applyPropertyValues(String, BeanDefinition, BeanWrapper, PropertyValues) applyPropertyValues }
 	 */
-	void read18(){}
+	void read18() {
+	}
 
 	/**
 	 * 忽略三个 Aware 接口
@@ -551,7 +570,8 @@ public class Readme {
 	 *     <li>处理 Aware 接口： {@link ApplicationContextAwareProcessor#postProcessBeforeInitialization(Object, String) }  </li>
 	 * </ol>
 	 */
-	void read19(){}
+	void read19() {
+	}
 
 
 }

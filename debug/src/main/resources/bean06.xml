@@ -10,10 +10,10 @@
 		http://www.ling.com/schema/user
 	   http://www.ling.com/schema/user.xsd">
 	<!-- 自定义标签 -->
-	<!--<ling:user id="user" username="张灵" password="123456" email="2312312@qq.com"></ling:user>-->
+	<ling:user id="user" username="张灵" password="123456" email="2312312@qq.com"></ling:user>
 
 	<!-- 解析非默认命名空间标签 -->
-	<context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
+<!--	<context:property-placeholder location="classpath:db.properties"></context:property-placeholder>-->
 
 	<!--<bean id="person" class="com.ling.Person">-->
 	<!--	<lookup-method></lookup-method>-->

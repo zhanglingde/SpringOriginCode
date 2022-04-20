@@ -5,6 +5,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Spring 初始化时，初始化自己的环境变量
+ *
  * @author zhangling  2021/12/13 21:28
  */
 public class MyClassPathXmlApplicationContext extends ClassPathXmlApplicationContext {
@@ -24,6 +25,7 @@ public class MyClassPathXmlApplicationContext extends ClassPathXmlApplicationCon
 
 	/**
 	 * 设置 bean 允许被覆盖，允许循环依赖，重写方法
+	 *
 	 * @param beanFactory the newly created bean factory for this context
 	 */
 	@Override

@@ -62,6 +62,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 	 * @see java.lang.Thread#getContextClassLoader()
 	 */
 	public DefaultResourceLoader() {
+		// 默认为 AppClassLoader，加载 classpath 目录下的类
 		this.classLoader = ClassUtils.getDefaultClassLoader();
 	}
 
