@@ -19,7 +19,7 @@ public class MyClassPathXmlApplicationContext extends ClassPathXmlApplicationCon
 	protected void initPropertySources() {
 		System.out.println("扩展 initPropertySources");
 		// 自定义必须的环境变量
-		getEnvironment().setRequiredProperties("username");
+		// getEnvironment().setRequiredProperties("username");
 		getEnvironment().validateRequiredProperties();
 	}
 

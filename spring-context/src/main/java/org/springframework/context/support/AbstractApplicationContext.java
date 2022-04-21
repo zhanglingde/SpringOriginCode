@@ -654,11 +654,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
-		// 创建并获取环境对象，验证需要的属性是否已经都放入环境对象中
+		// 创建并获取环境对象，验证所有标记为必填的属性是否已经都放入环境对象中
 		getEnvironment().validateRequiredProperties();
 
-		// 创建基本监听器，事件集合对象（作扩展使用）
-		// 判断刷新前的应用程序监听器集合是否为空，如果为空，则将监听器添加到此集合中
+		// 创建基本监听器，事件集合对象（作扩展使用），判断刷新前的应用程序监听器集合是否为空，如果为空，则将监听器添加到此集合中
 		// Store pre-refresh ApplicationListeners...
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);

@@ -42,6 +42,7 @@ public class Readme {
 	 * 1. 流程概述： {@link com.ling.test01.Test}  <br>
 	 * 2. 启动流程细节    {@link Test02}			<br>
 	 *
+	 * refresh 执行前设置：
 	 * <ul>
 	 *     <li> 调用父类方法初始化资源： {@link AbstractApplicationContext#AbstractApplicationContext()} </li>
 	 *     <li> 设置配置文件路径：
@@ -50,7 +51,11 @@ public class Readme {
 	 *     <li> 设置表达式解析器：{@link AbstractApplicationContext#prepareBeanFactory(ConfigurableListableBeanFactory)} </li>
 	 * </ul>
 	 *
-	 *
+	 */
+	void readme01() {
+	}
+
+	/**
 	 * <ol>
 	 *     <li>
 	 *         refresh()：{@link AbstractApplicationContext#refresh()}
@@ -74,8 +79,7 @@ public class Readme {
 	 *     </li>
 	 * </ol>
 	 */
-	void readme01() {
-	}
+	void read02(){}
 
 	/**
 	 * 05. xml 配置文件加载过程 -> beanDefinition(一个标签解析成一个 BeanDefinition)
