@@ -412,7 +412,7 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
-		// 解析id属性
+		// 解析 id 属性
 		String id = ele.getAttribute(ID_ATTRIBUTE);
 		// 解析 name 属性
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
@@ -425,6 +425,7 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		String beanName = id;
+		// bean 标签没有 id 但 有 name(别名)，使用第一个别名为 id
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
 			if (logger.isTraceEnabled()) {
@@ -519,7 +520,7 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		try {
-			// 创建装载 bean 信息的 AbstractBeanDefinition 对象，实际实现的是 GenericBeanDefinition（有 beanName和类后，通过反射创建对象）
+			// 创建装载 bean 信息的 AbstractBeanDefinition 对象，实际实现的是 GenericBeanDefinition（有 beanName 和类后，通过反射创建对象）
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
 
 			// 解析 bean 标签的各种其他属性
@@ -1460,6 +1461,8 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * 通过命名空间  装饰 BeanDefinition 定义
+	 *
 	 * Decorate the given bean definition through a namespace handler, if applicable.
 	 * @param ele the current element
 	 * @param originalDef the current bean definition

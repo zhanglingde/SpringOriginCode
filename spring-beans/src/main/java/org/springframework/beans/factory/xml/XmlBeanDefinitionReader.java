@@ -79,11 +79,15 @@ import org.springframework.util.xml.XmlValidationModeDetector;
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	/**
+	 * 禁用验证
+	 *
 	 * Indicates that the validation should be disabled.
 	 */
 	public static final int VALIDATION_NONE = XmlValidationModeDetector.VALIDATION_NONE;
 
 	/**
+	 * 自动检测验证模式
+	 *
 	 * Indicates that the validation mode should be detected automatically.
 	 */
 	public static final int VALIDATION_AUTO = XmlValidationModeDetector.VALIDATION_AUTO;
@@ -391,7 +395,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
-			// 获取 xml 文件的 document 对象，这个解析过程是由documentLoader完成的（读取 xml配置文件，生成 docuemnt 对象）
+			// 获取 xml 文件的 document 对象，这个解析过程是由documentLoader完成的（读取 xml配置文件，生成 document 对象）
 			// 从 String[] -> String -> Resource[] -> resource;最终开始将 resource 读取成一个document文档，根据文档节点信息封装成一个个BeanDefinition 对象
 			Document doc = doLoadDocument(inputSource, resource);
 			// 标签解析
@@ -518,11 +522,13 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
-		// 对xml的beanDefinition进行解析
+		// 对 xml 的 beanDefinition 进行解析（DefaultBeanDefinitionDocumentReader ）
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
+		// 记录统计前 BeanDefinition 的加载个数
 		int countBefore = getRegistry().getBeanDefinitionCount();
 		// 完成具体的解析过程（获取 readerContext）
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
+		// 记录本次加载的 BeanDefinition 个数
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}
 

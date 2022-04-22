@@ -56,6 +56,11 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 将指定的资源位置路径解析为一个或多个匹配的资源（资源路径地址加载为 Resource）
+ *
+ * 1. 可以包含 classpath: 前缀开头的
+ * 2. 或 Ant 风格的路径（使用 Spring 的 AntPathMatcher 进行匹配）
+ *
  * A {@link ResourcePatternResolver} implementation that is able to resolve a
  * specified resource location path into one or more matching Resources.
  * The source path may be a simple path which has a one-to-one mapping to a

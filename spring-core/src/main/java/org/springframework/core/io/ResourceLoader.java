@@ -20,6 +20,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ResourceUtils;
 
 /**
+ * 用于加载 Resource 资源的策略接口（类路径或文件系统资源），需要一个 ApplicationContext 来提供这个功能
+ *
  * Strategy interface for loading resources (e.. class path or file system
  * resources). An {@link org.springframework.context.ApplicationContext}
  * is required to provide this functionality, plus extended

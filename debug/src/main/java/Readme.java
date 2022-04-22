@@ -14,6 +14,7 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.io.Resource;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.util.StringValueResolver;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostP
 import org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.context.support.AbstractRefreshableConfigApplicationContext;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
@@ -52,7 +54,7 @@ public class Readme {
 	 * </ul>
 	 *
 	 */
-	void readme01() {
+	void read01() {
 	}
 
 	/**
@@ -77,6 +79,19 @@ public class Readme {
 	 *     <li>
 	 *         初始化 documentReader，为 xml 文件解析做准备：{@link AbstractRefreshableApplicationContext#loadBeanDefinitions}
 	 *     </li>
+	 * </ol>
+	 *
+	 * 资源文件读取加载：
+	 * <ol>
+	 *     <li> 解析配置文件为 Resource： {@link org.springframework.core.io.support.PathMatchingResourcePatternResolver#getResources(String) } </li>
+	 *     <li> 将 Resource 解析为 BeanDefinition： {@link XmlBeanDefinitionReader#loadBeanDefinitions(Resource...) } </li>
+	 *     <li> 将 Resource 解析为 BeanDefinition： {@link XmlBeanDefinitionReader#doLoadBeanDefinitions(InputSource, Resource) } </li>
+	 *     <li> 获取 Document： 			{@link XmlBeanDefinitionReader#doLoadDocument(InputSource, Resource)}  <br>
+	 *     		EntityResolver 用法：{@link org.xml.sax.EntityResolver}
+	 *     </li>
+	 *     <li> 将 Document 解析为 BeanDefinition  {@link DefaultBeanDefinitionDocumentReader#doRegisterBeanDefinitions(Element)} </li>
+	 *     <li> 标签解析 {@link XmlBeanDefinitionReader#registerBeanDefinitions(Document, Resource)} </li>
+	 *     <li> 默认标签及自定义标签解析： {@link DefaultBeanDefinitionDocumentReader#parseBeanDefinitions(Element, BeanDefinitionParserDelegate)}</li>
 	 * </ol>
 	 */
 	void read02(){}
@@ -111,7 +126,7 @@ public class Readme {
 	 *     </li>
 	 * </ol>
 	 */
-	void readme05() {
+	void read05() {
 	}
 
 	/**
@@ -144,8 +159,7 @@ public class Readme {
 	 * 4. 将解析后的对象注册成 beanDefinition
 	 * {@link AbstractBeanDefinitionParser#parse}   registerBeanDefinition
 	 */
-	void read06() {
-	}
+	void read06() {}
 
 	/**
 	 * 07. BeanFactory的准备工作
@@ -175,8 +189,7 @@ public class Readme {
 	 * 一：获取该属性对应的 set 方法进行赋值
 	 * 二：获取到该属性对象 Field
 	 */
-	void red07() {
-	}
+	void red07() {}
 
 	/**
 	 * 8. BeanFactoryPostProcessor 的执行过程
@@ -217,8 +230,7 @@ public class Readme {
 	 *       <li> 用于解析 bean 定义中属性值里面的占位符 					{@link PlaceholderConfigurerSupport } </li>
 	 * </ul>
 	 */
-	void read08() {
-	}
+	void read08() {}
 
 
 	/**
