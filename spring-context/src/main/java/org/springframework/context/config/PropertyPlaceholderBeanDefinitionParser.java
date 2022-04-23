@@ -24,6 +24,8 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.util.StringUtils;
 
 /**
+ * property-placeholder 标签的元素解析器
+ *
  * Parser for the {@code <context:property-placeholder/>} element.
  *
  * @author Juergen Hoeller

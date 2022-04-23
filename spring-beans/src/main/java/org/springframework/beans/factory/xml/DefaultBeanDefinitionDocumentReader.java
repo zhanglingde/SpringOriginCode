@@ -219,18 +219,21 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * from the given resource into the bean factory.
 	 */
 	protected void importBeanDefinitionResource(Element ele) {
+		// 获取 resource 属性
 		String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
+		// 如果不存在 resource 属性不做任何处理
 		if (!StringUtils.hasText(location)) {
 			getReaderContext().error("Resource location must not be empty", ele);
 			return;
 		}
 
-		// Resolve system properties: e.g. "${user.dir}"
+		// Resolve system properties: e.g. "${user.dir}"  解析系统属性
 		location = getReaderContext().getEnvironment().resolveRequiredPlaceholders(location);
 
 		Set<Resource> actualResources = new LinkedHashSet<>(4);
 
 		// Discover whether the location is an absolute or relative URI
+		// 判断 location 是绝对 URI 还是相对 URI
 		boolean absoluteLocation = false;
 		try {
 			absoluteLocation = ResourcePatternUtils.isUrl(location) || ResourceUtils.toURI(location).isAbsolute();
@@ -241,6 +244,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 
 		// Absolute or relative?
+		// 如果是绝对 URI 则直接根据地址加载对应的配置文件
 		if (absoluteLocation) {
 			try {
 				int importCount = getReaderContext().getReader().loadBeanDefinitions(location, actualResources);
@@ -255,14 +259,17 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 		else {
 			// No URL -> considering resource location as relative to the current file.
+			// 如果是相对 URI，则根据相对地址计算出绝对地址
 			try {
 				int importCount;
+				// Resource 存在多个子类，每个子类的 createRelative 实现方式不一样，所以这里先用子类的方法尝试解析
 				Resource relativeResource = getReaderContext().getResource().createRelative(location);
 				if (relativeResource.exists()) {
 					importCount = getReaderContext().getReader().loadBeanDefinitions(relativeResource);
 					actualResources.add(relativeResource);
 				}
 				else {
+					// 如果解析不成功，则使用默认的解析器 ResourcePatternResolver 进行解析
 					String baseLocation = getReaderContext().getResource().getURL().toString();
 					importCount = getReaderContext().getReader().loadBeanDefinitions(
 							StringUtils.applyRelativePath(baseLocation, location), actualResources);
@@ -279,6 +286,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						"Failed to import bean definitions from relative location [" + location + "]", ele, ex);
 			}
 		}
+		// 解析后进行监听器激活处理
 		Resource[] actResArray = actualResources.toArray(new Resource[0]);
 		getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
 	}
@@ -330,7 +338,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						bdHolder.getBeanName() + "'", ele, ex);
 			}
 			// Send registration event.
-			// 在 beanDefinition 向 ioc 容器完成注册后，发送消息
+			// 在 beanDefinition 向 ioc 容器完成注册后，通知监听器解析及注册完成（这里实现只为扩展，当需要对注册 BeanDefinition
+			// 事件进行监听时可以通过注册监听器的方式并将处理逻辑写入监听器中，目前在 Spring 中并没有对此事件做任何逻辑处理）
 			getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
 		}
 	}

@@ -990,8 +990,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
-				// 注册前最后一个校验，不同于之前xml的文件校验，主要是对abstractBeanDefinition属性的methodOverrides校验
-				// 校验 methodOverrides 是否与工厂方法并存或者 methodoverrides 对应的方法根本不存在
+				/*
+				 * 注册前最后一个校验，不同于之前 xml 的文件校验，主要是对 AbstractBeanDefinition 属性的 methodOverrides 校验
+				 * 校验 methodOverrides 是否与工厂方法并存或者 methodOverrides 对应的方法根本不存在
+				 */
 				((AbstractBeanDefinition) beanDefinition).validate();
 			} catch (BeanDefinitionValidationException ex) {
 				throw new BeanDefinitionStoreException(beanDefinition.getResourceDescription(), beanName,

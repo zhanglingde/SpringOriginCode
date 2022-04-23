@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+		xmlns:tns="http://www.ling.com/schema/cat"
+		targetNamespace="http://www.ling.com/schema/cat"
+		elementFormDefault="qualified">
+
+	<element name="cat">
+		<complexType>
+			<!-- id 为 beanName ，必须要有-->
+			<attribute name="id" type="string"/>
+			<attribute name="name" type="string"/>
+			<attribute name="weight" type="string"/>
+		</complexType>
+	</element>
+</schema>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="person" name="person-alias" class="com.ling.test05.Person" scope="singleton" init-method="initMethod" lazy-init="false" destroy-method="destroyMethod">
 		<lookup-method></lookup-method>
@@ -9,11 +10,19 @@
 		<property name="id" value="1"></property>
 		<property name="name" value="zhang"></property>
 	</bean>
+
 	<alias name="person" alias="person-alias2"></alias>
 
+
+	<!-- 默认标签中的 自定义标签(属性)-->
 	<bean id="person2" class="com.ling.test05.Person">
 		<constructor-arg index="0" name="id" value="1"></constructor-arg>
 		<constructor-arg index="1" name="name" value="zhang"></constructor-arg>
 	</bean>
+
+	<beans>
+		<import resource="bean01.xml"></import>
+		<import resource="bean02.xml"></import>
+	</beans>
 
 </beans>

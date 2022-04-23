@@ -28,9 +28,11 @@ import org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPos
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.context.support.AbstractRefreshableConfigApplicationContext;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.context.config.ContextNamespaceHandler;
 
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
+import com.ling.test06.customtag.CatBeanDefinitionParser;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -116,34 +118,46 @@ public class Readme {
 	}
 
 	/**
-	 * 06. 自定义标签加载过程
-	 * <p>
-	 * XmlReaderContext -> namespaceHandlerResolver
-	 * 相关对象：
-	 * {@link org.springframework.context.config.PropertyPlaceholderBeanDefinitionParser}
-	 * {@link PropertySourcesPlaceholderConfigurer}
-	 * 非默认命名空间加载过程：
-	 * 1. 加载 spring.handlers 配置文件
-	 * 2. 将配置文件内容加载到 handlerMappings 集合中
-	 * 3. 根据指定的 key 获取对应的处理器（一个处理器处理一种标签）
-	 * 自定义标签解析步骤：
-	 * 1. 创建一个对应的解析器处理类（在 init 方法中添加 parser 类）
-	 * 2. 创建一个普通的 spring.handlers 配置文件，让应用程序能够完成加载工作
-	 * 3. 创建对应标签的 parser 类（对当前标签的其他属性值进行解析工作）
-	 * context 标签解析：
-	 * 1. createReaderContext(resource)：创建ReaderContext，读取 spring.handlers 命名空间的Handler
-	 * {@link XmlBeanDefinitionReader#registerBeanDefinitions}
-	 * 2. 解析导入的命名空间 <context><aop><tx> 等
-	 * {@link DefaultBeanDefinitionDocumentReader#parseBeanDefinitions}
-	 * {@link BeanDefinitionParserDelegate#parseCustomElement(Element, BeanDefinition)}
+	 * 06. 自定义标签加载过程     <br><br>
+	 *
+	 * 标签元素解析器抽象类：{@link BeanDefinitionParser}
+	 * <ul>
+	 *     <li> context 命名空间 Handler：{@link ContextNamespaceHandler } </li>
+	 *     <li> property-placeholder 标签的元素解析器：{@link org.springframework.context.config.PropertyPlaceholderBeanDefinitionParser} </li>
+	 *     <li> 自定义 cat 标签的元素解析器： 	{@link CatBeanDefinitionParser} </li>
+	 * </ul>
+	 *
+     *
+	 * context:property-placeholder 标签解析：
+	 * <ol>
+	 *     <li> 解析自定义标签： {@link DefaultBeanDefinitionDocumentReader#parseBeanDefinitions} <br>
+	 *     		{@link BeanDefinitionParserDelegate#parseCustomElement(Element)}
+	 *     </li>
+	 *     <li> createReaderContext(resource) 创建 XmlReaderContext，读取 spring.handlers 中对应命名空间的 Handler： {@link XmlBeanDefinitionReader#registerBeanDefinitions(Document, Resource)} </li>
+	 *     <li> readerContext 获取 NamespaceHandlerResolver 解析命名空间，根据命名空间获得对应命名空间标签的 Handler：{@link XmlReaderContext#getNamespaceHandlerResolver() } </li>
+	 *     <li> handle 根据标签名(property-placeholder)获得对应的解析器： {@link NamespaceHandlerSupport#parse(Element, ParserContext)}  </li>
+	 *     <li> 将标签属性值转换成对象（放入 beanDefinition）：{@link AbstractSingleBeanDefinitionParser#parseInternal}中的 doParser 方法进行解析 </li>
+	 *     <li> 将解析后的对象注册成 beanDefinition：{@link AbstractBeanDefinitionParser#parse}   registerBeanDefinition </li>
+	 * </ol>
+	 *
+	 * 			{@link org.springframework.context.config.PropertyPlaceholderBeanDefinitionParser}
+	 * 			{@link PropertySourcesPlaceholderConfigurer}
+	 *
 	 * 获取命名空间 url -> 根据命名空间找到对应的 Handler（spring.handlers）-> ContextNamespaceHandler（初始化解析器）->
 	 * 通过反射将 Handler 实例化存在 handlerMappings 中 -> Handler init 方法为每个属性值创建不同解析器（）
-	 * <ling:user> 标签需要一个 UserBeanDefinitionParser 的解析器
-	 * <ling:book> 标签需要一个 BookBeanDefinitionParser 的解析器
-	 * 3. 解析：将标签属性值转换成对象（放入 beanDefinition）
-	 * {@link AbstractSingleBeanDefinitionParser#parseInternal}中的 doParser 方法进行解析
-	 * 4. 将解析后的对象注册成 beanDefinition
-	 * {@link AbstractBeanDefinitionParser#parse}   registerBeanDefinition
+	 *
+	 * 非默认命名空间加载过程：
+	 * <ol>
+	 *     <li> 加载 spring.handlers 配置文件 </li>
+	 *     <li> 将配置文件内容加载到 handlerMappings 集合中 </li>
+	 *     <li> 根据指定的 key 获取对应的处理器（一个处理器处理一种标签） </li>
+	 * </ol>
+	 * 自定义标签解析步骤：
+	 * <ol>
+	 *     <li> 创建一个对应的解析器处理类（在 init 方法中添加 parser 类） </li>
+	 *     <li> 创建一个普通的 spring.handlers 配置文件，让应用程序能够完成加载工作 </li>
+	 *     <li> 创建对应标签的 parser 类（对当前标签的其他属性值进行解析工作） </li>
+	 * </ol>
 	 */
 	void read06() {}
 
@@ -338,7 +352,8 @@ public class Readme {
 	}
 
 	/**
-	 * 13. Spring Bean 的创建流程一
+	 * 13. Spring Bean
+	 *
 	 *
 	 * <p> 类型转换器
 	 * 		<ul>
@@ -347,6 +362,7 @@ public class Readme {
 	 * 		 	<li> {@link org.springframework.core.convert.converter.GenericConverter GenericConverter}
 	 *
 	 * 		 	</li>
+	 *
 	 * 		 	<li> {@link org.springframework.core.convert.converter.ConverterFactory ConverterFactory}
 	 *
 	 * 		 	</li>
