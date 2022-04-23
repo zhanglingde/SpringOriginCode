@@ -81,18 +81,7 @@ public class Readme {
 	 *     </li>
 	 * </ol>
 	 *
-	 * 资源文件读取加载：
-	 * <ol>
-	 *     <li> 解析配置文件为 Resource： {@link org.springframework.core.io.support.PathMatchingResourcePatternResolver#getResources(String) } </li>
-	 *     <li> 将 Resource 解析为 BeanDefinition： {@link XmlBeanDefinitionReader#loadBeanDefinitions(Resource...) } </li>
-	 *     <li> 将 Resource 解析为 BeanDefinition： {@link XmlBeanDefinitionReader#doLoadBeanDefinitions(InputSource, Resource) } </li>
-	 *     <li> 获取 Document： 			{@link XmlBeanDefinitionReader#doLoadDocument(InputSource, Resource)}  <br>
-	 *     		EntityResolver 用法：{@link org.xml.sax.EntityResolver}
-	 *     </li>
-	 *     <li> 将 Document 解析为 BeanDefinition  {@link DefaultBeanDefinitionDocumentReader#doRegisterBeanDefinitions(Element)} </li>
-	 *     <li> 标签解析 {@link XmlBeanDefinitionReader#registerBeanDefinitions(Document, Resource)} </li>
-	 *     <li> 默认标签及自定义标签解析： {@link DefaultBeanDefinitionDocumentReader#parseBeanDefinitions(Element, BeanDefinitionParserDelegate)}</li>
-	 * </ol>
+	 *
 	 */
 	void read02(){}
 
@@ -104,27 +93,24 @@ public class Readme {
 	 *     <li> ScannedGenericBeanDefinition（扫描的 Bean） </li>
 	 *     <li> AnnotatedBeanDefinition </li>
 	 * </ul>
+	 *
+	 *
+	 * 资源文件读取加载：
 	 * <ol>
-	 *     <li> 从网络加载配置文件，本地定义的文件 spring-bean/META-iNF  spring.schemas
-	 *                {@link AbstractXmlApplicationContext#loadBeanDefinitions(XmlBeanDefinitionReader)}
+	 *     <li> 解析配置文件为 Resource： {@link org.springframework.core.io.support.PathMatchingResourcePatternResolver#getResources(String) } </li>
+	 *     <li> 从网络加载配置文件，本地定义的文件 spring-bean/META-iNF  spring.schemas :{@link AbstractXmlApplicationContext#loadBeanDefinitions(XmlBeanDefinitionReader)}</li>
+	 *     <li> 将 Resource 解析为 BeanDefinition： {@link XmlBeanDefinitionReader#loadBeanDefinitions(Resource...) } </li>
+	 *     <li> 将 Resource 解析为 BeanDefinition： {@link XmlBeanDefinitionReader#doLoadBeanDefinitions(InputSource, Resource) } </li>
+	 *     <li> 获取 Document： 			{@link XmlBeanDefinitionReader#doLoadDocument(InputSource, Resource)}  <br>
+	 *     		EntityResolver 用法：{@link org.xml.sax.EntityResolver}
 	 *     </li>
-	 *     <li>
-	 *         获取配置文件路径：
-	 *     </li>
-	 *     <li>
-	 *         读取xml 配置文件，生成document对象   		{@link XmlBeanDefinitionReader#doLoadBeanDefinitions(InputSource, Resource)}
-	 *     </li>
-	 *     <li>
-	 *         解析过程								{@link DefaultBeanDefinitionDocumentReader#doRegisterBeanDefinitions(Element)}  <br>
-	 *         解析 bean标签 						{@link DefaultBeanDefinitionDocumentReader#processBeanDefinition}
-	 *     </li>
-	 *     <li>
-	 *         将xml解析成 beanDefinition 对象后，将 BeanDefinition 对象放入 BeanFactory
-	 *         beanDefinitionMap<beanName,BeanDefinition>
-	 *             beanDefinitionNames<beanName>
-	 *                 {@link BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder, BeanDefinitionRegistry)}
-	 *     </li>
+	 *     <li> 将 Document 解析为 BeanDefinition  {@link DefaultBeanDefinitionDocumentReader#doRegisterBeanDefinitions(Element)} </li>
+	 *     <li> 标签解析 {@link XmlBeanDefinitionReader#registerBeanDefinitions(Document, Resource)} </li>
+	 *     <li> 默认标签及自定义标签解析： {@link DefaultBeanDefinitionDocumentReader#parseBeanDefinitions(Element, BeanDefinitionParserDelegate)}</li>
+	 *     <li> bean 标签解析生成 BeanDefinition：{@link BeanDefinitionParserDelegate#parseBeanDefinitionElement(Element, BeanDefinition)} </li>
+	 *     <li> 注册 BeanDefinition（放入 BeanFactory）： {@link BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder, BeanDefinitionRegistry)} </li>
 	 * </ol>
+	 *
 	 */
 	void read05() {
 	}

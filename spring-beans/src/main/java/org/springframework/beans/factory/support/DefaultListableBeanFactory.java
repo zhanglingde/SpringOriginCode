@@ -1000,7 +1000,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
-		// 处理注册 已经注册的 beanName 的情况（Map 中包含了 beanName）
+		// 处理已经注册了该 beanName 的 BeanDefinition（Map 中包含了 BeanDefinition）
 		if (existingDefinition != null) {
 			// 如果对应的 beanName 已经注册且在配置中配置了 bean 不允许被覆盖，则抛出异常
 			if (!isAllowBeanDefinitionOverriding()) {

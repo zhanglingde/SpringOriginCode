@@ -3,14 +3,17 @@
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="person" class="com.ling.Person">
+	<bean id="person" name="person-alias" class="com.ling.test05.Person" scope="singleton" init-method="initMethod" lazy-init="false" destroy-method="destroyMethod">
 		<lookup-method></lookup-method>
 		<replaced-method></replaced-method>
 		<property name="id" value="1"></property>
 		<property name="name" value="zhang"></property>
 	</bean>
-	<bean id="person2" class="com.ling.Person">
+	<alias name="person" alias="person-alias2"></alias>
+
+	<bean id="person2" class="com.ling.test05.Person">
 		<constructor-arg index="0" name="id" value="1"></constructor-arg>
 		<constructor-arg index="1" name="name" value="zhang"></constructor-arg>
 	</bean>
+
 </beans>
