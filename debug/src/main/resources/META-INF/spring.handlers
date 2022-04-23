@@ -1,3 +1,4 @@
 # \u547D\u540D\u7A7A\u95F4\u5730\u5740 - Handler
 http\://www.ling.com/schema/user=com.ling.test06.selftag.UserNamespaceHandler
 http\://www.ling.com/schema/cat=com.ling.test06.customtag.AnimalNamespaceHandler
+http\://www.ling.com/schema/animal=com.ling.test06.customtag.AnimalNamespaceHandler

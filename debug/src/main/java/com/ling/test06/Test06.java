@@ -17,7 +17,7 @@ public class Test06 {
 
 		Cat cat = (Cat) ac.getBean("cat");
 		System.out.println("cat = " + cat);
-		// Dog dog = (Dog) ac.getBean("dog");
-		// System.out.println("dog = " + dog);
+		Dog dog = (Dog) ac.getBean("dog");
+		System.out.println("dog = " + dog);
 	}
 }

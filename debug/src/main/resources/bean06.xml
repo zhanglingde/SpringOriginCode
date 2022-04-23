@@ -2,7 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:context="http://www.springframework.org/schema/context"
 	   xmlns:ling="http://www.ling.com/schema/user"
-	   xmlns:animal="http://www.ling.com/schema/cat"
+	   xmlns:cat="http://www.ling.com/schema/cat"
+	   xmlns:animal="http://www.ling.com/schema/animal"
+
 
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -12,17 +14,19 @@
 	   	http://www.ling.com/schema/user
 	   	http://www.ling.com/schema/user.xsd
 	   	http://www.ling.com/schema/cat
-	   	http://www.ling.com/schema/cat.xsd">
+	   	http://www.ling.com/schema/cat.xsd
+	   	http://www.ling.com/schema/animal
+	   	http://www.ling.com/schema/animal.xsd">
 
 	<!-- xmlns 命名空间可以自定义 -->
 	<!-- 自定义标签 -->
 	<ling:user id="user" username="张灵" password="123456" email="2312312@qq.com"></ling:user>
 
-	<!-- 动物命名空间下的 cat 标签 -->
+	<!-- 动物命名空间下的 cat 标签(xsd 文件的文件名要和 targetNamespace 一致) -->
 	<animal:cat id="cat" weight="18.6" name="Tom"></animal:cat>
-	<!--<animal:dog id="dog" weight="18.6" name="Tom" color="yellow"></animal:dog>-->
+	<animal:dog id="dog" weight="18.6" name="Tom" color="yellow"></animal:dog>
 
 	<!-- 解析非默认命名空间标签，（还有 tx） -->
-		<context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
+	<context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
 
 </beans>
