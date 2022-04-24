@@ -1,7 +1,5 @@
 import com.ling.test02.Test02;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyValues;
+import org.springframework.beans.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.beans.factory.support.*;
 import org.springframework.beans.factory.xml.*;
@@ -19,7 +17,6 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 import org.springframework.context.expression.StandardBeanExpressionResolver;
-import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
 import org.springframework.context.event.EventListenerMethodProcessor;
 import org.springframework.beans.factory.support.BeanNameGenerator;
@@ -29,6 +26,7 @@ import org.springframework.core.env.PropertyResolver;
 import org.springframework.context.support.AbstractRefreshableConfigApplicationContext;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.context.config.ContextNamespaceHandler;
+import org.springframework.beans.support.ResourceEditorRegistrar;
 
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
@@ -174,7 +172,8 @@ public class Readme {
 	 * </ul>
 	 *
 	 * 2. 注册定制化解析器（扩展自定义属性编辑器 ）			<br>
-	 * {@link PropertyEditorRegistrar#registerCustomEditors}
+	 * 		{@link PropertyEditorRegistrar#registerCustomEditors}
+	 * 		{@link ResourceEditorRegistrar#registerCustomEditors(PropertyEditorRegistry)}
 	 * <ol>
 	 *     <li> 自定义一个实现 PropertyEditorRegistrar 接口的编辑器 </li>
 	 *     <li> 自定义属性编辑器的注册器，实现 PropertyEditorRegistrar 接口 </li>

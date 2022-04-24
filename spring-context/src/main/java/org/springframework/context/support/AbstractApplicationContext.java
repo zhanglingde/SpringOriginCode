@@ -532,7 +532,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
 			/**
-			 * 1. 准备工作,容器刷新前的准备工作
+			 * 1. 准备工作：准备刷新的上下文环境
 			 * 	1、设置容器的启动时间
 			 * 	2、设置活跃状态为 true
 			 * 	3、设置关闭状态为 false
@@ -543,14 +543,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Tell the subclass to refresh the internal bean factory.
 			/**
-			 * 2. 创建 beanFactory 工厂容器对象( DefaultListableBeanFactory 工厂对象)
+			 * 2. 初始化 BeanFactory（DefaultListableBeanFactory） ，并进行 XML 文件读取
 			 * 	  加载 xml 配置文件的属性值到当前工厂中，最重要的就是 BeanDefinition
 			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
 			/**
-			 * 3、初始化 beanFactory 工厂，对各种属性进行填充
+			 * 3、对 BeanFactory 各种属性功能进行填充
 			 */
 			prepareBeanFactory(beanFactory);
 
@@ -569,17 +569,17 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Register bean processors that intercept bean creation.
 				/**
-				 * 6. 准备工作
+				 * 6. 注册拦截 Bean 创建的 Bean 处理器，这里只是注册，真正调用是在 getBean 的时候
 				 * 	注册所有的 BeanPostProcessor
 				 */
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
-				// 7. 初始化消息资源（国际化 i18n）,不同语言的消息体（SpringMVC）
+				// 7. 为上下文初始化 Message 源，即不同语言的消息体（国际化 i18n）,不同语言的消息体（SpringMVC）
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
-				// 8. 初始化应用程序的广播器 监听事件（观察者模式）
+				// 8. 初始化应用消息广播器，并放入 “applicationEventMulticaster” 中 监听事件（观察者模式）
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
@@ -587,15 +587,15 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				onRefresh();
 
 				// Check for listener beans and register them.
-				// 10. 注册监听器,在所有注册的 bean 中查找 listener,bean，注册到广播器中
+				// 10. 注册监听器,在所有注册的 bean 中查找 listener,bean，注册到消息广播器中
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
-				// 11. 实例化剩下的单例对象（非懒加载的对象）（重点，Spring Bean 的创建）
+				// 11. 初始化剩下的单例对象（非懒加载的对象）（重点，Spring Bean 的创建）
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
-				// 12. 完成刷新
+				// 12. 完成刷新过程，通知生命周期处理器 lifecycleProcessor 刷新过程，同时发出 ContextRefreshEvent 通知别人
 				finishRefresh();
 			}
 
@@ -706,7 +706,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Tell the internal bean factory to use the context's class loader etc.
 		// 设置 beanFactory 的 classLoader 为当前 context 的 classLoader
 		beanFactory.setBeanClassLoader(getClassLoader());
-		// 设置 beanFactory 的表达式语言处理器
+		// 设置 beanFactory 的表达式语言处理器，Spring3 增加了表达式语言的支持（默认可以使用 #{bean.xxx} 的形式来调用相关属性值）
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
 		// 为 beanFactory 增加一个默认的 propertyEditor,这个主要是对 bean 的属性等设置管理的一个工具类
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
@@ -714,6 +714,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Configure the bean factory with context callbacks.
 		// 添加 ApplicationContextAwareProcessor(BeanPostProcessor) 用来完成某些 Aware 对象的注入
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+
 		// 设置要忽略自动装配的接口,这些接口是由容器通过 set 方式进行注入的，所以在使用 Autowire 进行注入的时候要将这些接口进行忽略
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
