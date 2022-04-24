@@ -168,28 +168,26 @@ public class Readme {
 	 * {@link AbstractApplicationContext#prepareBeanFactory}
 	 * <p>
 	 * {@link ComponentScanBeanDefinitionParser} 扫描注解注入类
-	 * 1. Spel 表达式解析类
-	 * {@link StandardBeanExpressionResolver}
-	 * 2. 注册定制化解析器（扩展自定义属性编辑器 ）
+	 *
+	 * <ul>
+	 *     <li> spel 表达式解析类：{@link StandardBeanExpressionResolver} </li>
+	 * </ul>
+	 *
+	 * 2. 注册定制化解析器（扩展自定义属性编辑器 ）			<br>
 	 * {@link PropertyEditorRegistrar#registerCustomEditors}
-	 * 1. 自定义一个实现 PropertyEditorRegistrar 接口的编辑器
-	 * 2. 自定义属性编辑器的注册器，实现 PropertyEditorRegistrar 接口
-	 * 3. 让 Spring 能够识别到对应的注册器
-	 * <p>
+	 * <ol>
+	 *     <li> 自定义一个实现 PropertyEditorRegistrar 接口的编辑器 </li>
+	 *     <li> 自定义属性编辑器的注册器，实现 PropertyEditorRegistrar 接口 </li>
+	 *     <li> 让 Spring 能够识别到对应的注册器 </li>
+	 * </ol>
+	 *
 	 * 3. 扩展定义 MyAwareProcessor
 	 * 其他忽略的 Aware（自定义的 Aware） 在 beanPostProcessor 中进行调用
 	 * BeanNameAware,BeanClassLoaderAware,BeanFactoryAware 在 invokeAwareMethods 中进行调用
 	 * {@link AbstractAutowireCapableBeanFactory#invokeAwareMethods(String, Object)}
-	 * <p>
-	 * Autowire
-	 * {@link AbstractAutowireCapableBeanFactory#populateBean}
-	 * 根据名称自动注入  autowireByName(beanName, mbd, bw, newPvs);
-	 * 根据类型自动注入  autowireByType(beanName, mbd, bw, newPvs);
-	 * 反射进行值处理时有两种方式
-	 * 一：获取该属性对应的 set 方法进行赋值
-	 * 二：获取到该属性对象 Field
+	 *
 	 */
-	void red07() {}
+	void read07() {}
 
 	/**
 	 * 8. BeanFactoryPostProcessor 的执行过程

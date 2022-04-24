@@ -67,7 +67,7 @@ final class PostProcessorRegistrationDelegate {
 		// 存储已经执行过的 BeanFactoryPostProcessor，防止重复执行
 		Set<String> processedBeans = new HashSet<>();
 
-		// 1. 实现 BeanDefinitionRegistry 类型的处理（ DefaultListableBeanFactory 为子类）
+		// 1. BeanDefinitionRegistry 类型处理（ DefaultListableBeanFactory 为子类）
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
 			// BeanDefinitionRegistryPostProcessor 是 BeanDefinitionRegistry 的子集
@@ -101,7 +101,7 @@ final class PostProcessorRegistrationDelegate {
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
 			// 先执行子类 PriorityOrdered 排序的
 			// 调用所有实现 PriorityOrdered 接口的 BeanDefinitionRegistryPostProcessor 实现类
-			// 找到所有实现 BeanDefinitiongistryPostProcessor 接口 bean 的beanName
+			// 找到所有实现 BeanDefinitionRegistryPostProcessor 接口 bean 的beanName
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			// 遍历所有符合规则的 postProcessorNames
