@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/util
+       https://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<!-- xml 方式 aop -->
+
+	<!--配置springIOC,把service类注入进来-->
+	<bean id="accountService" class="com.ling.test21.aopxml.service.impl.AccountServiceImpl"></bean>
+	<!--配置logger类-->
+	<bean id="logger" class="com.ling.test21.aopxml.utils.Logger"></bean>
+	<!--配置AOP-->
+	<aop:config>
+		<!-- 配置切面-->
+		<aop:aspect id="logAdvice" ref="logger">
+			<!--配置通知类型，并建立通知方法和切入点方法的关联-->
+			<aop:before method="printLog" pointcut="execution(public void com.ling.test21.aopxml.service.impl.AccountServiceImpl.saveAccount())"></aop:before>
+			<aop:after method="after" pointcut="execution(public void com.ling.test21.aopxml.service.impl.AccountServiceImpl.saveAccount())"></aop:after>
+		</aop:aspect>
+	</aop:config>
+
+
+	<!-- 注解方式 AOP -->
+
+	<!-- 配置spring开启注解AOP的支持 -->
+	<!--<aop:aspectj-autoproxy></aop:aspectj-autoproxy>-->
+	<!--&lt;!&ndash; @Autowired 注解注入属性，AnnotationBeanPostProcessor &ndash;&gt;-->
+	<!--<context:component-scan base-package="com.ling.test21.aopannotation"></context:component-scan>-->
+
+
+</beans>

@@ -588,6 +588,22 @@ public class Readme {
 	void read19() {
 	}
 
+	/**
+	 * Spring AOP 相关 BeanDefinition 的准备工作
+	 * <ul>
+	 *     <li> aop 标签解析：{@link org.springframework.aop.config.ConfigBeanDefinitionParser#parse(Element, ParserContext)}</li>
+	 *     <li> 解析 aspect 标签：{@link org.springframework.aop.config.ConfigBeanDefinitionParser#parseAspect(Element, ParserContext)}</li>
+	 *     <li> 解析 advice 节点并注册到 bean 工厂中：{@link org.springframework.aop.config.ConfigBeanDefinitionParser#parseAdvice(String, int, Element, Element, ParserContext, List, List)}</li>
+	 *     <li> 解析 point-cut 节点并注册到 bean 工厂中：{@link org.springframework.aop.config.ConfigBeanDefinitionParser#parsePointcut(Element, ParserContext)}</li>
+	 * </ul>
+	 */
+	void read21(){}
+
+	/**
+	 * Spring AOP Bean 的实例化
+	 */
+	void read22(){}
+
 
 }
 
