@@ -585,8 +585,7 @@ public class Readme {
 	 *     <li>处理 Aware 接口： {@link ApplicationContextAwareProcessor#postProcessBeforeInitialization(Object, String) }  </li>
 	 * </ol>
 	 */
-	void read19() {
-	}
+	void read19() {}
 
 	/**
 	 * Spring AOP 相关 BeanDefinition 的准备工作
@@ -596,6 +595,16 @@ public class Readme {
 	 *     <li> 解析 advice 节点并注册到 bean 工厂中：{@link org.springframework.aop.config.ConfigBeanDefinitionParser#parseAdvice(String, int, Element, Element, ParserContext, List, List)}</li>
 	 *     <li> 解析 point-cut 节点并注册到 bean 工厂中：{@link org.springframework.aop.config.ConfigBeanDefinitionParser#parsePointcut(Element, ParserContext)}</li>
 	 * </ul>
+	 *
+	 * AOP
+	 * <ol>
+	 *     <li> AOP 标签命名空间解析器：  	{@link org.springframework.aop.config.AopNamespaceHandler} </li>
+	 *     <li> AOP 标签命名空间解析器：  	{@link org.springframework.aop.config.AspectJAutoProxyBeanDefinitionParser#parse(Element, ParserContext)} </li>
+	 *     <li> 注册 AnnotationAwareAspectJAutoProxyCreator：  	{@link org.springframework.aop.config.AopNamespaceUtils#registerAspectJAnnotationAutoProxyCreatorIfNecessary(ParserContext, Element)} </li>
+	 *     <li> 注册 AnnotationAwareAspectJAutoProxyCreator：  	{@link org.springframework.aop.config.AopConfigUtils#registerOrEscalateApcAsRequired(Class, BeanDefinitionRegistry, Object)} </li>
+	 *     <li> AnnotationAwareAspectJAutoProxyCreator 实现 BeanPostProcessor,调用父类的 postProcessAfterInitialization 方法  	</li>
+	 *     <li> 创建 AOP 代理 ：  	{@link org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#postProcessAfterInitialization(Object, String)} </li>
+	 * </ol>
 	 */
 	void read21(){}
 
@@ -603,7 +612,6 @@ public class Readme {
 	 * Spring AOP Bean 的实例化
 	 */
 	void read22(){}
-
 
 }
 

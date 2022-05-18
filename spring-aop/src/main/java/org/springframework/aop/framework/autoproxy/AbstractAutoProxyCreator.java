@@ -83,11 +83,11 @@ import org.springframework.util.StringUtils;
  * @author Juergen Hoeller
  * @author Rod Johnson
  * @author Rob Harrop
+ * @since 13.10.2003
  * @see #setInterceptorNames
  * @see #getAdvicesAndAdvisorsForBean
  * @see BeanNameAutoProxyCreator
  * @see DefaultAdvisorAutoProxyCreator
- * @since 13.10.2003
  */
 @SuppressWarnings("serial")
 public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
@@ -305,8 +305,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	@Override
 	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {
 		if (bean != null) {
+			// 根据给定的 bean 的 class 和 name 构建出一个 key，格式：beanClassName_beanName
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
 			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
+				// 如何它适合被代理，则需要封装指定 bean
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
 		}
@@ -348,7 +350,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (StringUtils.hasLength(beanName) && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
-		// advisedBeans 缓存了已经进行了代理的 bean，如果缓存中存在，直接返回
+		// 无需增强，advisedBeans 缓存了已经进行了代理的 bean，如果缓存中存在，直接返回
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
@@ -360,9 +362,11 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			return bean;
 		}
 
+		// 如果存在增强方法则创建代理
 		// Create proxy if we have advice.
 		// 获取当前 bean 的 Advices 和 Advisors
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
+		// 如果获取到了增强则需要针对增强创建代理
 		if (specificInterceptors != DO_NOT_PROXY) {
 			// 对当前 bean 的代理状态进行缓存
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
