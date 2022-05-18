@@ -1,4 +1,6 @@
 import com.ling.test02.Test02;
+import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
+import org.springframework.aop.framework.autoproxy.BeanFactoryAdvisorRetrievalHelper;
 import org.springframework.beans.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.beans.factory.support.*;
@@ -609,7 +611,12 @@ public class Readme {
 	void read21(){}
 
 	/**
-	 * Spring AOP Bean 的实例化
+	 * Spring AOP 核心对象的创建
+	 *
+	 * <ol>
+	 *     <li> 获取 Advisor，创建 Advisor 所需要的 Bean：{@link BeanFactoryAdvisorRetrievalHelper#findAdvisorBeans()} </li>
+	 *     <li> 获取 @Aspect 标注的 bean：{@link AnnotationAwareAspectJAutoProxyCreator#findCandidateAdvisors() } </li>
+	 * </ol>
 	 */
 	void read22(){}
 
