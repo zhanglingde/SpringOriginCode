@@ -103,6 +103,8 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	}
 
 	/**
+	 * 调用 BeanFactoryAdvisorRetrievalHelper 来寻找是否有 Advisor 的 bean 定义
+	 *
 	 * Find all candidate Advisors to use in auto-proxying.
 	 * @return the List of candidate Advisors
 	 */

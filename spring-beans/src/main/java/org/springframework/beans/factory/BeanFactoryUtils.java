@@ -238,6 +238,8 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 获取给定类型的所有 bean 名称，包括父级工厂中定义的名称
+	 *
 	 * Get all bean names for the given type, including those defined in ancestor
 	 * factories. Will return unique names in case of overridden bean definitions.
 	 * <p>Does consider objects created by FactoryBeans if the "allowEagerInit"
@@ -262,12 +264,21 @@ public abstract class BeanFactoryUtils {
 			ListableBeanFactory lbf, Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
 
 		Assert.notNull(lbf, "ListableBeanFactory must not be null");
+		/**
+		 * 获取与 type（包括子类）匹配的 bean 名称
+		 * 根据 includeNonSingletons 来决定是否包含原型 + 单例还是只是单例
+		 * 根据 allowEagerInit 决定是否初始化 lazy-init 单例和由 FactoryBeans 创建的对象以进行类型检查
+		 */
 		String[] result = lbf.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
+		// HierarchicalBeanFactory 提供父容器的访问功能
 		if (lbf instanceof HierarchicalBeanFactory) {
 			HierarchicalBeanFactory hbf = (HierarchicalBeanFactory) lbf;
+			// ListableBeanFactory 扩展了 BeanFactory 使其支持迭代 Ioc 容器持有的 bean 对象。
+			// 如果 ListableBeanFactory 同时也是 HierarchicalBeanFactory，那么大多数情况下，只迭代当前 IOC 容器持有的 Bean 对象，不会在体系结构中向父级递归迭代
 			if (hbf.getParentBeanFactory() instanceof ListableBeanFactory) {
 				String[] parentResult = beanNamesForTypeIncludingAncestors(
 						(ListableBeanFactory) hbf.getParentBeanFactory(), type, includeNonSingletons, allowEagerInit);
+				// 将 result 结果与 parentResult 合并
 				result = mergeNamesWithParent(result, parentResult, hbf);
 			}
 		}
@@ -275,6 +286,8 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 返回包含注解的 beanName 的集合
+	 *
 	 * Get all bean names whose {@code Class} has the supplied {@link Annotation}
 	 * type, including those defined in ancestor factories, without creating any bean
 	 * instances yet. Will return unique names in case of overridden bean definitions.
@@ -288,12 +301,16 @@ public abstract class BeanFactoryUtils {
 			ListableBeanFactory lbf, Class<? extends Annotation> annotationType) {
 
 		Assert.notNull(lbf, "ListableBeanFactory must not be null");
+		// 根据 annotationType 返回对应的 beanName 集合
 		String[] result = lbf.getBeanNamesForAnnotation(annotationType);
 		if (lbf instanceof HierarchicalBeanFactory) {
 			HierarchicalBeanFactory hbf = (HierarchicalBeanFactory) lbf;
+			// 判断父 beanFactory 是否是　ListableBeanFactory
 			if (hbf.getParentBeanFactory() instanceof ListableBeanFactory) {
+				// 递归调用
 				String[] parentResult = beanNamesForAnnotationIncludingAncestors(
 						(ListableBeanFactory) hbf.getParentBeanFactory(), annotationType);
+				//　合并父容器中的 beanName
 				result = mergeNamesWithParent(result, parentResult, hbf);
 			}
 		}
@@ -304,6 +321,8 @@ public abstract class BeanFactoryUtils {
 	// Retrieval of bean instances
 
 	/**
+	 * 返回给定类型或给定类型子类的所有 bean，如果 beanFactory 是一个有继承关系的 beanFactory,同时获取其祖先中的 bean
+	 *
 	 * Return all beans of the given type or subtypes, also picking up beans defined in
 	 * ancestor bean factories if the current bean factory is a HierarchicalBeanFactory.
 	 * The returned Map will only contain beans of this type.
@@ -460,6 +479,8 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 返回一个单例对象通过给定的类型和子类型
+	 *
 	 * Return a single bean of the given type or subtypes, not looking in ancestor
 	 * factories. Useful convenience method when we expect a single bean and
 	 * don't care about the bean name.
@@ -518,6 +539,8 @@ public abstract class BeanFactoryUtils {
 
 
 	/**
+	 * 将给定的 bean 名结果与给定的父结果合并
+	 *
 	 * Merge the given bean names result with the given parent result.
 	 * @param result the local bean name result
 	 * @param parentResult the parent bean name result (possibly empty)
@@ -526,20 +549,26 @@ public abstract class BeanFactoryUtils {
 	 * @since 4.3.15
 	 */
 	private static String[] mergeNamesWithParent(String[] result, String[] parentResult, HierarchicalBeanFactory hbf) {
+		// 如果 parentResult 是空数组，直接返回result
 		if (parentResult.length == 0) {
 			return result;
 		}
+		// 定义一个合并后的 bean 名称结果集，初始化长度为 result 数组长度 + parentResult 数组长度
 		List<String> merged = new ArrayList<>(result.length + parentResult.length);
 		merged.addAll(Arrays.asList(result));
 		for (String beanName : parentResult) {
+			// merged 未包含 beanName && hbf 没包含给定 beanName
 			if (!merged.contains(beanName) && !hbf.containsLocalBean(beanName)) {
 				merged.add(beanName);
 			}
 		}
+		// merged 转换成数组
 		return StringUtils.toStringArray(merged);
 	}
 
 	/**
+	 * 在给定的 map 中通过给定的类型提取唯一的 bean
+	 *
 	 * Extract a unique bean for the given type from the given Map of matching beans.
 	 * @param type type of bean to match
 	 * @param matchingBeans all matching beans found

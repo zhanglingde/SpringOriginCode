@@ -43,6 +43,8 @@ public class RuntimeBeanReference implements BeanReference {
 
 
 	/**
+	 * ref 引用类型
+	 *
 	 * Create a new RuntimeBeanReference to the given bean name.
 	 * @param beanName name of the target bean
 	 */

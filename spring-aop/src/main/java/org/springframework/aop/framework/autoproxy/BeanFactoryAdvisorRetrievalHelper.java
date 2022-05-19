@@ -95,7 +95,7 @@ public class BeanFactoryAdvisorRetrievalHelper {
 				}
 				else {
 					try {
-						// 将当前 bean 添加到结果中
+						// 将当前 bean 添加到结果中（getBean 递归创建 bean 对象）
 						advisors.add(this.beanFactory.getBean(name, Advisor.class));
 					}
 					catch (BeanCreationException ex) {

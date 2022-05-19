@@ -192,7 +192,7 @@ class ConstructorResolver {
 				}
 			}
 
-			// 如果candidateList只有一个元素 且 没有传入构造函数值 且 mbd也没有构造函数参数值
+			// 如果candidateList只有一个元素 且 没有传入构造函数参数值 且 mbd也没有构造函数参数值
 			if (candidates.length == 1 && explicitArgs == null && !mbd.hasConstructorArgumentValues()) {
 				// 获取candidates中唯一的方法
 				Constructor<?> uniqueCandidate = candidates[0];

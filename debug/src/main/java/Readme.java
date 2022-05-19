@@ -29,6 +29,8 @@ import org.springframework.context.support.AbstractRefreshableConfigApplicationC
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.context.config.ContextNamespaceHandler;
 import org.springframework.beans.support.ResourceEditorRegistrar;
+import org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator;
+import org.springframework.aop.aspectj.autoproxy.AspectJAwareAdvisorAutoProxyCreator;
 
 
 import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
@@ -612,8 +614,13 @@ public class Readme {
 
 	/**
 	 * Spring AOP 核心对象的创建
+	 * Advisor 使用 构造方法创建
 	 *
 	 * <ol>
+	 *     <li> 创建 bean ：{@link AbstractAutowireCapableBeanFactory#createBean(String, RootBeanDefinition, Object[])   } </li>
+	 *     <li> 创建 bean ：{@link AbstractAutowireCapableBeanFactory#resolveBeforeInstantiation(String, RootBeanDefinition)  } </li>
+	 *     <li> 创建 bean ：{@link AbstractAutoProxyCreator#postProcessBeforeInstantiation(Class, String)  } </li>
+	 *     <li> 创建 bean ：{@link AspectJAwareAdvisorAutoProxyCreator#shouldSkip(Class, String)  } </li>
 	 *     <li> 获取 Advisor，创建 Advisor 所需要的 Bean：{@link BeanFactoryAdvisorRetrievalHelper#findAdvisorBeans()} </li>
 	 *     <li> 获取 @Aspect 标注的 bean：{@link AnnotationAwareAspectJAutoProxyCreator#findCandidateAdvisors() } </li>
 	 * </ol>
