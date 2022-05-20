@@ -624,6 +624,11 @@ public class Readme {
 	 *     <li> 获取 Advisor，创建 Advisor 所需要的 Bean：{@link BeanFactoryAdvisorRetrievalHelper#findAdvisorBeans()} </li>
 	 *     <li> 获取 @Aspect 标注的 bean：{@link AnnotationAwareAspectJAutoProxyCreator#findCandidateAdvisors() } </li>
 	 * </ol>
+	 *
+	 * 创建 AOP 代理
+	 * <ol>
+	 *     <li>创建 AOP 代理： {@link AbstractAutoProxyCreator#postProcessAfterInitialization(Object, String)  } </li>
+	 * </ol>
 	 */
 	void read22(){}
 
