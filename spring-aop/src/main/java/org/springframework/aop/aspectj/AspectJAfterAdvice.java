@@ -25,6 +25,8 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.AfterAdvice;
 
 /**
+ * 后置增强直接在拦截器链中使用了中间的 AspectJAfterAdvice
+ *
  * Spring AOP advice wrapping an AspectJ after advice method.
  *
  * @author Rod Johnson
@@ -47,6 +49,7 @@ public class AspectJAfterAdvice extends AbstractAspectJAdvice
 			return mi.proceed();
 		}
 		finally {
+			// 激活增强方法
 			invokeAdviceMethod(getJoinPointMatch(), null, null);
 		}
 	}

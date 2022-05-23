@@ -34,6 +34,8 @@ import org.springframework.lang.Nullable;
 public interface AspectInstanceFactory extends Ordered {
 
 	/**
+	 * 简单初始化 aspect
+	 *
 	 * Create an instance of this factory's aspect.
 	 * @return the aspect instance (never {@code null})
 	 */

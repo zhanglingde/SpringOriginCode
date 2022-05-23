@@ -1,5 +1,12 @@
 import com.ling.test02.Test02;
+import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.aop.TargetSource;
+import org.springframework.aop.aspectj.AspectJAfterAdvice;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
+import org.springframework.aop.aspectj.annotation.BeanFactoryAspectJAdvisorsBuilder;
+import org.springframework.aop.aspectj.annotation.MetadataAwareAspectInstanceFactory;
+import org.springframework.aop.framework.ProxyCreatorSupport;
 import org.springframework.aop.framework.autoproxy.BeanFactoryAdvisorRetrievalHelper;
 import org.springframework.beans.*;
 import org.springframework.beans.factory.config.*;
@@ -37,6 +44,7 @@ import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
 import com.ling.test06.customtag.CatBeanDefinitionParser;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -622,12 +630,28 @@ public class Readme {
 	 *     <li> 创建 bean ：{@link AbstractAutoProxyCreator#postProcessBeforeInstantiation(Class, String)  } </li>
 	 *     <li> 创建 bean ：{@link AspectJAwareAdvisorAutoProxyCreator#shouldSkip(Class, String)  } </li>
 	 *     <li> 获取 Advisor，创建 Advisor 所需要的 Bean：{@link BeanFactoryAdvisorRetrievalHelper#findAdvisorBeans()} </li>
-	 *     <li> 获取 @Aspect 标注的 bean：{@link AnnotationAwareAspectJAutoProxyCreator#findCandidateAdvisors() } </li>
 	 * </ol>
 	 *
-	 * 创建 AOP 代理
+	 * 注解方式创建 AOP 代理
+	 *
 	 * <ol>
-	 *     <li>创建 AOP 代理： {@link AbstractAutoProxyCreator#postProcessAfterInitialization(Object, String)  } </li>
+	 *     <li> bean 实例化前调用：  {@link AnnotationAwareAspectJAutoProxyCreator#postProcessAfterInitialization(Object, String)} </li>
+	 *     <li> 调用父类： {@link AbstractAutoProxyCreator#postProcessAfterInitialization(Object, String)  } </li>
+	 *     <li> 获取增强方法：{@link org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator#findEligibleAdvisors(Class, String) }  </li>
+	 *     <li> 获取所有增强(获取 @Aspect 标注的 bean)：{@link AnnotationAwareAspectJAutoProxyCreator#findCandidateAdvisors()} </li>
+	 *     <li> 获取 bean 的注解增强（获取 @Aspect 标注的 bean）：{@link BeanFactoryAspectJAdvisorsBuilder#buildAspectJAdvisors()} </li>
+	 *     <li> 增强器的获取： {@link org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory#getAdvisors(MetadataAwareAspectInstanceFactory)}</li>
+	 *     <li> 普通增强器的获取：{@link org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory#getAdvisor(Method, MetadataAwareAspectInstanceFactory, int, String)}</li>
+	 *     <li> 根据切点信息生成增强，不同注解类型封装不同的增强器：{@link org.springframework.aop.aspectj.annotation.InstantiationModelAwarePointcutAdvisorImpl#instantiateAdvice(AspectJExpressionPointcut)   }</li>
+	 *     <li> 前置处理增强器 MethodBeforeAdviceInterceptor 对应 AspectJMethodBeforeAdvice {@link org.springframework.aop.framework.adapter.MethodBeforeAdviceInterceptor#invoke(MethodInvocation)}</li>
+	 *     <li> 后置处理器增强 AspectJAfterAdvice {@link AspectJAfterAdvice#invoke(MethodInvocation)} </li>
+	 *     <li> 挑取出匹配通配符的增强器 {@link org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator#findAdvisorsThatCanApply(List, Class, String)}</li>
+	 *	   <li> 创建代理：	{@link AbstractAutoProxyCreator#createProxy(Class, String, Object[], TargetSource)  }</li>
+	 *	   <li> 封装 Advisor：{@link AbstractAutoProxyCreator#buildAdvisors(String, Object[]) }</li>
+	 *	   <li> 创建代理（AOP 或 CGLIB）： {@link ProxyCreatorSupport#createAopProxy()}  }  </li>
+	 *	   <li> Jdk 获取代理：	{@link org.springframework.aop.framework.JdkDynamicAopProxy#invoke(Object, Method, Object[])  }</li>
+	 *
+	 *     <li> 增强同步实例化增强器  {@link org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory.SyntheticInstantiationAdvisor}</li>
 	 * </ol>
 	 */
 	void read22(){}
