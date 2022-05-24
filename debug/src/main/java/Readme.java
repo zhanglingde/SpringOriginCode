@@ -608,6 +608,12 @@ public class Readme {
 	 *     <li> 解析 point-cut 节点并注册到 bean 工厂中：{@link org.springframework.aop.config.ConfigBeanDefinitionParser#parsePointcut(Element, ParserContext)}</li>
 	 * </ul>
 	 *
+	 * 代理模式
+	 * <ul>
+	 *     <li> jdk 动态代理：{@link com.ling.test21.proxy.jdk.MyInvocationHandler} </li>
+	 *     <li> cglib 代理：  {@link com.ling.test21.proxy.cglib.MyTest} </li>
+	 * </ul>
+	 *
 	 * AOP
 	 * <ol>
 	 *     <li> AOP 标签命名空间解析器：  	{@link org.springframework.aop.config.AopNamespaceHandler} </li>
