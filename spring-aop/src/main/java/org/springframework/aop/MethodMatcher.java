@@ -53,6 +53,8 @@ import java.lang.reflect.Method;
 public interface MethodMatcher {
 
 	/**
+	 * 静态匹配，在匹配条件不是太严格时使用，可以满足大部分场景的使用
+	 *
 	 * Perform static checking whether the given method matches.
 	 * <p>If this returns {@code false} or if the {@link #isRuntime()}
 	 * method returns {@code false}, no runtime check (i.e. no

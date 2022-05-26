@@ -17,6 +17,8 @@
 package org.springframework.aop;
 
 /**
+ * advisors 的超接口，用来执行一个或者多个 introductions 类型的 aop
+ *
  * Superinterface for advisors that perform one or more AOP <b>introductions</b>.
  *
  * <p>This interface cannot be implemented directly; subinterfaces must

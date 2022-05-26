@@ -662,6 +662,17 @@ public class Readme {
 	 */
 	void read22(){}
 
+	/**
+	 * xml 声明式事务
+	 *
+	 */
+	void read27(){}
+
+	/**
+	 * 注解 声明式事务
+	 */
+	void read28(){}
+
 }
 
 

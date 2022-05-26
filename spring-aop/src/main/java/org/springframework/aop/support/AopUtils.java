@@ -310,8 +310,9 @@ public abstract class AopUtils {
 		if (candidateAdvisors.isEmpty()) {
 			return candidateAdvisors;
 		}
+		// 定义匹配的增强器集合对象
 		List<Advisor> eligibleAdvisors = new ArrayList<>();
-		// 首先处理引介增强
+		// 首先处理引介增强--IntroductionAdvisor（对于一个现存的了，Introduction 可以为其增强行为，而不用修改该类的程序）
 		for (Advisor candidate : candidateAdvisors) {
 			// 真正匹配增强器在 canApply 中实现
 			if (candidate instanceof IntroductionAdvisor && canApply(candidate, clazz)) {
@@ -325,7 +326,7 @@ public abstract class AopUtils {
 				// already processed
 				continue;
 			}
-			// 普通 bean 的处理
+			// 普通 bean 的处理（真正匹配增强器在 canApply 中实现）
 			if (canApply(candidate, clazz, hasIntroductions)) {
 				eligibleAdvisors.add(candidate);
 			}
