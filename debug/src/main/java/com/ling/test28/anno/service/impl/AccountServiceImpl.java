@@ -4,6 +4,7 @@ package com.ling.test28.anno.service.impl;
 import com.ling.test28.anno.Account;
 import com.ling.test28.anno.dao.AccountDao;
 import com.ling.test28.anno.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true) //只读型事务的配置
 public class AccountServiceImpl implements AccountService {
 
+	@Autowired
 	private AccountDao accountDao;
-
-	public void setAccountDao(AccountDao accountDao) {
-		this.accountDao = accountDao;
-	}
 
 	@Override
 	public Account findAccountById(Integer accountId) {

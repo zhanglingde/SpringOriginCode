@@ -39,5 +39,8 @@ dependencies {
     compile("mysql:mysql-connector-java:5.1.48")
     implementation group: 'cglib', name: 'cglib', version: '3.3.0'
     implementation group: 'javax.annotation', name: 'jsr250-api', version: '1.0'
+    // 数据库连接池，数据库操作工具类
+    implementation group: 'c3p0', name: 'c3p0', version: '0.9.1.2'
+    implementation group: 'commons-dbutils', name: 'commons-dbutils', version: '1.7'
 
 }
