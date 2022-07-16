@@ -25,11 +25,6 @@ public class Person {
 		this.name = name;
 	}
 
-
-
-
-
-
 	public Integer getId() {
 		return id;
 	}

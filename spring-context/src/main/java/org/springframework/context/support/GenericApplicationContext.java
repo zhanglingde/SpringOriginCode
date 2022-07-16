@@ -255,7 +255,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	// Implementations of AbstractApplicationContext's template methods
 	//---------------------------------------------------------------------
 
-	/**
+	/** 使用上下文中的 beanFactory 容器
 	 * Do nothing: We hold a single internal BeanFactory and rely on callers
 	 * to register beans through our public methods (or the BeanFactory's).
 	 * @see #registerBeanDefinition

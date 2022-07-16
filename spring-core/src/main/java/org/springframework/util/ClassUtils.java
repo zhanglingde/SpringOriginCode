@@ -1054,10 +1054,13 @@ public abstract class ClassUtils {
 	 */
 	public static String getQualifiedMethodName(Method method, @Nullable Class<?> clazz) {
 		Assert.notNull(method, "Method must not be null");
+		// 如果 clazz 不为空，使用 clazz；否则使用声明 method 的类对象。然后取出类对象的全类名 . 加上方法名
 		return (clazz != null ? clazz : method.getDeclaringClass()).getName() + '.' + method.getName();
 	}
 
 	/**
+	 * 确定给定的类是否具有堵得要死给定签名的公共构造函数
+	 *
 	 * Determine whether the given class has a public constructor with the given signature.
 	 * <p>Essentially translates {@code NoSuchMethodException} to "false".
 	 * @param clazz the clazz to analyze
@@ -1066,6 +1069,7 @@ public abstract class ClassUtils {
 	 * @see Class#getConstructor
 	 */
 	public static boolean hasConstructor(Class<?> clazz, Class<?>... paramTypes) {
+		// 获取 paramTypes 的构造函数对象；不为空返回 true
 		return (getConstructorIfAvailable(clazz, paramTypes) != null);
 	}
 

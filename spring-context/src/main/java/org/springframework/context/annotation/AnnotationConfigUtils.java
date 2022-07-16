@@ -60,6 +60,8 @@ import org.springframework.util.ClassUtils;
 public abstract class AnnotationConfigUtils {
 
 	/**
+	 * 映射成 ConfigurationClassPostProcessor
+	 *
 	 * The bean name of the internally managed Configuration annotation processor.
 	 */
 	public static final String CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME =

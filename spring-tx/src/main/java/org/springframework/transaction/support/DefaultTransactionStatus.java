@@ -84,11 +84,15 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 			@Nullable Object transaction, boolean newTransaction, boolean newSynchronization,
 			boolean readOnly, boolean debug, @Nullable Object suspendedResources) {
 
+		// 新创建事务
 		this.transaction = transaction;
+		// 是否需要新事务
 		this.newTransaction = newTransaction;
+		// 是否需要新同步
 		this.newSynchronization = newSynchronization;
 		this.readOnly = readOnly;
 		this.debug = debug;
+		// 是否有挂起的连接资源
 		this.suspendedResources = suspendedResources;
 	}
 

@@ -5,6 +5,7 @@ import com.ling.test28.anno.service.AccountService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.util.Assert;
 
 public class Test28 {
 

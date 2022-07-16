@@ -301,6 +301,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				}
 			}
 			// 判断当前 BeanDefinition 是否加了 @Configuration 注解的类或其他 @Bean、@Component、@ComponentScan、@Import、@ImportSource 等注解
+			// 判断 BeanDefinition 是否是一个配置类，并为 BeanDefinition 设置属性为 lite 或 full，此属性值是为了后续调用（ @@Configuration 为 full，其他注解则为 lite）
+			// 配置类上被 @Order 注解标注，则设置 BeanDefinition 的 order 属性值
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
 				// 添加到对应的集合对象中
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));

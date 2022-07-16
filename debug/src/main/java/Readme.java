@@ -7,6 +7,7 @@ import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProx
 import org.springframework.aop.aspectj.annotation.BeanFactoryAspectJAdvisorsBuilder;
 import org.springframework.aop.aspectj.annotation.MetadataAwareAspectInstanceFactory;
 import org.springframework.aop.framework.ProxyCreatorSupport;
+import org.springframework.aop.framework.ReflectiveMethodInvocation;
 import org.springframework.aop.framework.autoproxy.BeanFactoryAdvisorRetrievalHelper;
 import org.springframework.beans.*;
 import org.springframework.beans.factory.config.*;
@@ -20,6 +21,12 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.io.Resource;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.interceptor.TransactionAttribute;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.util.StringValueResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -663,15 +670,44 @@ public class Readme {
 	void read22(){}
 
 	/**
+	 * Spring 事务对象的创建
+	 *
+	 * {@link org.springframework.aop.aspectj.AspectJProxyUtils}
+	 */
+	void read27_01(){}
+
+	/**
 	 * xml 声明式事务
 	 *
 	 */
 	void read27(){}
 
 	/**
-	 * 注解 声明式事务
+	 * 注解声明式事务
+	 *
+	 * Spring 事务默认的创建代理对象的类：{@link org.springframework.aop.framework.autoproxy.InfrastructureAdvisorAutoProxyCreator}
 	 */
 	void read28(){}
+
+	/**
+	 * 事务执行流程
+	 * <ol>
+	 *     <li> 执行事务方法 {@link  org.springframework.aop.framework.JdkDynamicAopProxy#invoke(Object, Method, Object[])  } 或 CglibAopProxy </li>
+	 *     <li> 执行拦截器链 {@link ReflectiveMethodInvocation#proceed()} </li>
+	 *     <li> 以事务方式调用目标方法 {@link org.springframework.transaction.interceptor.TransactionInterceptor#invoke(MethodInvocation) } </li>
+	 *     <li> 获取事务属性源、事务管理器等信息 {@link org.springframework.transaction.interceptor.TransactionAspectSupport#invokeWithinTransaction(Method, Class, TransactionAspectSupport.InvocationCallback)}</li>
+	 *     <li> 创建事务 TransactionInfo {@link TransactionAspectSupport#createTransactionIfNecessary(PlatformTransactionManager, TransactionAttribute, String)} </li>
+	 *     <li> 开启事务 {@link org.springframework.transaction.support.AbstractPlatformTransactionManager#startTransaction(TransactionDefinition, Object, boolean, AbstractPlatformTransactionManager.SuspendedResourcesHolder)} </li>
+	 *	   <li> 开启事务和连接,设置事务的一些属性及关闭自动提交 {@link org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin(Object, TransactionDefinition)} </li>
+	 *	   <li> 将数据源和连接持有器绑定到当前线程 {@link org.springframework.transaction.support.TransactionSynchronizationManager#bindResource(Object, Object)} </li>
+	 *	   <li> TransactionInfo 准备完毕 {@link TransactionAspectSupport#prepareTransactionInfo(PlatformTransactionManager, TransactionAttribute, String, TransactionStatus)} </li>
+	 *
+	 *	   <li> 抛异常进行回滚 {@link TransactionAspectSupport#completeTransactionAfterThrowing(TransactionAspectSupport.TransactionInfo, Throwable)} </li>
+	 *	   <li> 判断回滚规则，rollbackFor 等 {@link org.springframework.transaction.interceptor.RuleBasedTransactionAttribute#rollbackOn(Throwable)} </li>
+	 *
+	 * </ol>
+	 */
+	void read30(){}
 
 }
 
