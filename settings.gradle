@@ -40,4 +40,5 @@ rootProject.children.each {project ->
 }
 //include 'spring-debug'
 include 'debug'
+include 'debug-mvc'
 

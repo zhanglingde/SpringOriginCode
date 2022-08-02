@@ -155,6 +155,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 				parserContext.getRegistry().registerBeanDefinition(advisorBeanName, advisorDef);
 			}
 			else {
+				// Advisor#1、Advisor#2 等名称
 				advisorBeanName = parserContext.getReaderContext().registerWithGeneratedName(advisorDef);
 			}
 
@@ -184,6 +185,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 		advisorDefinition.setSource(parserContext.extractSource(advisorElement));
 
 		String adviceRef = advisorElement.getAttribute(ADVICE_REF);
+		// 一定要有 advice 属性
 		if (!StringUtils.hasText(adviceRef)) {
 			parserContext.getReaderContext().error(
 					"'advice-ref' attribute contains empty value.", advisorElement, this.parseState.snapshot());

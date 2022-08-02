@@ -9,7 +9,9 @@ import org.springframework.aop.aspectj.annotation.MetadataAwareAspectInstanceFac
 import org.springframework.aop.framework.ProxyCreatorSupport;
 import org.springframework.aop.framework.ReflectiveMethodInvocation;
 import org.springframework.aop.framework.autoproxy.BeanFactoryAdvisorRetrievalHelper;
+import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
 import org.springframework.beans.*;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.*;
 import org.springframework.beans.factory.support.*;
 import org.springframework.beans.factory.xml.*;
@@ -678,6 +680,44 @@ public class Readme {
 
 	/**
 	 * xml 声明式事务
+	 *
+	 * <ol>
+	 *     <li> 加载配置文件后解析标签：{@link DefaultBeanDefinitionDocumentReader#parseBeanDefinitions(Element, BeanDefinitionParserDelegate)} </li>
+	 *	   <li> 解析 aop:config 下的标签 {@link org.springframework.aop.config.ConfigBeanDefinitionParser#parse(Element, ParserContext)} </li>
+	 *	   <li> 解析 pointcut 切入点  {@link org.springframework.aop.config.ConfigBeanDefinitionParser#parsePointcut(Element, ParserContext)}</li>
+	 *	   <li> 创建 AspectJExpressionPointcut 切点表达式对象 {@link org.springframework.aop.config.ConfigBeanDefinitionParser#createPointcutDefinition(String)} </li>
+	 *	   <li> 解析 advisor 标签  {@link org.springframework.aop.config.ConfigBeanDefinitionParser#parseAdvisor(Element, ParserContext)}</li>
+	 *     <li> 创建 DefaultBeanFactoryPointcutAdvisor 增强器对象，设置引用属性对象 advice 和 pointcut {@link org.springframework.aop.config.ConfigBeanDefinitionParser#createAdvisorBeanDefinition(Element, ParserContext)}</li>
+	 *     <li> 解析 tx 事务标签 {@link AbstractBeanDefinitionParser#parse(Element, ParserContext)}
+	 * 				{@link AbstractSingleBeanDefinitionParser#parseInternal(Element, ParserContext)}
+	 *     </li>
+	 *     <li> getBeanClass 获取 MethodInterceptor 拦截器对象  {@link org.springframework.transaction.config.TxAdviceBeanDefinitionParser#getBeanClass(Element)} </li>
+	 *     <li> 解析 tx:attributes 标签  {@link org.springframework.transaction.config.TxAdviceBeanDefinitionParser#doParse(Element, ParserContext, BeanDefinitionBuilder)}</li>
+	 *	   <li> 解析 tx:attributes 下的标签,并创建事务属性对象(隔离级别,传播行为等),并创建 NameMatchTransactionAttributeSource 对象 {@link org.springframework.transaction.config.TxAdviceBeanDefinitionParser#parseAttributeSource(Element, ParserContext)}</li>
+	 *	   <li> 在注册 BPP 的时候创建 AspectJAwareAdvisorAutoProxyCreator 对象 {@link AbstractApplicationContext#registerBeanPostProcessors(ConfigurableListableBeanFactory)} </li>
+	 * </ol>
+	 * 通过 BeanDefinition 创建对象：Advisor -> Advice -> NameMatchTransactionAttributeSource(隔离级别，传播行为等)
+	 * <ol>
+	 *     <li> 在第一个对象创建之前，调用 BPP 中的方法创建 Advisor 对象 {@link AbstractAutoProxyCreator#postProcessBeforeInstantiation(Class, String)} </li>
+	 *	   <li> shouldSkip 进行 Advisor 对象的创建  {@link AspectJAwareAdvisorAutoProxyCreator#shouldSkip(Class, String)} </li>
+	 *	   <li> 获取 Advisor 类型的 beanName  {@link org.springframework.beans.factory.BeanFactoryUtils#beanNamesForTypeIncludingAncestors(ListableBeanFactory, Class, boolean, boolean)} </li>
+	 *	   <li> 遍历 beanDefinitoin 中的，判断是否有 Advisor 对象类型的,找到 DefaultBeanFactoryPointcutAdvisor {@link DefaultListableBeanFactory#doGetBeanNamesForType(ResolvableType, boolean, boolean)} </li>
+	 *	   <li> 获取到 Advisor 对象定义后，遍历并调用 getBean 创建 Advisor 对象，同时在属性填充时会创建 Advisor 里面的事务对象 {@link BeanFactoryAdvisorRetrievalHelper#findAdvisorBeans()} </li>
+	 *	   <li> 创建 Advisor 对象后，通过属性填充创建 Advice,Pointcut 引用对象 {@link AbstractAutowireCapableBeanFactory#populateBean(String, RootBeanDefinition, BeanWrapper)} </li>
+	 *	   <li> applyPropertyValues -> resolveValueIfNecessary 创建了 AspectJExpressionPointcut 对象和 Advisor 对象，但 advice 属性引用对象还未创建 </li>
+	 *	   <li> service.impl 包下的 accountService 对象创建时需要被动态代理创建，动态代理创建时,需要创建 Advisor(事先创建好了)aop 中切点表达式声明了该包被代理 </li>
+	 *	   <ol>
+	 *	       <li> 创建 accountService -> 属性注入创建 accountDao -> jdbcTemplate </li>
+	 *	       <li> accountService 创建完成后进行初始化， {@link AbstractAutowireCapableBeanFactory#applyBeanPostProcessorsAfterInitialization(Object, String)}</li>
+	 *	       <li> {@link AbstractAutoProxyCreator#wrapIfNecessary(Object, String, Object)}</li>
+	 *	       <li> 获取 accountService 的 advice 和 advisor {@link AbstractAutoProxyCreator#getAdvicesAndAdvisorsForBean(Class, String, TargetSource) } </li>
+	 *	       <li> advice 对象的创建 {@link AbstractBeanFactoryPointcutAdvisor#getAdvice()}</li>
+	 *		   <li> advice 对象属性填充时创建 NameMatchTransactionAttributeSource 对象 {@link AbstractAutowireCapableBeanFactory#applyPropertyValues(String, BeanDefinition, BeanWrapper, PropertyValues)}</li>
+	 *		   <li> NameMatchTransactionAttributeSource 对象进行属性填充时将配置的事务方法及定义事务属性(隔离级别,传播行为等)填充进去 </li>
+	 *	   </ol>
+	 *	   <li> 获取到 Advices 和 Advisors 后,动态代理创建 accountService {@link AbstractAutoProxyCreator#createProxy(Class, String, Object[], TargetSource)} </li>
+	 *
+	 * </ol>
 	 *
 	 */
 	void read27(){}
