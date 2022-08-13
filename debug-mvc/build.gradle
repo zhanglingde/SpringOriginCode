@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'war'
 }
 
 group 'org.springframework'
@@ -44,5 +45,8 @@ dependencies {
     // 数据库连接池，数据库操作工具类
     implementation group: 'c3p0', name: 'c3p0', version: '0.9.1.2'
     implementation group: 'commons-dbutils', name: 'commons-dbutils', version: '1.7'
+    //
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+    compileOnly group: 'javax.servlet.jsp', name: 'jsp-api', version: '2.2'
 
 }

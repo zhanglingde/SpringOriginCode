@@ -96,6 +96,8 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 
 
 	/**
+     * servletContext 中包含了配置文件的路径
+     *
 	 * Initialize the root web application context.
 	 */
 	@Override
