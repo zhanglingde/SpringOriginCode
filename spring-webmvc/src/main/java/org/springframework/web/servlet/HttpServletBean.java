@@ -153,7 +153,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 	public final void init() throws ServletException {
 
 		// Set bean properties from init parameters.
-        // 将 servlet 中配置的 init-param 参数封装到 pvs 变量中
+        // 将 servlet 中配置的 init-param 参数封装到 pvs 变量中,requiredProperties 为必须参数，如果没配置将报异常
 		PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
 		if (!pvs.isEmpty()) {
 			try {
