@@ -5,6 +5,11 @@ import org.springframework.web.servlet.HttpServletBean;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServlet;
 
 public class Readme {
 
@@ -24,7 +29,7 @@ public class Readme {
      *     <li> {@link FrameworkServlet#initWebApplicationContext()} </li>
      *     <ol>
      *         <li> 获取 Spring 的根容器 rootContext </li>
-     *         <li> 设置 webApplicationContext 并根据情况调用 onRefresh 方法 </li>
+     *         <li> 设置 webApplicationContext 并根据情况调用 onRefresh 方法（有三种方法） </li>
      *         <li> 将 webApplicationContext 设置到 ServletContext 中 </li>
      *     </ol>
      *
@@ -45,7 +50,22 @@ public class Readme {
 
 
     /**
-     *
+     * Spring 请求处理方式：
+     * <ol>
+     *     <li> Servlet 处理过程：{@link HttpServlet#service(HttpServletRequest, HttpServletResponse)}</li>
+     *     <li> FrameworkServlet 重写了除 doHead 外的所有请求处理方式：{@link FrameworkServlet#service(HttpServletRequest, HttpServletResponse)}</li>
+     *     <li> FrameworkServlet 处理请求最核心的方法：{@link FrameworkServlet#processRequest(HttpServletRequest, HttpServletResponse)}</li>
+     * </ol>
      */
     void read02(){}
+
+    /**
+     * 设计模式
+     *
+     * <ol>
+     *     <li> 模板方法：{@link FrameworkServlet#doService(HttpServletRequest, HttpServletResponse)} </li>
+     *     <li> 装饰者模式：{@link org.springframework.context.i18n.LocaleContextHolder}</li>
+     * </ol>
+     */
+    void read03(){}
 }

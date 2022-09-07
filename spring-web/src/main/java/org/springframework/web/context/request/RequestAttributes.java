@@ -19,6 +19,8 @@ package org.springframework.web.context.request;
 import org.springframework.lang.Nullable;
 
 /**
+ * 通过该类可以 get/set/removeAttribute，根据 scope 参数判断操作 request 还是 session
+ *
  * Abstraction for accessing attribute objects associated with a request.
  * Supports access to request-scoped attributes as well as to session-scoped
  * attributes, with the optional notion of a "global session".

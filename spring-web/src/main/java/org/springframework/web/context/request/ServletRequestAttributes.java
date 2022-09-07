@@ -171,7 +171,9 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 
 	@Override
 	public void setAttribute(String name, Object value, int scope) {
+		// 通过 scope 判断是对 request 还是 session 进行设置
 		if (scope == SCOPE_REQUEST) {
+			// 当调用了 ServletRequestAttributes#requestCompleted 方法后 requestActive 就会变为 false，执行之前是 true
 			if (!isRequestActive()) {
 				throw new IllegalStateException(
 						"Cannot set request attribute - request is not active anymore!");
