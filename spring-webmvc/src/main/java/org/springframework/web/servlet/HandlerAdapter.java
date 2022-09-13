@@ -50,6 +50,8 @@ import org.springframework.lang.Nullable;
 public interface HandlerAdapter {
 
 	/**
+	 * 是否可以使用某个 Handler
+	 *
 	 * Given a handler instance, return whether or not this {@code HandlerAdapter}
 	 * can support it. Typical HandlerAdapters will base the decision on the handler
 	 * type. HandlerAdapters will usually only support one handler type each.
@@ -63,6 +65,8 @@ public interface HandlerAdapter {
 	boolean supports(Object handler);
 
 	/**
+	 * 具体使用 Handler 干活
+	 *
 	 * Use the given handler to handle this request.
 	 * The workflow that is required may vary widely.
 	 * @param request current HTTP request
@@ -78,6 +82,8 @@ public interface HandlerAdapter {
 	ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception;
 
 	/**
+	 * 获取资源的最后一次修改时间
+	 *
 	 * Same contract as for HttpServlet's {@code getLastModified} method.
 	 * Can simply return -1 if there's no support in the handler class.
 	 * @param request current HTTP request

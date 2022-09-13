@@ -1,7 +1,6 @@
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.FrameworkServlet;
-import org.springframework.web.servlet.HttpServletBean;
+import org.springframework.web.servlet.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -10,6 +9,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServlet;
+
+import com.ling.test02.controller.RedirectParamController;
 
 public class Readme {
 
@@ -52,12 +53,34 @@ public class Readme {
     /**
      * Spring 请求处理方式：
      * <ol>
-     *     <li> Servlet 处理过程：{@link HttpServlet#service(HttpServletRequest, HttpServletResponse)}</li>
-     *     <li> FrameworkServlet 重写了除 doHead 外的所有请求处理方式：{@link FrameworkServlet#service(HttpServletRequest, HttpServletResponse)}</li>
-     *     <li> FrameworkServlet 处理请求最核心的方法：{@link FrameworkServlet#processRequest(HttpServletRequest, HttpServletResponse)}</li>
+     *     <li> Servlet 处理过程：{@link HttpServlet#service(HttpServletRequest, HttpServletResponse) HttpServlet#service}</li>
+     *     <li> FrameworkServlet 重写了除 doHead 外的所有请求处理方式：{@link FrameworkServlet#service(HttpServletRequest, HttpServletResponse) FrameworkServlet#service}</li>
+     *     <li> FrameworkServlet 处理请求最核心的方法：{@link FrameworkServlet#processRequest(HttpServletRequest, HttpServletResponse) processRequest}</li>
+     *     <li> DispatchServlet 执行请求的入口{@link DispatcherServlet#doService(HttpServletRequest, HttpServletResponse) doService} ：</li>
+     *     <ol>
+     *         <li> 对 request 设置一些属性，如果是 include 请求会对 request 当前的属性做快照备份，在处理结束后恢复</li>
+     *         <li> 重定向参数传递 {@link RedirectParamController}</li>
+     *     </ol>
+     *     <li> doService 会将请求转发到 doDispatch {@link DispatcherServlet#doDispatch(HttpServletRequest, HttpServletResponse) doDispatch} </li>
+     *     <ol>
+     *         <li>  根据 request 找到 Handler </li>
+     *         <li>  根据 Handler 找到对应的 HandlerAdapter </li>
+     *         <li>  用 HandlerAdapter 处理 Handler </li>
+     *         <li>  调用 processDispatchResult 方法处理上面处理之后的结果（包含找到 View 并渲染输出给用户） {@link DispatcherServlet#processDispatchResult(HttpServletRequest, HttpServletResponse, HandlerExecutionChain, ModelAndView, Exception) processDispatchResult}</li>
+     *
+     *     </ol>
      * </ol>
      */
     void read02(){}
+
+    /**
+     * Spring MVC 九大组件
+     *
+     * <ol>
+     *     <li> HandlerMapping {@link }</li>
+     * </ol>
+     */
+    void read03(){}
 
     /**
      * 设计模式
@@ -67,5 +90,5 @@ public class Readme {
      *     <li> 装饰者模式：{@link org.springframework.context.i18n.LocaleContextHolder}</li>
      * </ol>
      */
-    void read03(){}
+    void read04(){}
 }

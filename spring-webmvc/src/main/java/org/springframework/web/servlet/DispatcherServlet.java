@@ -912,6 +912,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Keep a snapshot of the request attributes in case of an include,
 		// to be able to restore the original attributes after the include.
+		// 1. 如果是 include 请求，对 request 的 Attribute 做快照备份（等 doDispatch 处理完之后（如果不是异步调用且未完成）进行还原）
 		Map<String, Object> attributesSnapshot = null;
 		if (WebUtils.isIncludeRequest(request)) {
 			attributesSnapshot = new HashMap<>();
@@ -925,6 +926,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		// Make framework objects available to handlers and view objects.
+		// 2. request 设置一些属性
 		request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, getWebApplicationContext());
 		request.setAttribute(LOCALE_RESOLVER_ATTRIBUTE, this.localeResolver);
 		request.setAttribute(THEME_RESOLVER_ATTRIBUTE, this.themeResolver);
@@ -943,6 +945,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			doDispatch(request, response);
 		}
 		finally {
+			// 3. 如果不是异步请求，且还未完成 则还原 request 快照的属性
 			if (!WebAsyncUtils.getAsyncManager(request).isConcurrentHandlingStarted()) {
 				// Restore the original attribute snapshot, in case of an include.
 				if (attributesSnapshot != null) {
@@ -998,21 +1001,28 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * @throws Exception in case of any kind of processing failure
 	 */
 	protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 实际处理时所用的 request
 		HttpServletRequest processedRequest = request;
+		// 处理请求的处理器链（包含处理器和对应的 Interceptor）
 		HandlerExecutionChain mappedHandler = null;
+		// 是否是上传请求标识，是为 true
 		boolean multipartRequestParsed = false;
 
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 
 		try {
+			// 封装 Model 和 View 的容器
 			ModelAndView mv = null;
+			// 处理请求过程中抛出的异常（不包含渲染过程抛出的异常）
 			Exception dispatchException = null;
 
 			try {
+				// 如果不是上传请求则直接使用接收到的 request,否则封装为上传请求类型 MultipartHttpServletRequest（使用了 MultipartResolver）
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
+				// 1. 根据 request 找到 Handler（使用了 HandlerMapping）
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
@@ -1020,9 +1030,11 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				// Determine handler adapter for the current request.
+				// 2. 根据 Handler 找到对应的 HandlerAdapter
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
+				// 3. 用 HandlerAdapter 处理 Handler
 				String method = request.getMethod();
 				boolean isGet = "GET".equals(method);
 				if (isGet || "HEAD".equals(method)) {
@@ -1054,6 +1066,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				// making them available for @ExceptionHandler methods and other scenarios.
 				dispatchException = new NestedServletException("Handler dispatch failed", err);
 			}
+			// 4. 调用 processDispatchResult 方法处理上面处理之后的结果（包含找到 View 并渲染输出给用户）
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
 		catch (Exception ex) {
@@ -1101,6 +1114,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		boolean errorView = false;
 
+		// 请求处理过程中有异常直接抛出异常
 		if (exception != null) {
 			if (exception instanceof ModelAndViewDefiningException) {
 				logger.debug("ModelAndViewDefiningException encountered", exception);
@@ -1108,12 +1122,14 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 			else {
 				Object handler = (mappedHandler != null ? mappedHandler.getHandler() : null);
+				// 处理异常其实就是将相应的错误设置到 view（处理异常用到了 HandlerExceptionResolver ）
 				mv = processHandlerException(request, response, handler, exception);
 				errorView = (mv != null);
 			}
 		}
 
 		// Did the handler return a view to render?
+		// 渲染页面
 		if (mv != null && !mv.wasCleared()) {
 			render(mv, request, response);
 			if (errorView) {
@@ -1126,11 +1142,13 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 
+		// 如果启动了异步处理则返回
 		if (WebAsyncUtils.getAsyncManager(request).isConcurrentHandlingStarted()) {
 			// Concurrent handling started during a forward
 			return;
 		}
 
+		// 发送请求处理完成的通知，触发 Interceptor 的 afterCompletion（Interceptor 是按反方向执行的）
 		if (mappedHandler != null) {
 			// Exception (if any) is already handled..
 			mappedHandler.triggerAfterCompletion(request, response, null);
@@ -1222,6 +1240,11 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
+	 * 根据 request 找到 Handler，包含值包含着与当前 request 相匹配的 Interceptor 和 Handler
+	 *
+	 * 执行时先依次执行 Interceptor 的 preHandle 方法，最后执行 Handler，返回的时候按相反的顺序执行 Interceptor 的 postHandle 方法。
+	 * 就好像要去一个地方，Interceptor 是要经过的收费站，Handler是目的地，去的时候和返回的时候都要经过加油站，但两次所经过的顺序是相反的
+	 *
 	 * Return the HandlerExecutionChain for this request.
 	 * <p>Tries all handler mappings in order.
 	 * @param request current HTTP request
@@ -1329,6 +1352,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
+	 * 具体渲染页面的方法
+	 *
 	 * Render the given ModelAndView.
 	 * <p>This is the last stage in handling a request. It may involve resolving the view by name.
 	 * @param mv the ModelAndView to render
@@ -1347,6 +1372,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		String viewName = mv.getViewName();
 		if (viewName != null) {
 			// We need to resolve the view name.
+			// 2. view 是 String 类型，使用 ViewResolver 得到实际的 view
 			view = resolveViewName(viewName, mv.getModelInternal(), locale, request);
 			if (view == null) {
 				throw new ServletException("Could not resolve view with name '" + mv.getViewName() +
@@ -1370,6 +1396,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			if (mv.getStatus() != null) {
 				response.setStatus(mv.getStatus().value());
 			}
+			// 3. render 方法对页面进行具体渲染，渲染过程中使用到了 ThemeResolver
 			view.render(mv.getModelInternal(), request, response);
 		}
 		catch (Exception ex) {
