@@ -42,6 +42,9 @@ import org.springframework.util.ObjectUtils;
  */
 public class CompositeRequestCondition extends AbstractRequestCondition<CompositeRequestCondition> {
 
+    /**
+     * 责任链模式：可以封装多个 RequestCondition 条件
+     */
 	private final RequestConditionHolder[] requestConditions;
 
 

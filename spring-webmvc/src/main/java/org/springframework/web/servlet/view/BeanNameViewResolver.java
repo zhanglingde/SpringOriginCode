@@ -88,6 +88,7 @@ public class BeanNameViewResolver extends WebApplicationObjectSupport implements
 			// let's accept this as a non-match and allow for chaining as well...
 			return null;
 		}
+        // 根据 viewName 从 ApplicationContext 容器中查找相应的 bean 作为 View
 		return context.getBean(viewName, View.class);
 	}
 

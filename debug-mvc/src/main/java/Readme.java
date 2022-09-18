@@ -1,6 +1,15 @@
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.*;
+import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
+import org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter;
+import org.springframework.web.servlet.handler.AbstractHandlerMapping;
+import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
+import org.springframework.web.servlet.handler.AbstractDetectingUrlHandlerMapping;
+import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
+import org.springframework.web.servlet.handler.AbstractHandlerMethodMapping;
+import org.springframework.web.servlet.mvc.condition.CompositeRequestCondition;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -11,6 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServlet;
 
 import com.ling.test02.controller.RedirectParamController;
+
+import java.lang.reflect.Method;
+import java.util.List;
 
 public class Readme {
 
@@ -45,7 +57,7 @@ public class Readme {
      *
      *
      * </ol>
-     *
+     * Spring MVC 处理请求
      */
     void read01(){}
 
@@ -74,21 +86,62 @@ public class Readme {
     void read02(){}
 
     /**
-     * Spring MVC 九大组件
+     * Spring MVC 九大组件之 HandleMapping
+     *
+     * <li> Spring 自己 HandlerMapping {@link SimpleUrlHandlerMapping}</li>
      *
      * <ol>
-     *     <li> HandlerMapping {@link }</li>
+     *     <li>AbstractHandlerMapping</li>
+     *     <ul>
+     *          <li> {@link AbstractHandlerMapping#initApplicationContext()}</li>
+     *          <li> {@link AbstractHandlerMapping#getHandler(HttpServletRequest)} ()}</li>
+     *     </ul>
+     *     <li> AbstractUrlHandlerMapping {@link AbstractUrlHandlerMapping AbstractUrlHandlerMapping }</li>
+     *     <ul>
+     *         <li> 获取 Handler 的实现  {@link AbstractUrlHandlerMapping#getHandlerInternal(HttpServletRequest)} </li>
+     *         <li> 使用 lookupPath 从 Map 中查找 Handler {@link AbstractUrlHandlerMapping#lookupHandler(String, HttpServletRequest) }</li>
+     *         <li> 注册 Handler {@link AbstractUrlHandlerMapping#registerHandler(String[], String)}</li>
+     *     </ul>
+     *     <li> 子类 SimpleUrlHandlerMapping：将配置的内容（urlMap）注册到 AbstractUrlHandlerMapping {@link SimpleUrlHandlerMapping SimpleUrlHandlerMapping}</li>
+     *     <li> 子类 AbstractDetectingUrlHandlerMapping {@link AbstractDetectingUrlHandlerMapping}</li>
+     *     <ul>
+     *         <li> BeanNameUrlHandlerMapping {@link BeanNameUrlHandlerMapping}</li>
+     *         <li> AbstractControllerUrlHandlerMapping(已移除) </li>
+     *     </ul>
+     *     <li> AbstractHandlerMethodMapping 将 Method 作为 Handler 来使用，如 @RequestMapping 注释的方法（现在使用最多的一种 Handler）{@link AbstractHandlerMethodMapping}</li>
+     *     <ul>
+     *         <li> 保存了 7 个 RequestCondition，所以可以在 @RequestMapping 中给处理器指定多种匹配方式 {@link RequestMappingInfo} </li>
+     *         <li> 该类实现了 InitializingBean接口，所以 Spring 容器会自动调用其 afterPropertiesSet 方法，后又交给 initHandlerMethods 方法完成具体的初始化 {@link AbstractHandlerMethodMapping#afterPropertiesSet()}</li>
+     *         <li> 将 Handler 保存到 map 里 {@link AbstractHandlerMethodMapping#detectHandlerMethods(Object)}</li>
+     *         <li> 获取 Method 的匹配条件 {@link AbstractHandlerMethodMapping#getMappingForMethod(Method, Class) getMappingForMethod} </li>
+     *         <li> 将找到的 HandlerMethod 注册到三个 Map 里 {@link AbstractHandlerMethodMapping#registerHandlerMethod(Object, Method, Object) registerHandlerMethod } </li>
+     *
+     *         
+     *     </ul>
      * </ol>
      */
     void read03(){}
+
+    /**
+     * Spring 自己 HandlerAdapter {@link SimpleControllerHandlerAdapter}
+     */
+    void read04(){}
 
     /**
      * 设计模式
      *
      * <ol>
      *     <li> 模板方法：{@link FrameworkServlet#doService(HttpServletRequest, HttpServletResponse)} </li>
+     *     <li> 模板方法：{@link AbstractHandlerMapping#extendInterceptors(List)}</li>
+     *     <li> 模板方法：{@link AbstractHandlerMapping#getHandlerInternal(HttpServletRequest)}</li>
+     *     <li> 模板方法：{@link AbstractUrlHandlerMapping#validateHandler(Object, HttpServletRequest) }</li>
+     *     <li> {@link AbstractDetectingUrlHandlerMapping#determineUrlsForHandler}</li>
+     *     <li> 模板方法：根据一定的规则筛选出 Handler {@link AbstractHandlerMethodMapping#isHandler(Class)} </li>
+     *     <li> 模板方法具体实现在 RequestMappingHandlerMapping {@link AbstractHandlerMethodMapping#getMappingForMethod(Method, Class)}  } </li>
+     *
      *     <li> 装饰者模式：{@link org.springframework.context.i18n.LocaleContextHolder}</li>
+     *     <li> 责任链模式：可以封装多个别的 RequestCondition 封装到自己的一个变量里 {@link CompositeRequestCondition}</li>
      * </ol>
      */
-    void read04(){}
+    void read0410(){}
 }

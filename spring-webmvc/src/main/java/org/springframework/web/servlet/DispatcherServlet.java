@@ -278,6 +278,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	/** Additional logger to use when no mapped handler is found for a request. */
 	protected static final Log pageNotFoundLogger = LogFactory.getLog(PAGE_NOT_FOUND_LOG_CATEGORY);
 
+    /**
+     * org.springframework.web.DispatcherServlet.properties 文件中定义的键值对（spring-webmvc 模块）
+     */
 	private static final Properties defaultStrategies;
 
 	static {
@@ -496,6 +499,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
+     * 初始化 9 大组件
 	 * Initialize the strategy objects that this servlet uses.
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
@@ -542,6 +546,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	private void initLocaleResolver(ApplicationContext context) {
 		try {
+            // 1、从容器中获取（SpringMvc 配置文件中配置相应类型的组件）（context 为 FrameworkServlet 创建的 WebApplicationContext）
 			this.localeResolver = context.getBean(LOCALE_RESOLVER_BEAN_NAME, LocaleResolver.class);
 			if (logger.isTraceEnabled()) {
 				logger.trace("Detected " + this.localeResolver);
@@ -552,6 +557,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 		catch (NoSuchBeanDefinitionException ex) {
 			// We need to use the default.
+            // 2、使用默认策略
 			this.localeResolver = getDefaultStrategy(context, LocaleResolver.class);
 			if (logger.isTraceEnabled()) {
 				logger.trace("No LocaleResolver '" + LOCALE_RESOLVER_BEAN_NAME +
@@ -839,11 +845,13 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * @see #getDefaultStrategies
 	 */
 	protected <T> T getDefaultStrategy(ApplicationContext context, Class<T> strategyInterface) {
+        // HandlerMapping 等组件可以有多个，返回 list
 		List<T> strategies = getDefaultStrategies(context, strategyInterface);
 		if (strategies.size() != 1) {
 			throw new BeanInitializationException(
 					"DispatcherServlet needs exactly 1 strategy for interface [" + strategyInterface.getName() + "]");
 		}
+        // 默认返回第一个
 		return strategies.get(0);
 	}
 
@@ -1283,6 +1291,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
+     * 遍历所有 Adapter，找到第一个可以处理 Handler 的 Adapter 后就停止查找并将其返回
+     *
 	 * Return the HandlerAdapter for this handler object.
 	 * @param handler the handler object to find an adapter for
 	 * @throws ServletException if no HandlerAdapter can be found for the handler. This is a fatal error.

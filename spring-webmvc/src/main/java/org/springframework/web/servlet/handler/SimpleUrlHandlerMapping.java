@@ -58,6 +58,11 @@ import org.springframework.util.CollectionUtils;
  */
 public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 
+    /**
+     * 自定义 Map 有两个作用
+     * 1、 方便配置
+     * 2、 在注册前做一些预处理，确保所有 url 都以 / 开头
+     */
 	private final Map<String, Object> urlMap = new LinkedHashMap<>();
 
 
@@ -159,6 +164,7 @@ public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 				if (handler instanceof String) {
 					handler = ((String) handler).trim();
 				}
+                // 子类调用父类方法将 配置的 urlMap 注册到 AbstractUrlHandlerMapping 的 Map 中
 				registerHandler(url, handler);
 			});
 			if (logger.isDebugEnabled()) {

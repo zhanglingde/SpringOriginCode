@@ -17,7 +17,7 @@ public class AnimalHandlerMapping implements HandlerMapping {
         String method = request.getMethod();
         if (url.startsWith("/animal")) {
             if (method.equalsIgnoreCase("GET")) {
-                return new CatHandler();
+                // return new CatHandler();
             } else if (method.equalsIgnoreCase("POST")) {
 
             }

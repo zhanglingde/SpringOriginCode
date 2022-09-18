@@ -57,6 +57,7 @@ import org.springframework.web.util.UrlPathHelper;
  */
 public final class RequestMappingInfo implements RequestCondition<RequestMappingInfo> {
 
+    // 使用 7 个变量保存了 7 个 RequestCondition，匹配时使用 7 个变量进行匹配（所以可以在 @RequestMapping 中给处理器指定多种匹配方式）
 	private static final PatternsRequestCondition EMPTY_PATTERNS = new PatternsRequestCondition();
 
 	private static final RequestMethodsRequestCondition EMPTY_REQUEST_METHODS = new RequestMethodsRequestCondition();

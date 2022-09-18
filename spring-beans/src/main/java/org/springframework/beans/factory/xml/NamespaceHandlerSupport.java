@@ -45,18 +45,24 @@ import org.springframework.lang.Nullable;
 public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 
 	/**
+     * 处理解析工作
+     *
 	 * Stores the {@link BeanDefinitionParser} implementations keyed by the
 	 * local name of the {@link Element Elements} they handle.
 	 */
 	private final Map<String, BeanDefinitionParser> parsers = new HashMap<>();
 
 	/**
+     * 处理标签类型
+     *
 	 * Stores the {@link BeanDefinitionDecorator} implementations keyed by the
 	 * local name of the {@link Element Elements} they handle.
 	 */
 	private final Map<String, BeanDefinitionDecorator> decorators = new HashMap<>();
 
 	/**
+     * 处理属性类型的装饰
+     *
 	 * Stores the {@link BeanDefinitionDecorator} implementations keyed by the local
 	 * name of the {@link Attr Attrs} they handle.
 	 */
