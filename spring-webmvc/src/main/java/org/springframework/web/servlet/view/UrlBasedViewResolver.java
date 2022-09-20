@@ -165,6 +165,8 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	}
 
 	/**
+     * 用于在设置视图时判断所设置的类型是否支持，UrlBasedViewResolver 默认返回 AbstractUrlBasedView 类型
+     *
 	 * Return the required type of view for this resolver.
 	 * This implementation returns AbstractUrlBasedView.
 	 * @see AbstractUrlBasedView
@@ -468,10 +470,12 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	protected View createView(String viewName, Locale locale) throws Exception {
 		// If this resolver is not supposed to handle the given view,
 		// return null to pass on to the next resolver in the chain.
+        // 检查是否支持此逻辑视图，可以配置支持的模板
 		if (!canHandle(viewName, locale)) {
 			return null;
 		}
 
+        // 检查是不是 redirect 视图
 		// Check for special "redirect:" prefix.
 		if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
 			String redirectUrl = viewName.substring(REDIRECT_URL_PREFIX.length());
@@ -484,6 +488,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 			return applyLifecycleMethods(REDIRECT_URL_PREFIX, view);
 		}
 
+        // 检查是不是 forward 视图
 		// Check for special "forward:" prefix.
 		if (viewName.startsWith(FORWARD_URL_PREFIX)) {
 			String forwardUrl = viewName.substring(FORWARD_URL_PREFIX.length());
@@ -491,11 +496,14 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 			return applyLifecycleMethods(FORWARD_URL_PREFIX, view);
 		}
 
+        // 如果都不是则调用父类 createView,也就会调用 loadView
 		// Else fall back to superclass implementation: calling loadView.
 		return super.createView(viewName, locale);
 	}
 
 	/**
+     * 检查是否支持传入的逻辑视图，支持返回 true
+     *
 	 * Indicates whether or not this {@link org.springframework.web.servlet.ViewResolver} can
 	 * handle the supplied view name. If not, {@link #createView(String, java.util.Locale)} will
 	 * return {@code null}. The default implementation checks against the configured
@@ -506,6 +514,8 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 * @see org.springframework.util.PatternMatchUtils#simpleMatch(String, String)
 	 */
 	protected boolean canHandle(String viewName, Locale locale) {
+        // 通过配置的 viewNames 检查，如果没有配置则可以解析所有逻辑视图，如果配置了则按配置的模式检查，配置的方法可以直接将所有可以解析的逻辑视图配置进去，也可以配置逻辑视图需要满足的模板
+        // 如 *report、 goto* 、 *from*
 		String[] viewNames = getViewNames();
 		return (viewNames == null || PatternMatchUtils.simpleMatch(viewNames, viewName));
 	}
@@ -527,8 +537,11 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 */
 	@Override
 	protected View loadView(String viewName, Locale locale) throws Exception {
+        // 创建 view
 		AbstractUrlBasedView view = buildView(viewName);
+        // 初始化 view
 		View result = applyLifecycleMethods(viewName, view);
+        // 检查 view 对应的模板是否存在，如果存在则将初始化的视图返回，否则返回 null 交给下一个 ViewResolver 处理
 		return (view.checkResource(locale) ? result : null);
 	}
 
@@ -550,10 +563,12 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 		Class<?> viewClass = getViewClass();
 		Assert.state(viewClass != null, "No view class");
 
+        // BeanUtils 反射创建 view，为 viewName 加上前缀，后缀设置为 url（前缀后缀可以在配置 ViewResovler 时设置）
 		AbstractUrlBasedView view = (AbstractUrlBasedView) BeanUtils.instantiateClass(viewClass);
 		view.setUrl(getPrefix() + viewName + getSuffix());
 		view.setAttributesMap(getAttributesMap());
 
+        // 如果 contentType 不为 null，将其值设置给 view，可以在 ViewResolver 中配置
 		String contentType = getContentType();
 		if (contentType != null) {
 			view.setContentType(contentType);
@@ -564,14 +579,19 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 			view.setRequestContextAttribute(requestContextAttribute);
 		}
 
+        // exposePathVariables 不为 null，设置给 view，它用于标示是否让 view 使用 PathVariables，可以在 ViewResolver 中配置（@PathVariables 中注释的参数）
 		Boolean exposePathVariables = getExposePathVariables();
 		if (exposePathVariables != null) {
 			view.setExposePathVariables(exposePathVariables);
 		}
+
+        // exposeContextBeansAsAttributes 不为 null，设置到 view；它用于标示是否可以让 view 使用容器中注册的 bean，可以在 ViewResolver 中配置
 		Boolean exposeContextBeansAsAttributes = getExposeContextBeansAsAttributes();
 		if (exposeContextBeansAsAttributes != null) {
 			view.setExposeContextBeansAsAttributes(exposeContextBeansAsAttributes);
 		}
+
+        // 不为 null 设置到 view 中；它用于配置 view 可以使用容器中的哪些 bean，可以在 ViewResolver 中配置
 		String[] exposedContextBeanNames = getExposedContextBeanNames();
 		if (exposedContextBeanNames != null) {
 			view.setExposedContextBeanNames(exposedContextBeanNames);

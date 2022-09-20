@@ -180,6 +180,13 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 	}
 
 
+    /**
+     * 两种方式初始化 viewResolvers
+     *
+     * 1. 手动设置（手动设置但不在 Spring 容器中，会对它进行初始化）
+     * 2. 若没有设置则自动获取 Spring 容器中除了它自己外的所有 ViewResolver 并设置到 viewResolvers 中
+     *
+     */
 	@Override
 	protected void initServletContext(ServletContext servletContext) {
 		// 获取容器中所有 ViewResolver 类型的 bean，从整个 Spring 容器中获取而不只是 SpringMVC 容器中获取

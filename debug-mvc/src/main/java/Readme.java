@@ -10,7 +10,18 @@ import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 import org.springframework.web.servlet.handler.AbstractHandlerMethodMapping;
 import org.springframework.web.servlet.mvc.condition.CompositeRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
+import org.springframework.web.servlet.handler.SimpleServletHandlerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.AbstractCachingViewResolver;
+import org.springframework.web.servlet.view.ViewResolverComposite;
+import org.springframework.web.servlet.view.BeanNameViewResolver;
+import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
+import org.springframework.web.servlet.view.ResourceBundleViewResolver;
+import org.springframework.web.servlet.view.XmlViewResolver;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.web.servlet.view.ViewResolverComposite;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -125,9 +136,39 @@ public class Readme {
     void read03(){}
 
     /**
-     * Spring 自己 HandlerAdapter {@link SimpleControllerHandlerAdapter}
+     * 处理器适配器  HandlerAdapter
+     * <ol>
+     *     <li> 适配 HttpRequestHandler {@link HttpRequestHandlerAdapter} </li>
+     *     <li> 适配 Servlet {@link SimpleServletHandlerAdapter} </li>
+     *     <li> 适配 Controller 类型的 Handler {@link SimpleControllerHandlerAdapter} </li>
+     *     <li> {@link RequestMappingHandlerAdapter} </li>
+     * </ol>
      */
     void read04(){}
+
+    /**
+     * 视图解析器 ViewResolver
+     *
+     * <ol>
+     *     <li> 根据 ViewName 从 ApplicationContext 容器中查找相应的 bean 做 View 的 {@link BeanNameViewResolver} </li>
+     *     <li> 可以存放多个 ViewResolver {@link ViewResolverComposite} </li>
+     *     <li> 增加了对 MediaType 和后缀的支持 {@link ContentNegotiatingViewResolver#initServletContext(ServletContext)} </li>
+     *     <li> 提供了缓存视图的功能 {@link AbstractCachingViewResolver} </li>
+     *     <ul>
+     *         <li> 根据 properties 配置文件来解析视图 {@link ResourceBundleViewResolver} </li>
+     *         <li> 根据 xml 配置文件来解析视图 {@link XmlViewResolver} </li>
+     *         <li> {@link UrlBasedViewResolver} </li>
+     *         <ol>
+     *             <li> {@link UrlBasedViewResolver#createView(String, Locale)} </li>
+     *             <li> 调用父类创建 view {@link UrlBasedViewResolver#loadView(String, Locale)}</li>
+     *             <li> 调用父类创建 view {@link UrlBasedViewResolver#buildView(String)}</li>
+     *         </ol>
+     *         <li> {@link org.springframework.web.servlet.view.InternalResourceViewResolver} </li>
+     *         <li> {@link org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver} </li>
+     *     </ul>
+     * </ol>
+     */
+    void read06(){}
 
     /**
      * 设计模式
@@ -142,8 +183,10 @@ public class Readme {
      *     <li> 模板方法具体实现在 RequestMappingHandlerMapping {@link AbstractHandlerMethodMapping#getMappingForMethod(Method, Class)}  } </li>
      *     <li> 子类解析视图的如入口方法 {@link AbstractCachingViewResolver#loadView(String, Locale)}</li>
      *
-     *     <li> 装饰者模式：{@link org.springframework.context.i18n.LocaleContextHolder}</li>
-     *     <li> 责任链模式：可以封装多个别的 RequestCondition 封装到自己的一个变量里 {@link CompositeRequestCondition}</li>
+     *     <li> 装饰者模式：{@link LocaleContextHolder}</li>
+     *
+     *     <li> 责任链模式：可以封装多个别的 RequestCondition 封装到自己的一个变量里（XXXComposite CompositeXXX 都是） {@link CompositeRequestCondition}</li>
+     *     <li> 视图解析器 {@link ViewResolverComposite} </li>
      * </ol>
      */
     void read0410(){}

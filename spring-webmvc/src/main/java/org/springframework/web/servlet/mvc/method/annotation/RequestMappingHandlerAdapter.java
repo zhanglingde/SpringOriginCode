@@ -754,6 +754,8 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 
 	/**
+     * 返回 true 表示不增加判断 Handler 的条件
+     *
 	 * Always return {@code true} since any method argument and return value
 	 * type will be processed in some way. A method argument not recognized
 	 * by any HandlerMethodArgumentResolver is interpreted as a request parameter
@@ -766,6 +768,11 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		return true;
 	}
 
+    /**
+     * 实际使用 Handler 处理请求
+     * @return
+     * @throws Exception
+     */
 	@Override
 	protected ModelAndView handleInternal(HttpServletRequest request,
 			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
@@ -774,6 +781,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		checkRequest(request);
 
 		// Execute invokeHandlerMethod in synchronized block if required.
+        // 2. 使用处理器处理请求
 		if (this.synchronizeOnSession) {
 			HttpSession session = request.getSession(false);
 			if (session != null) {

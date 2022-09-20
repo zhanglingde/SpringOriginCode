@@ -64,7 +64,9 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	private static final CacheFilter DEFAULT_CACHE_FILTER = (view, viewName, locale) -> true;
 
 
-	/** The maximum number of entries in the cache. */
+	/** The maximum number of entries in the cache.
+     * 最大缓存视图数量，超过了最大缓存数量，前面的缓存值将会删除，默认值为 1024；（设置为 0 时不启用缓存）
+     * */
 	private volatile int cacheLimit = DEFAULT_CACHE_LIMIT;
 
 	/** Whether we should refrain from resolving views again if unresolved once. */
@@ -73,10 +75,18 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	/** Filter function that determines if view should be cached. */
 	private CacheFilter cacheFilter = DEFAULT_CACHE_FILTER;
 
-	/** Fast access cache for Views, returning already cached instances without a global lock. */
+	/**
+     * Fast access cache for Views, returning already cached instances without a global lock.
+     *
+     * 使用细粒度锁，并发访问效率高
+     */
 	private final Map<Object, View> viewAccessCache = new ConcurrentHashMap<>(DEFAULT_CACHE_LIMIT);
 
-	/** Map from view key to View instance, synchronized for View creation. */
+	/**
+     * Map from view key to View instance, synchronized for View creation.
+     *
+     * 使用 LinkedHashMap，该 Map 中有一个 removeEldestEntry 方法，如果这个方法返回 true，Map 中最前面添加的内容将被删除，该方法在 put 或 putAll 方法调用后自动调用
+     */
 	@SuppressWarnings("serial")
 	private final Map<Object, View> viewCreationCache =
 			new LinkedHashMap<Object, View>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
