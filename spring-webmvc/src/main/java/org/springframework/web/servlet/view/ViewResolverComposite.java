@@ -35,6 +35,10 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
 /**
+ * 实现 ApplicationContextAware，表示该类可以使用 ApplicationContext
+ * 实现 ServletContextAware 表示该类可以使用 ServletContext
+ * 实现 InitializingBean 接口 调用 afterPropertiesSet
+ *
  * A {@link org.springframework.web.servlet.ViewResolver} that delegates to others.
  *
  * @author Sebastien Deleuze
@@ -44,6 +48,9 @@ import org.springframework.web.servlet.ViewResolver;
 public class ViewResolverComposite implements ViewResolver, Ordered, InitializingBean,
 		ApplicationContextAware, ServletContextAware {
 
+	/**
+	 * 责任链模式，封装多个 ViewResolver;使用时遍历
+	 */
 	private final List<ViewResolver> viewResolvers = new ArrayList<>();
 
 	private int order = Ordered.LOWEST_PRECEDENCE;
@@ -102,6 +109,9 @@ public class ViewResolverComposite implements ViewResolver, Ordered, Initializin
 		}
 	}
 
+	/**
+	 * 解析视图
+	 */
 	@Override
 	@Nullable
 	public View resolveViewName(String viewName, Locale locale) throws Exception {

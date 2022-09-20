@@ -174,6 +174,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 			return createView(viewName, locale);
 		}
 		else {
+			// 未开启缓存，检查缓存中是否存在
 			Object cacheKey = getCacheKey(viewName, locale);
 			View view = this.viewAccessCache.get(cacheKey);
 			if (view == null) {
@@ -181,6 +182,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 					view = this.viewCreationCache.get(cacheKey);
 					if (view == null) {
 						// Ask the subclass to create the View object.
+						// 没有创建一个视图
 						view = createView(viewName, locale);
 						if (view == null && this.cacheUnresolved) {
 							view = UNRESOLVED_VIEW;

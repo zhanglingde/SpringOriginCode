@@ -182,8 +182,10 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 
 	@Override
 	protected void initServletContext(ServletContext servletContext) {
+		// 获取容器中所有 ViewResolver 类型的 bean，从整个 Spring 容器中获取而不只是 SpringMVC 容器中获取
 		Collection<ViewResolver> matchingBeans =
 				BeanFactoryUtils.beansOfTypeIncludingAncestors(obtainApplicationContext(), ViewResolver.class).values();
+		// 如果没有手动注册则将容器中找到的 ViewResolver 设置到 viewResolvers 属性中
 		if (this.viewResolvers == null) {
 			this.viewResolvers = new ArrayList<>(matchingBeans.size());
 			for (ViewResolver viewResolver : matchingBeans) {
@@ -193,6 +195,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 			}
 		}
 		else {
+			// 如果是手动注册的，并且在容器中不存在，则进行初始化
 			for (int i = 0; i < this.viewResolvers.size(); i++) {
 				ViewResolver vr = this.viewResolvers.get(i);
 				if (matchingBeans.contains(vr)) {
@@ -203,6 +206,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 			}
 
 		}
+		// 按照 Order 属性进行排序
 		AnnotationAwareOrderComparator.sort(this.viewResolvers);
 		this.cnmFactoryBean.setServletContext(servletContext);
 	}
@@ -221,11 +225,15 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 	@Override
 	@Nullable
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
+		// 从 Holder 中获取 RequestAttributes，进而在下面获取 request
 		RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
 		Assert.state(attrs instanceof ServletRequestAttributes, "No current ServletRequestAttributes");
+		// 使用 request 获取 MediaType,用作需要满足的条件
 		List<MediaType> requestedMediaTypes = getMediaTypes(((ServletRequestAttributes) attrs).getRequest());
 		if (requestedMediaTypes != null) {
+			// 获取所有候选视图，内部通过遍历封装的 viewResolvers 来解析
 			List<View> candidateViews = getCandidateViews(viewName, locale, requestedMediaTypes);
+			// 从多个视图中找出最优视图
 			View bestView = getBestView(candidateViews, requestedMediaTypes, attrs);
 			if (bestView != null) {
 				return bestView;
@@ -306,11 +314,14 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		List<View> candidateViews = new ArrayList<>();
 		if (this.viewResolvers != null) {
 			Assert.state(this.contentNegotiationManager != null, "No ContentNegotiationManager set");
+			// 遍历 viewResolvers 进行视图解析，并将解析出的视图添加到候选视图 candidateViews
 			for (ViewResolver viewResolver : this.viewResolvers) {
+				// 直接使用逻辑视图进行解析
 				View view = viewResolver.resolveViewName(viewName, locale);
 				if (view != null) {
 					candidateViews.add(view);
 				}
+				// 遍历 requestedMediaTypes 获取到对应的后缀，然后添加到逻辑视图后面作为一个新的视图名进行解析
 				for (MediaType requestedMediaType : requestedMediaTypes) {
 					List<String> extensions = this.contentNegotiationManager.resolveFileExtensions(requestedMediaType);
 					for (String extension : extensions) {
@@ -323,14 +334,24 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 				}
 			}
 		}
+		// 如果有默认视图，将默认视图也添加到 候选视图
 		if (!CollectionUtils.isEmpty(this.defaultViews)) {
 			candidateViews.addAll(this.defaultViews);
 		}
 		return candidateViews;
 	}
 
+	/**
+	 * 从多个视图中找出最优视图
+	 *
+	 * @param candidateViews 候选视图
+	 * @param requestedMediaTypes
+	 * @param attrs
+	 * @return
+	 */
 	@Nullable
 	private View getBestView(List<View> candidateViews, List<MediaType> requestedMediaTypes, RequestAttributes attrs) {
+		// 判断候选视图中有没有 redirect 视图，如果有直接将其返回
 		for (View candidateView : candidateViews) {
 			if (candidateView instanceof SmartView) {
 				SmartView smartView = (SmartView) candidateView;
@@ -342,7 +363,9 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		for (MediaType mediaType : requestedMediaTypes) {
 			for (View candidateView : candidateViews) {
 				if (StringUtils.hasText(candidateView.getContentType())) {
+					// 根据候选视图获取对应的 MediaType
 					MediaType candidateContentType = MediaType.parseMediaType(candidateView.getContentType());
+					// 判断当前 MediaType 是否支持从候选视图获取对应的 MediaType，如 text/* 可以支持 text/html、text/css、text/xml 等所有 text 的类型
 					if (mediaType.isCompatibleWith(candidateContentType)) {
 						if (logger.isDebugEnabled()) {
 							logger.debug("Selected '" + mediaType + "' given " + requestedMediaTypes);

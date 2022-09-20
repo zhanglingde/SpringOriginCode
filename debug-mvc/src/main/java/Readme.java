@@ -10,6 +10,7 @@ import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 import org.springframework.web.servlet.handler.AbstractHandlerMethodMapping;
 import org.springframework.web.servlet.mvc.condition.CompositeRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.view.AbstractCachingViewResolver;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -23,6 +24,7 @@ import com.ling.test02.controller.RedirectParamController;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Locale;
 
 public class Readme {
 
@@ -138,6 +140,7 @@ public class Readme {
      *     <li> {@link AbstractDetectingUrlHandlerMapping#determineUrlsForHandler}</li>
      *     <li> 模板方法：根据一定的规则筛选出 Handler {@link AbstractHandlerMethodMapping#isHandler(Class)} </li>
      *     <li> 模板方法具体实现在 RequestMappingHandlerMapping {@link AbstractHandlerMethodMapping#getMappingForMethod(Method, Class)}  } </li>
+     *     <li> 子类解析视图的如入口方法 {@link AbstractCachingViewResolver#loadView(String, Locale)}</li>
      *
      *     <li> 装饰者模式：{@link org.springframework.context.i18n.LocaleContextHolder}</li>
      *     <li> 责任链模式：可以封装多个别的 RequestCondition 封装到自己的一个变量里 {@link CompositeRequestCondition}</li>
