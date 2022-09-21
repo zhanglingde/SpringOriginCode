@@ -92,6 +92,7 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 
 	private void parseRequest(HttpServletRequest request) {
 		try {
+            // 获取所有 Part
 			Collection<Part> parts = request.getParts();
 			this.multipartParameterNames = new LinkedHashSet<>(parts.size());
 			MultiValueMap<String, MultipartFile> files = new LinkedMultiValueMap<>(parts.size());
@@ -109,6 +110,7 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 					this.multipartParameterNames.add(part.getName());
 				}
 			}
+            // 然后使用它们创建出 File 并保存到对应的属性
 			setMultipartFiles(files);
 		}
 		catch (Throwable ex) {

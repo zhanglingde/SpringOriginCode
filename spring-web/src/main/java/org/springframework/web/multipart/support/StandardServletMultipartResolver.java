@@ -79,14 +79,21 @@ public class StandardServletMultipartResolver implements MultipartResolver {
 
 	@Override
 	public boolean isMultipart(HttpServletRequest request) {
+        // contentType 以 multipart/ 开头则认为是上传 请求
 		return StringUtils.startsWithIgnoreCase(request.getContentType(), "multipart/");
 	}
 
+
 	@Override
 	public MultipartHttpServletRequest resolveMultipart(HttpServletRequest request) throws MultipartException {
+        // 将请求封装成 StandardMultipartHttpServletRequest 并返回
 		return new StandardMultipartHttpServletRequest(request, this.resolveLazily);
 	}
 
+    /**
+     * 该方法删除了缓存
+     * @param request the request to cleanup resources for
+     */
 	@Override
 	public void cleanupMultipart(MultipartHttpServletRequest request) {
 		if (!(request instanceof AbstractMultipartHttpServletRequest) ||

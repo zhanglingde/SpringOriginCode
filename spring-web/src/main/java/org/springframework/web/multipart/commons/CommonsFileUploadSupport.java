@@ -247,12 +247,17 @@ public abstract class CommonsFileUploadSupport {
 	 * @see CommonsMultipartFile#CommonsMultipartFile(org.apache.commons.fileupload.FileItem)
 	 */
 	protected MultipartParsingResult parseFileItems(List<FileItem> fileItems, String encoding) {
+        // 保存上传的文件
 		MultiValueMap<String, MultipartFile> multipartFiles = new LinkedMultiValueMap<>();
+        // 保存参数
 		Map<String, String[]> multipartParameters = new HashMap<>();
+        // 保存参数的 ContentType
 		Map<String, String> multipartParameterContentTypes = new HashMap<>();
 
 		// Extract multipart files and multipart parameters.
+        // 将 fileItems 分为文件和参数两类，并设置到相应的 Map
 		for (FileItem fileItem : fileItems) {
+            // 参数类型
 			if (fileItem.isFormField()) {
 				String value;
 				String partEncoding = determineEncoding(fileItem.getContentType(), encoding);
@@ -269,17 +274,21 @@ public abstract class CommonsFileUploadSupport {
 				String[] curParam = multipartParameters.get(fileItem.getFieldName());
 				if (curParam == null) {
 					// simple form field
+                    // 单个参数
 					multipartParameters.put(fileItem.getFieldName(), new String[] {value});
 				}
 				else {
 					// array of simple form fields
+                    // 数组参数
 					String[] newParam = StringUtils.addStringToArray(curParam, value);
 					multipartParameters.put(fileItem.getFieldName(), newParam);
 				}
+                // 保存参数的 ContentType
 				multipartParameterContentTypes.put(fileItem.getFieldName(), fileItem.getContentType());
 			}
 			else {
 				// multipart file field
+                // 文件类型
 				CommonsMultipartFile file = createMultipartFile(fileItem);
 				multipartFiles.add(file.getName(), file);
 				LogFormatUtils.traceDebug(logger, traceOn ->
@@ -307,6 +316,8 @@ public abstract class CommonsFileUploadSupport {
 	}
 
 	/**
+     * 清理缓存
+     *
 	 * Cleanup the Spring MultipartFiles created during multipart parsing,
 	 * potentially holding temporary data on disk.
 	 * <p>Deletes the underlying Commons FileItem instances.
@@ -314,6 +325,7 @@ public abstract class CommonsFileUploadSupport {
 	 * @see org.apache.commons.fileupload.FileItem#delete()
 	 */
 	protected void cleanupFileItems(MultiValueMap<String, MultipartFile> multipartFiles) {
+        // 遍历传入的文件并将它们删除（删除的是 MultiValueMap 类型，使用两层循环来操作）
 		for (List<MultipartFile> files : multipartFiles.values()) {
 			for (MultipartFile file : files) {
 				if (file instanceof CommonsMultipartFile) {

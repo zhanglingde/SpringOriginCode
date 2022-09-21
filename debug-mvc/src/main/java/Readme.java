@@ -170,6 +170,39 @@ public class Readme {
      */
     void read06(){}
 
+    void read07(){}
+
+    /**
+     * 主题解析器 ThemeResolver
+     *
+     * <ul>
+     *     <li> {@link ThemeResolver} </li>
+     *     <li> {@link org.springframework.web.servlet.support.RequestContext#getThemeMessage(String, Object[], String)} </li>
+     *     <li> SpringMVC 默认容器是 XmlWebApplicationContext，父类是 AbstractRefreshableWebApplicationContext，这个类实现了
+     *     ThemeSource 接口，内部封装了一个 ThemeSource 属性 {@link org.springframework.web.servlet.support.RequestContextUtils#getTheme(HttpServletRequest)} </li>
+     *
+     *
+     * </ul>
+     */
+    void read08(){}
+
+    /**
+     * 文件上传解析器 MultipartResolver
+     *
+     * <ul>
+     *     <li> 使用 Servlet3.0 标准的上传方式，只需要调用 request 的 getParts 方法就可以获取所有上传的文件 {@link org.springframework.web.multipart.support.StandardServletMultipartResolver} </li>
+     *     <ul>
+     *         <li> {@link org.springframework.web.multipart.support.StandardMultipartHttpServletRequest#parseRequest(HttpServletRequest)} </li>
+     *     </ul>
+     *     <li> Apache 的 commons-fileupload 来完成具体的上传操作 {@link org.springframework.web.multipart.commons.CommonsMultipartResolver} </li>
+     *     <ul>
+     *         <li> {@link org.springframework.web.multipart.commons.CommonsMultipartResolver#resolveMultipart(HttpServletRequest)}</li>
+     *         <li> {@link org.springframework.web.multipart.commons.CommonsFileUploadSupport#parseFileItems(List, String)} </li>
+     *     </ul>
+     * </ul>
+     */
+    void read09(){}
+
     /**
      * 设计模式
      *

@@ -395,6 +395,7 @@ public class RequestContext {
 	public Theme getTheme() {
 		if (this.theme == null) {
 			// Lazily determine theme to use for this RequestContext.
+            // 获取 theme
 			this.theme = RequestContextUtils.getTheme(this.request);
 			if (this.theme == null) {
 				// No ThemeResolver and ThemeSource available -> try fallback.

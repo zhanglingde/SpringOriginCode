@@ -211,7 +211,9 @@ public abstract class RequestContextUtils {
 	 */
 	@Nullable
 	public static Theme getTheme(HttpServletRequest request) {
+        // 默认实现是 FixedThemeResolver，默认主题名叫 theme
 		ThemeResolver themeResolver = getThemeResolver(request);
+        // ThemeSource 默认使用的是 WebApplicationContext；父类是 AbstractRefreshableWebApplicationContext，该类实现了 ThemeSource 接口
 		ThemeSource themeSource = getThemeSource(request);
 		if (themeResolver != null && themeSource != null) {
 			String themeName = themeResolver.resolveThemeName(request);

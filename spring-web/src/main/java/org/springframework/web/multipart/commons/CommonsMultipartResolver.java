@@ -122,14 +122,17 @@ public class CommonsMultipartResolver extends CommonsFileUploadSupport
 
 	@Override
 	public boolean isMultipart(HttpServletRequest request) {
+        // 交给 commons-fileupload 的 ServletFileUpload 类来判断是不是上传请求
 		return ServletFileUpload.isMultipartContent(request);
 	}
 
 	@Override
 	public MultipartHttpServletRequest resolveMultipart(final HttpServletRequest request) throws MultipartException {
 		Assert.notNull(request, "Request must not be null");
+        // 将 request 转换成 DefaultMultipartHttpServletRequest
 		if (this.resolveLazily) {
 			return new DefaultMultipartHttpServletRequest(request) {
+                // 重写 initializeMultipart 方法，该方法会在调用 getMultipartFiles、getMultipartParameters 或 getMultipartParameterContentTypes 时才会被调用
 				@Override
 				protected void initializeMultipart() {
 					MultipartParsingResult parsingResult = parseRequest(request);
@@ -140,6 +143,7 @@ public class CommonsMultipartResolver extends CommonsFileUploadSupport
 			};
 		}
 		else {
+            // 使用 commons-fileupload 中的 FileUpload 组件解析出 fileItems
 			MultipartParsingResult parsingResult = parseRequest(request);
 			return new DefaultMultipartHttpServletRequest(request, parsingResult.getMultipartFiles(),
 					parsingResult.getMultipartParameters(), parsingResult.getMultipartParameterContentTypes());
@@ -147,6 +151,8 @@ public class CommonsMultipartResolver extends CommonsFileUploadSupport
 	}
 
 	/**
+     * 使用commons-fileupload中的FileUpload组件解析出fileItems
+     *
 	 * Parse the given servlet request, resolving its multipart elements.
 	 * @param request the request to parse
 	 * @return the parsing result
@@ -157,6 +163,7 @@ public class CommonsMultipartResolver extends CommonsFileUploadSupport
 		FileUpload fileUpload = prepareFileUpload(encoding);
 		try {
 			List<FileItem> fileItems = ((ServletFileUpload) fileUpload).parseRequest(request);
+            // 将 fileItems 分为参数和文件两类，并设置到三个 Map
 			return parseFileItems(fileItems, encoding);
 		}
 		catch (FileUploadBase.SizeLimitExceededException ex) {
