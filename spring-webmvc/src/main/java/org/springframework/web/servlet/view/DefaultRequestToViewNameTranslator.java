@@ -64,14 +64,19 @@ public class DefaultRequestToViewNameTranslator implements RequestToViewNameTran
 
 	private String suffix = "";
 
+    // separator 与 Slash 不同，则用于替换原来的分隔符 Slash
 	private String separator = SLASH;
 
+    // 如果最前面字符为 / 是否将其去掉
 	private boolean stripLeadingSlash = true;
 
+    // 如果最后一个字符为 / 是否将其去掉
 	private boolean stripTrailingSlash = true;
 
+    // 是否需要去掉扩展名
 	private boolean stripExtension = true;
 
+    // /处理 url 的工具类
 	private UrlPathHelper urlPathHelper = new UrlPathHelper();
 
 
@@ -168,11 +173,15 @@ public class DefaultRequestToViewNameTranslator implements RequestToViewNameTran
 	 */
 	@Override
 	public String getViewName(HttpServletRequest request) {
+        // 从 request 获取 lookupPath
 		String lookupPath = this.urlPathHelper.getLookupPathForRequest(request, HandlerMapping.LOOKUP_PATH);
+        // 使用 transformPath 方法对其进行处理后加上前缀后缀
 		return (this.prefix + transformPath(lookupPath) + this.suffix);
 	}
 
 	/**
+     * 根据配置对 lookupPath 掐头去尾换分隔符
+     *
 	 * Transform the request URI (in the context of the webapp) stripping
 	 * slashes and extensions, and replacing the separator as required.
 	 * @param lookupPath the lookup path for the current request,
