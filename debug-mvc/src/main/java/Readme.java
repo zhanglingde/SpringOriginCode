@@ -250,6 +250,23 @@ public class Readme {
     void read09(){}
 
     /**
+     * <ol>
+     *     <li> retrieveFlashMaps、getFlashMapsMutex和updateFlashMaps方法都在子类SessionFlashMapManager中实现 {@link org.springframework.web.servlet.support.AbstractFlashMapManager#saveOutputFlashMap(FlashMap, HttpServletRequest, HttpServletResponse)} </li>
+     *     <li> {@link org.springframework.web.servlet.support.SessionFlashMapManager}</li>
+     * </ol>
+     */
+    void read10(){}
+
+    /**
+     * RequestToViewNameTranslator：在 view 为空时使用它根据 reqeust 获取 viewName
+     *
+     * <ol>
+     *     <li> {@link org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator#getViewName(HttpServletRequest)} </li>
+     * </ol>
+     */
+    void read12(){}
+
+    /**
      * 设计模式
      *
      * <ol>
@@ -262,6 +279,8 @@ public class Readme {
      *     <li> 模板方法具体实现在 RequestMappingHandlerMapping {@link AbstractHandlerMethodMapping#getMappingForMethod(Method, Class)}  } </li>
      *     <li> 子类解析视图的如入口方法 {@link AbstractCachingViewResolver#loadView(String, Locale)}</li>
      *     <li> 异常解析的父类，定义了通用的解析流程（模板方法） {@link org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver} </li>
+     *     <li> {@link org.springframework.web.servlet.support.AbstractFlashMapManager#getFlashMapsMutex(HttpServletRequest)} </li>
+     *     <li> 模板方法获取 List<FlashMap> {@link org.springframework.web.servlet.support.AbstractFlashMapManager#retrieveFlashMaps(HttpServletRequest)} </li>
      *
      *     <li> 装饰者模式：{@link LocaleContextHolder}</li>
      *
