@@ -31,6 +31,9 @@ import org.springframework.web.servlet.LocaleResolver;
  */
 public abstract class AbstractLocaleResolver implements LocaleResolver {
 
+	/**
+	 * 默认 defaultLocale 属性
+	 */
 	@Nullable
 	private Locale defaultLocale;
 

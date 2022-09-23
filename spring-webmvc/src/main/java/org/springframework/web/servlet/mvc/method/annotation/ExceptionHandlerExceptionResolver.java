@@ -371,6 +371,8 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 
 
 	/**
+	 * 进行异常解析
+	 *
 	 * Find an {@code @ExceptionHandler} method and invoke it to handle the raised exception.
 	 */
 	@Override
@@ -378,6 +380,7 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 	protected ModelAndView doResolveHandlerMethodException(HttpServletRequest request,
 			HttpServletResponse response, @Nullable HandlerMethod handlerMethod, Exception exception) {
 
+		// 找到处理异常的方法
 		ServletInvocableHandlerMethod exceptionHandlerMethod = getExceptionHandlerMethod(handlerMethod, exception);
 		if (exceptionHandlerMethod == null) {
 			return null;
@@ -400,6 +403,7 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 			Throwable cause = exception.getCause();
 			if (cause != null) {
 				// Expose cause as provided argument as well
+				// 解析异常
 				exceptionHandlerMethod.invokeAndHandle(webRequest, mavContainer, exception, cause, handlerMethod);
 			}
 			else {
@@ -421,6 +425,7 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 			return new ModelAndView();
 		}
 		else {
+			// 将结果封装成 ModelAndView 返回
 			ModelMap model = mavContainer.getModel();
 			HttpStatus status = mavContainer.getStatus();
 			ModelAndView mav = new ModelAndView(mavContainer.getViewName(), model, status);
@@ -432,11 +437,14 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 				Map<String, ?> flashAttributes = ((RedirectAttributes) model).getFlashAttributes();
 				RequestContextUtils.getOutputFlashMap(request).putAll(flashAttributes);
 			}
+			// 只是返回了 ModelAndView，并没有对 response 进行设置
 			return mav;
 		}
 	}
 
 	/**
+	 * 在处理器类里找出所有注释了 @ExceptionHandler 的方法，然后再根据其配置中的异常和需要解析的异常进行匹配
+	 *
 	 * Find an {@code @ExceptionHandler} method for the given exception. The default
 	 * implementation searches methods in the class hierarchy of the controller first
 	 * and if not found, it continues searching for additional {@code @ExceptionHandler}

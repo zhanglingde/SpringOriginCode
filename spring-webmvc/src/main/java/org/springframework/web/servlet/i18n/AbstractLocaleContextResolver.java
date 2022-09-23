@@ -27,6 +27,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.LocaleContextResolver;
 
 /**
+ * 1. 添加默认时区的属性 defaultTimeZone
+ * 2. 提供 LocaleResolver 接口的默认实现，实现方法是使用 LocaleContext
+ *
  * Abstract base class for {@link LocaleContextResolver} implementations.
  * Provides support for a default locale and a default time zone.
  *
@@ -40,6 +43,9 @@ import org.springframework.web.servlet.LocaleContextResolver;
  */
 public abstract class AbstractLocaleContextResolver extends AbstractLocaleResolver implements LocaleContextResolver {
 
+	/**
+	 * 添加默认时区的属性
+	 */
 	@Nullable
 	private TimeZone defaultTimeZone;
 

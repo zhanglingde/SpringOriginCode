@@ -24,6 +24,8 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
+ * AbstractHandlerMethodExceptionResolver 相当于一个适配器，一般处理器是类的形式，HandlerMethod 是将方法作为处理器，所以需要适配。
+ *
  * Abstract base class for
  * {@link org.springframework.web.servlet.HandlerExceptionResolver HandlerExceptionResolver}
  * implementations that support handling exceptions from handlers of type {@link HandlerMethod}.
@@ -44,6 +46,7 @@ public abstract class AbstractHandlerMethodExceptionResolver extends AbstractHan
 			return super.shouldApplyTo(request, null);
 		}
 		else if (handler instanceof HandlerMethod) {
+			// handler 是方法，将处理器设置为其所在的类，然后再交给父类判断
 			HandlerMethod handlerMethod = (HandlerMethod) handler;
 			handler = handlerMethod.getBean();
 			return super.shouldApplyTo(request, handler);

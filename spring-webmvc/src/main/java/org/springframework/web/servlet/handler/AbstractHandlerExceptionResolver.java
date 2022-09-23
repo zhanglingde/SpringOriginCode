@@ -135,9 +135,10 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	@Nullable
 	public ModelAndView resolveException(
 			HttpServletRequest request, HttpServletResponse response, @Nullable Object handler, Exception ex) {
-
+		// 判断是否可以解析传入的 handler 抛出的异常，
 		if (shouldApplyTo(request, handler)) {
 			prepareResponse(ex, response);
+			// 实际异常解析（子类实现）
 			ModelAndView result = doResolveException(request, response, handler, ex);
 			if (result != null) {
 				// Print debug message when warn logger is not enabled.
@@ -150,6 +151,7 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 			return result;
 		}
 		else {
+			// 不支持，抛出异常交给下一的 ExceptionResolver
 			return null;
 		}
 	}
@@ -169,6 +171,7 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	 */
 	protected boolean shouldApplyTo(HttpServletRequest request, @Nullable Object handler) {
 		if (handler != null) {
+			// 这两个属性可以在定义的时候进行配置，用于指定可以解析处理器抛出的哪些异常
 			if (this.mappedHandlers != null && this.mappedHandlers.contains(handler)) {
 				return true;
 			}
@@ -181,10 +184,13 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 			}
 		}
 		// Else only apply if there are no explicit handler mappings.
+		// 这两个属性未配置，则可以处理所有的异常
 		return (this.mappedHandlers == null && this.mappedHandlerClasses == null);
 	}
 
 	/**
+	 * 记录日志
+	 *
 	 * Log the given exception at warn level, provided that warn logging has been
 	 * activated through the {@link #setWarnLogCategory "warnLogCategory"} property.
 	 * <p>Calls {@link #buildLogMessage} in order to determine the concrete message to log.
@@ -211,6 +217,8 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	}
 
 	/**
+	 *
+	 *
 	 * Prepare the response for the exceptional case.
 	 * <p>The default implementation prevents the response from being cached,
 	 * if the {@link #setPreventResponseCaching "preventResponseCaching"} property
@@ -220,6 +228,7 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	 * @see #preventCaching
 	 */
 	protected void prepareResponse(Exception ex, HttpServletResponse response) {
+		// 是否给 response 设置禁用缓存的属性，preventResponseCaching 默认为 false
 		if (this.preventResponseCaching) {
 			preventCaching(response);
 		}

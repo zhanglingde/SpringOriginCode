@@ -1,5 +1,6 @@
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.*;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter;
@@ -22,6 +23,19 @@ import org.springframework.web.servlet.view.XmlViewResolver;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.servlet.view.ViewResolverComposite;
+import org.springframework.web.servlet.theme.AbstractThemeResolver;
+import org.springframework.web.servlet.theme.FixedThemeResolver;
+import org.springframework.web.servlet.theme.SessionThemeResolver;
+import org.springframework.web.servlet.theme.CookieThemeResolver;
+import org.springframework.web.servlet.support.RequestContext;
+import org.springframework.web.servlet.support.RequestContextUtils;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.commons.CommonsFileUploadSupport;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
+import org.springframework.web.servlet.i18n.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -147,6 +161,19 @@ public class Readme {
     void read04(){}
 
     /**
+     * 请求异常处理 HandlerExceptionResolver
+     * <ol>
+     *     <li> 异常解析的父类，定义了通用的解析流程（模板方法） {@link org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver} </li>
+     *     <li> 对 HandlerMethod 进行适配 {@link org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver#shouldApplyTo(HttpServletRequest, Object)} </li>
+     *     <li> 进行异常解析 {@link org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver#doResolveHandlerMethodException(HttpServletRequest, HttpServletResponse, HandlerMethod, Exception)} </li>
+     *     <li> 根据异常类型的不同，使用不同的方法进行处理 {@link org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver} </li>
+     *     <li> 用来解析注释了 @ResponseStatus 的异常{@link org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver} </li>
+     *     <li> 需要提前配置异常类和 view 的对应关系{@link org.springframework.web.servlet.handler.SimpleMappingExceptionResolver} </li>
+     * </ol>
+     */
+    void read05(){}
+
+    /**
      * 视图解析器 ViewResolver
      *
      * <ol>
@@ -163,13 +190,25 @@ public class Readme {
      *             <li> 调用父类创建 view {@link UrlBasedViewResolver#loadView(String, Locale)}</li>
      *             <li> 调用父类创建 view {@link UrlBasedViewResolver#buildView(String)}</li>
      *         </ol>
-     *         <li> {@link org.springframework.web.servlet.view.InternalResourceViewResolver} </li>
-     *         <li> {@link org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver} </li>
+     *         <li> {@link InternalResourceViewResolver} </li>
+     *         <li> {@link FreeMarkerViewResolver} </li>
      *     </ul>
      * </ol>
      */
     void read06(){}
 
+    /**
+     * LocaleResolver
+     *
+     * <ol>
+     *     <li> {@link AbstractLocaleResolver }</li>
+     *     <li> 使用 Header 里的 acceptlanguage,不可以在程序中修改 {@link AcceptHeaderLocaleResolver} </li>
+     *     <li> 解析出固定的 Locale,创建时就确定好 Locale,之后无法修改 {@link FixedLocaleResolver} </li>
+     *     <li> 将 Locale 保存到 Session 中 {@link SessionLocaleResolver} </li>
+     *     <li> 将 Locale 保存到 Cookie 中 {@link CookieLocaleResolver} </li>
+     *     <li> 从Spring MVC4.0开始，LocaleResolver添加了一个子接口LocaleContextResolver，其中增加了获取和设置LocaleContext的能力，并添加了抽象类AbstractLocaleContextResolver，抽象类添加了对TimeZone也就是时区的支持 {@link LocaleContextResolver} </li>
+     * </ol>
+     */
     void read07(){}
 
     /**
@@ -177,9 +216,16 @@ public class Readme {
      *
      * <ul>
      *     <li> {@link ThemeResolver} </li>
-     *     <li> {@link org.springframework.web.servlet.support.RequestContext#getThemeMessage(String, Object[], String)} </li>
+     *     <li> 设置了默认主题名，默认值为 theme {@link AbstractThemeResolver} </li>
+     *     <ul>
+     *         <li> 用于解析固定的主题名，主题名的创建时设置，不能修改 {@link FixedThemeResolver} </li>
+     *         <li> 将主题保存在 Session 中，可以修改 {@link SessionThemeResolver} </li>
+     *     </ul>
+     *     <li> 将主题保存在 Cookie 中，继承了 CookieGenerator 方便处理 Cookie，所以就不能继承 AbstractThemeResolver {@link CookieThemeResolver} </li>
+     *
+     *     <li> {@link RequestContext#getThemeMessage(String, Object[], String)} </li>
      *     <li> SpringMVC 默认容器是 XmlWebApplicationContext，父类是 AbstractRefreshableWebApplicationContext，这个类实现了
-     *     ThemeSource 接口，内部封装了一个 ThemeSource 属性 {@link org.springframework.web.servlet.support.RequestContextUtils#getTheme(HttpServletRequest)} </li>
+     *     ThemeSource 接口，内部封装了一个 ThemeSource 属性 {@link RequestContextUtils#getTheme(HttpServletRequest)} </li>
      *
      *
      * </ul>
@@ -190,14 +236,14 @@ public class Readme {
      * 文件上传解析器 MultipartResolver
      *
      * <ul>
-     *     <li> 使用 Servlet3.0 标准的上传方式，只需要调用 request 的 getParts 方法就可以获取所有上传的文件 {@link org.springframework.web.multipart.support.StandardServletMultipartResolver} </li>
+     *     <li> 使用 Servlet3.0 标准的上传方式，只需要调用 request 的 getParts 方法就可以获取所有上传的文件 {@link StandardServletMultipartResolver} </li>
      *     <ul>
-     *         <li> {@link org.springframework.web.multipart.support.StandardMultipartHttpServletRequest#parseRequest(HttpServletRequest)} </li>
+     *         <li> {@link StandardMultipartHttpServletRequest#parseRequest(HttpServletRequest)} </li>
      *     </ul>
-     *     <li> Apache 的 commons-fileupload 来完成具体的上传操作 {@link org.springframework.web.multipart.commons.CommonsMultipartResolver} </li>
+     *     <li> Apache 的 commons-fileupload 来完成具体的上传操作 {@link CommonsMultipartResolver} </li>
      *     <ul>
-     *         <li> {@link org.springframework.web.multipart.commons.CommonsMultipartResolver#resolveMultipart(HttpServletRequest)}</li>
-     *         <li> {@link org.springframework.web.multipart.commons.CommonsFileUploadSupport#parseFileItems(List, String)} </li>
+     *         <li> {@link CommonsMultipartResolver#resolveMultipart(HttpServletRequest)}</li>
+     *         <li> {@link CommonsFileUploadSupport#parseFileItems(List, String)} </li>
      *     </ul>
      * </ul>
      */
@@ -215,6 +261,7 @@ public class Readme {
      *     <li> 模板方法：根据一定的规则筛选出 Handler {@link AbstractHandlerMethodMapping#isHandler(Class)} </li>
      *     <li> 模板方法具体实现在 RequestMappingHandlerMapping {@link AbstractHandlerMethodMapping#getMappingForMethod(Method, Class)}  } </li>
      *     <li> 子类解析视图的如入口方法 {@link AbstractCachingViewResolver#loadView(String, Locale)}</li>
+     *     <li> 异常解析的父类，定义了通用的解析流程（模板方法） {@link org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver} </li>
      *
      *     <li> 装饰者模式：{@link LocaleContextHolder}</li>
      *

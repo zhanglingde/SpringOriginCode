@@ -169,7 +169,9 @@ public class DefaultHandlerExceptionResolver extends AbstractHandlerExceptionRes
 	protected ModelAndView doResolveException(
 			HttpServletRequest request, HttpServletResponse response, @Nullable Object handler, Exception ex) {
 
+		// 具体解析方法主要是设置 response 的相关属性
 		try {
+			// request 的 Method 的类型不支持的异常处理
 			if (ex instanceof HttpRequestMethodNotSupportedException) {
 				return handleHttpRequestMethodNotSupported(
 						(HttpRequestMethodNotSupportedException) ex, request, response, handler);
@@ -258,6 +260,7 @@ public class DefaultHandlerExceptionResolver extends AbstractHandlerExceptionRes
 		if (supportedMethods != null) {
 			response.setHeader("Allow", StringUtils.arrayToDelimitedString(supportedMethods, ", "));
 		}
+		// sendError 和 setStatus 的区别是 sendError 会返回 web.xml 中定义的相应错误页面；setStatus 只是设置了值
 		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, ex.getMessage());
 		return new ModelAndView();
 	}
