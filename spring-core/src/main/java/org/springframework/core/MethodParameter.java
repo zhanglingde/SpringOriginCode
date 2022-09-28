@@ -65,11 +65,17 @@ public class MethodParameter {
 
 	private final Executable executable;
 
+    /**
+     * 参数序号，从 0 开始
+     */
 	private final int parameterIndex;
 
 	@Nullable
 	private volatile Parameter parameter;
 
+    /**
+     * 嵌套级别，复合参数会使用；例如 List<User> user,user 嵌套级别为1，user 中属性嵌套级别为 2
+     */
 	private int nestingLevel;
 
 	/** Map from Integer level to Integer type index. */

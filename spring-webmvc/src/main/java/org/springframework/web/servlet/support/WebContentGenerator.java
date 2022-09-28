@@ -123,6 +123,8 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	}
 
 	/**
+     * 构造方法传入 true，默认设置 GET、POST、HEAD 三种请求类型
+     *
 	 * Create a new WebContentGenerator.
 	 * @param restrictDefaultSupportedMethods {@code true} if this
 	 * generator should support HTTP methods GET, HEAD and POST by default,
@@ -376,12 +378,14 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	 */
 	protected final void checkRequest(HttpServletRequest request) throws ServletException {
 		// Check whether we should support the request method.
+        // 是否支持该请求方式（supportedMethods 默认为空，在注册 RequestMappingHandlerAdapter 时对其进行设置）
 		String method = request.getMethod();
 		if (this.supportedMethods != null && !this.supportedMethods.contains(method)) {
 			throw new HttpRequestMethodNotSupportedException(method, this.supportedMethods);
 		}
 
 		// Check whether a session is required.
+        // 如果设置 session 必须存在，判断 session 实际是否存在（requireSession 默认为 false）
 		if (this.requireSession && request.getSession(false) == null) {
 			throw new HttpSessionRequiredException("Pre-existing session required but none found");
 		}

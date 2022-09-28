@@ -33,5 +33,7 @@
     </bean>
 
     <!-- 开启SpringMVC框架注解的支持 -->
+	<!-- 配置的HandlerMapping 是 RequestMappingHandlerMapping 和 BeanNameUrlHandlerMapping -->
+	<!-- 配置的 HandlerAdapter 是 RequestMappingHandlerAdapter、HttpRequestHandlerAdapter和SimpleControllerHandlerAdapter -->
     <mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
 </beans>

@@ -206,6 +206,8 @@ public class SimpleMappingExceptionResolver extends AbstractHandlerExceptionReso
 	}
 
 	/**
+     * 查找视图 viewName
+     *
 	 * Determine the view name for the given exception, first checking against the
 	 * {@link #setExcludedExceptions(Class[]) "excludedExecptions"}, then searching the
 	 * {@link #setExceptionMappings "exceptionMappings"}, and finally using the
