@@ -24,16 +24,31 @@
     </bean>
 
     <!--配置自定义类型转换器-->
-    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
-        <property name="converters">
-            <set>
-                <bean class="com.ling.test01.utils.StringToDateConverter"></bean>
-            </set>
-        </property>
-    </bean>
+    <!-- <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean"> -->
+    <!--     <property name="converters"> -->
+    <!--         <set> -->
+    <!--             <bean class="com.ling.test01.utils.StringToDateConverter"></bean> -->
+    <!--         </set> -->
+    <!--     </property> -->
+    <!-- </bean> -->
 
     <!-- 开启SpringMVC框架注解的支持 -->
 	<!-- 配置的HandlerMapping 是 RequestMappingHandlerMapping 和 BeanNameUrlHandlerMapping -->
 	<!-- 配置的 HandlerAdapter 是 RequestMappingHandlerAdapter、HttpRequestHandlerAdapter和SimpleControllerHandlerAdapter -->
-    <mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
+    <mvc:annotation-driven>
+    <!-- <mvc:annotation-driven conversion-service="conversionService"> -->
+	<!--     <mvc:message-converters> -->
+	<!-- 	    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"> -->
+	<!-- 			<property name="objectMapper"> -->
+	<!-- 				<bean class="com.fasterxml.jackson.databind.ObjectMapper"> -->
+	<!-- 					&lt;!&ndash; <property name="serializationInclusion"> &ndash;&gt; -->
+	<!-- 					&lt;!&ndash; 	<value type="com.fasterxml.jackson.annotation.JsonInclude">NON_NULL</value> &ndash;&gt; -->
+	<!-- 					&lt;!&ndash; </property> &ndash;&gt; -->
+
+	<!-- 				</bean> -->
+	<!-- 			</property> -->
+
+	<!-- 	    </bean> -->
+	<!--     </mvc:message-converters> -->
+    </mvc:annotation-driven>
 </beans>
