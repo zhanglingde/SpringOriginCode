@@ -9,6 +9,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -52,5 +53,18 @@ public class FollowMeController {
         model.addAttribute("article", articleId + "号文章内容");
         sessionStatus.setComplete();
         return "article";
+    }
+
+    @RequestMapping(value = "/body",method = RequestMethod.POST)
+    public String postBody(@RequestBody List<User> userList) {
+        System.out.println("userList = " + userList);
+        return "success";
+    }
+
+    @RequestMapping("/testRequestBody")
+    public String testRequestBody(@RequestBody List<User> body) {
+        System.out.println("执行了...");
+        System.out.println(body);
+        return "success";
     }
 }
