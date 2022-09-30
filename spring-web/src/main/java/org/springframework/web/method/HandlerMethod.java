@@ -43,6 +43,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
+ * 定义了两个内部类来封装参数，一个封装方法调用的参数，一个封装方法返回的参数；它们主要使用method和parameterIndex来创建MethodParameter
+ * 封装返回值的 ReturnValueMethodParameter 继承自封装调用参数的 HandlerMethodParameter
+ *
  * Encapsulates information about a handler method consisting of a
  * {@linkplain #getMethod() method} and a {@linkplain #getBean() bean}.
  * Provides convenient access to method parameters, the method return value,
@@ -66,15 +69,19 @@ public class HandlerMethod {
 
 	private final Object bean;
 
+	// 新建 HandlerMethod 时传入的 Handler（bean 属性）是 String 时，使用 beanFactory 获取 beanName 对应的 bean 并设置为 Handler
 	@Nullable
 	private final BeanFactory beanFactory;
 
 	private final Class<?> beanType;
 
+	// 参数所在的方法
 	private final Method method;
 
+	// method 是 bridgedMethod 时，设置其对应的原有方法，否则直接设置为 method
 	private final Method bridgedMethod;
 
+	// 处理请求的方法的参数
 	private final MethodParameter[] parameters;
 
 	@Nullable

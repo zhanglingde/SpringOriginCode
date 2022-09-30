@@ -25,6 +25,8 @@ package org.springframework.web.bind.annotation;
 public interface ValueConstants {
 
 	/**
+	 * 专门用来代表空默认值的变量
+	 *
 	 * Constant defining a value for no default - as a replacement for
 	 * {@code null} which we cannot use in annotation attributes.
 	 * <p>This is an artificial arrangement of 16 unicode characters,

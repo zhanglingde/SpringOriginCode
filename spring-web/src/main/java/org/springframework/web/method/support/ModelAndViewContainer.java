@@ -49,16 +49,23 @@ import org.springframework.web.bind.support.SimpleSessionStatus;
  */
 public class ModelAndViewContainer {
 
+	// 如果为 true,则在处理器返回  redirect 视图时一定不使用 defaultModel
 	private boolean ignoreDefaultModelOnRedirect = false;
 
+	/**
+	 * 视图，可以是实际视图也可以是 String 类型的逻辑视图
+	 */
 	@Nullable
 	private Object view;
 
+	// 默认使用的 Model
 	private final ModelMap defaultModel = new BindingAwareModelMap();
 
+	// redirect 类型的 Model
 	@Nullable
 	private ModelMap redirectModel;
 
+	// 处理器返回 redirect 视图的标志
 	private boolean redirectModelScenario = false;
 
 	@Nullable
@@ -68,8 +75,10 @@ public class ModelAndViewContainer {
 
 	private final Set<String> bindingDisabled = new HashSet<>(4);
 
+	// 用于设置 SessionAttribute 使用完的标志
 	private final SessionStatus sessionStatus = new SimpleSessionStatus();
 
+	// 请求是否已经处理完成的标志
 	private boolean requestHandled = false;
 
 
@@ -295,6 +304,9 @@ public class ModelAndViewContainer {
 	}
 
 	/**
+	 * 合并属性（直接操作 Model）
+	 * 原来 Model 中不包含传入的属性则添加进去，如果原来 Model 中已经有了则不操作
+	 *
 	 * Copy attributes in the supplied {@code Map} with existing objects of
 	 * the same name taking precedence (i.e. not getting replaced).
 	 * A shortcut for {@code getModel().mergeAttributes(Map<String, ?>)}.

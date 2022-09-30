@@ -48,12 +48,16 @@ import org.springframework.web.context.request.WebRequest;
  */
 public class SessionAttributesHandler {
 
+	// 存储 @SessionAttributes 注解中 value 的值
 	private final Set<String> attributeNames = new HashSet<>();
 
+	// 存储 @SessionAttributes 注解中 type 的值
 	private final Set<Class<?>> attributeTypes = new HashSet<>();
 
+	// 存储所有已知可以被当前处理器处理的属性名
 	private final Set<String> knownAttributeNames = Collections.newSetFromMap(new ConcurrentHashMap<>(4));
 
+	// 用于具体执行 Attribute 的存储工作
 	private final SessionAttributeStore sessionAttributeStore;
 
 

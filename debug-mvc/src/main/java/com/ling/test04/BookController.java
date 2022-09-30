@@ -35,6 +35,7 @@ public class BookController {
                                          SessionStatus sessionStatus) {
         logger.info("==========get==========");
         logger.info("get by @ModelAttribute:" + book);
+        System.out.println("get by @ModelAttribute:" + book);
         logger.info("ModelMap:" + modelMap.get("book") + "," + modelMap.get("description") + "," + modelMap.get("price"));
         // 使用该方法通知 SessionAttributes 使用完了，删除缓存
         sessionStatus.setComplete();
@@ -45,6 +46,6 @@ public class BookController {
     public String afterComplete(ModelMap modelMap) {
         logger.info("=====afterComplete=======");
         logger.info("ModelMap===" + modelMap.get("book") + "," + modelMap.get("description") + "," + modelMap.get("price"));
-        return "index";
+        return "success";
     }
 }

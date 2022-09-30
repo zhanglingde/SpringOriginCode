@@ -41,6 +41,9 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * MethodParameter 最重要的是 method 和 parameterIndex,有了这两个参数后参数类型、注解等都可以获取到
+ * 正常反射是获取不到参数名的，这里专门使用了一个参数名查找的组件 parameterNameDiscoverer
+ *
  * Helper class that encapsulates the specification of a method parameter, i.e. a {@link Method}
  * or {@link Constructor} plus a parameter index and a nested type index for a declared generic
  * type. Useful as a specification object to pass along.
@@ -78,26 +81,36 @@ public class MethodParameter {
      */
 	private int nestingLevel;
 
-	/** Map from Integer level to Integer type index. */
+	/**
+	 * 保存每层嵌套参数的序数
+	 * Map from Integer level to Integer type index. */
 	@Nullable
 	Map<Integer, Integer> typeIndexesPerLevel;
 
-	/** The containing class. Could also be supplied by overriding {@link #getContainingClass()} */
+	/**
+	 * 容器的类型，即参数所属方法所在的类
+	 *
+	 * The containing class. Could also be supplied by overriding {@link #getContainingClass()} */
 	@Nullable
 	private volatile Class<?> containingClass;
 
+	// 参数的类型
 	@Nullable
 	private volatile Class<?> parameterType;
 
+	// Type 型的参数类型
 	@Nullable
 	private volatile Type genericParameterType;
 
+	// 参数注解
 	@Nullable
 	private volatile Annotation[] parameterAnnotations;
 
+	// 参数名称查找器
 	@Nullable
 	private volatile ParameterNameDiscoverer parameterNameDiscoverer;
 
+	// 参数名称
 	@Nullable
 	private volatile String parameterName;
 

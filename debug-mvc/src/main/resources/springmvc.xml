@@ -13,9 +13,7 @@
     <!--开启注解扫描-->
     <context:component-scan base-package="com.ling"></context:component-scan>
 
-    <!--2. 配置视图解析器对象
-        当控制器中的方法返回字符串时，通过视图解析器查找返回需要跳转的页面
-    -->
+    <!--2. 配置视图解析器对象：当控制器中的方法返回字符串时，通过视图解析器查找返回需要跳转的页面 -->
     <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <!--jsp文件所在的位置-->
         <property name="prefix" value="/WEB-INF/pages/"></property>
@@ -23,32 +21,33 @@
         <property name="suffix" value=".jsp"></property>
     </bean>
 
+
     <!--配置自定义类型转换器-->
-    <!-- <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean"> -->
-    <!--     <property name="converters"> -->
-    <!--         <set> -->
-    <!--             <bean class="com.ling.test01.utils.StringToDateConverter"></bean> -->
-    <!--         </set> -->
-    <!--     </property> -->
-    <!-- </bean> -->
+     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+         <property name="converters">
+             <set>
+                 <bean class="com.ling.test01.utils.StringToDateConverter"></bean>
+             </set>
+         </property>
+     </bean>
 
     <!-- 开启SpringMVC框架注解的支持 -->
 	<!-- 配置的HandlerMapping 是 RequestMappingHandlerMapping 和 BeanNameUrlHandlerMapping -->
 	<!-- 配置的 HandlerAdapter 是 RequestMappingHandlerAdapter、HttpRequestHandlerAdapter和SimpleControllerHandlerAdapter -->
-    <mvc:annotation-driven>
-    <!-- <mvc:annotation-driven conversion-service="conversionService"> -->
-	<!--     <mvc:message-converters> -->
-	<!-- 	    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"> -->
-	<!-- 			<property name="objectMapper"> -->
-	<!-- 				<bean class="com.fasterxml.jackson.databind.ObjectMapper"> -->
-	<!-- 					&lt;!&ndash; <property name="serializationInclusion"> &ndash;&gt; -->
-	<!-- 					&lt;!&ndash; 	<value type="com.fasterxml.jackson.annotation.JsonInclude">NON_NULL</value> &ndash;&gt; -->
-	<!-- 					&lt;!&ndash; </property> &ndash;&gt; -->
+    <!--<mvc:annotation-driven> </mvc:annotation-driven>-->
+     <mvc:annotation-driven conversion-service="conversionService">
+	     <mvc:message-converters>
+	 	    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+	 			<property name="objectMapper">
+	 				<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+	 					 <property name="serializationInclusion">
+	 					 	<value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+	 					 </property>
+	 				</bean>
+	 			</property>
 
-	<!-- 				</bean> -->
-	<!-- 			</property> -->
-
-	<!-- 	    </bean> -->
-	<!--     </mvc:message-converters> -->
+	 	    </bean>
+	     </mvc:message-converters>
     </mvc:annotation-driven>
+
 </beans>

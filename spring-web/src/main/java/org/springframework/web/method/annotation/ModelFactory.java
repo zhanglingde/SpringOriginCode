@@ -44,6 +44,10 @@ import org.springframework.web.method.support.InvocableHandlerMethod;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
+ * 用来维护 Model
+ * 1. 初始化 Model
+ * 2. 处理器执行后将 Model 中相应的参数更新到 SessionAttributes 中
+ *
  * Assist with initialization of the {@link Model} before controller method
  * invocation and with updates to it after the invocation.
  *
@@ -101,10 +105,13 @@ public final class ModelFactory {
 	public void initModel(NativeWebRequest request, ModelAndViewContainer container, HandlerMethod handlerMethod)
 			throws Exception {
 
+		// 从 SessionAttributes 中取出保存的参数，并合并到 macContainer 中
 		Map<String, ?> sessionAttributes = this.sessionAttributesHandler.retrieveAttributes(request);
 		container.mergeAttributes(sessionAttributes);
+		// 执行注解了 @ModelAttribute 的方法并将结果设置到 Model
 		invokeModelAttributeMethods(request, container);
 
+		// 遍历既注解了 @ModelAttribute 又在 @SessionAttributes 注解中的参数
 		for (String name : findSessionAttributeArguments(handlerMethod)) {
 			if (!container.containsAttribute(name)) {
 				Object value = this.sessionAttributesHandler.retrieveAttribute(request, name);
@@ -124,9 +131,11 @@ public final class ModelFactory {
 			throws Exception {
 
 		while (!this.modelMethods.isEmpty()) {
+			// 获取注解了 @ModelAttribute 的方法
 			InvocableHandlerMethod modelMethod = getNextModelMethod(container).getHandlerMethod();
 			ModelAttribute ann = modelMethod.getMethodAnnotation(ModelAttribute.class);
 			Assert.state(ann != null, "No ModelAttribute annotation");
+			// 如果参数名已经在 macContainer 中，则跳过
 			if (container.containsAttribute(ann.name())) {
 				if (!ann.binding()) {
 					container.setBindingDisabled(ann.name());
@@ -134,8 +143,10 @@ public final class ModelFactory {
 				continue;
 			}
 
+			// 执行 @ModelAttribute 注解的方法
 			Object returnValue = modelMethod.invokeForRequest(request, container);
 			if (!modelMethod.isVoid()){
+				// 获取参数名
 				String returnValueName = getNameForReturnValue(returnValue, modelMethod.getReturnType());
 				if (!ann.binding()) {
 					container.setBindingDisabled(returnValueName);

@@ -48,11 +48,10 @@ dependencies {
     //
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     compileOnly group: 'javax.servlet.jsp', name: 'jsp-api', version: '2.2'
-//
-//    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
-//    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.3'
-//    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.3'
-//    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.3'
+    // @RequestBody 请求参数解析转换成对象需要使用 json 工具，这些依赖版本和 Spring 中使用 jackson 版本有关
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0'
 
 
 

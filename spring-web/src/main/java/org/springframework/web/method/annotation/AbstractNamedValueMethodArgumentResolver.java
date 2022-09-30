@@ -38,6 +38,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
+ * 处理 namedValue 类型参数的基类，cookie、requestParam、requestHeader、pathVariable 等类型参数的解析器都集成自它
+ *
  * Abstract base class for resolving method arguments from a named value.
  * Request parameters, request headers, and path variables are examples of named
  * values. Each may have a name, a required flag, and a default value.
@@ -96,6 +98,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 	public final Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
+		// 1. 根据参数类型获取到 NamedValueInfo
 		NamedValueInfo namedValueInfo = getNamedValueInfo(parameter);
 		MethodParameter nestedParameter = parameter.nestedIfOptional();
 
@@ -104,21 +107,25 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 			throw new IllegalArgumentException(
 					"Specified name must not resolve to null: [" + namedValueInfo.name + "]");
 		}
-
+		// 2. 具体解析参数，模板方法，在子类实现
 		Object arg = resolveName(resolvedName.toString(), nestedParameter, webRequest);
+		// 3. 未解析到参数，必填或参数异常处理
 		if (arg == null) {
 			if (namedValueInfo.defaultValue != null) {
 				arg = resolveStringValue(namedValueInfo.defaultValue);
 			}
 			else if (namedValueInfo.required && !nestedParameter.isOptional()) {
+				// 参数未空且必填，模板方法
 				handleMissingValue(namedValueInfo.name, nestedParameter, webRequest);
 			}
+			// 处理 null 返回值
 			arg = handleNullValue(namedValueInfo.name, arg, nestedParameter.getNestedParameterType());
 		}
 		else if ("".equals(arg) && namedValueInfo.defaultValue != null) {
 			arg = resolveStringValue(namedValueInfo.defaultValue);
 		}
 
+		// 4. 如果 binderFactory 不为空，则用它创建 binder 并转换解析出的参数（如果需要转换）
 		if (binderFactory != null) {
 			WebDataBinder binder = binderFactory.createBinder(webRequest, null, namedValueInfo.name);
 			try {
@@ -134,6 +141,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 			}
 		}
 
+		// 5. 对解析出的参数进行后置处理（模板方法）
 		handleResolvedValue(arg, namedValueInfo.name, parameter, mavContainer, webRequest);
 
 		return arg;
@@ -145,8 +153,11 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 	private NamedValueInfo getNamedValueInfo(MethodParameter parameter) {
 		NamedValueInfo namedValueInfo = this.namedValueInfoCache.get(parameter);
 		if (namedValueInfo == null) {
+			// 模板方法
 			namedValueInfo = createNamedValueInfo(parameter);
+			// 更新
 			namedValueInfo = updateNamedValueInfo(parameter, namedValueInfo);
+			// 添加到缓存
 			this.namedValueInfoCache.put(parameter, namedValueInfo);
 		}
 		return namedValueInfo;
@@ -165,6 +176,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 	 */
 	private NamedValueInfo updateNamedValueInfo(MethodParameter parameter, NamedValueInfo info) {
 		String name = info.name;
+		// 1. name 为空使用 parameter 的 name
 		if (info.name.isEmpty()) {
 			name = parameter.getParameterName();
 			if (name == null) {
@@ -173,6 +185,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 						"] not available, and parameter name information not found in class file either.");
 			}
 		}
+		// 2. 如果默认值是代表没有的ValueConstants.DEFAULT_NONE类型则设置为null
 		String defaultValue = (ValueConstants.DEFAULT_NONE.equals(info.defaultValue) ? null : info.defaultValue);
 		return new NamedValueInfo(name, info.required, defaultValue);
 	}
@@ -268,6 +281,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 	 */
 	protected static class NamedValueInfo {
 
+		// 参数名
 		private final String name;
 
 		private final boolean required;

@@ -102,9 +102,12 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 	public void invokeAndHandle(ServletWebRequest webRequest, ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
 
+		// 1. 调用父类执行请求方法
 		Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
+		// 2. 处理 @ResponseStatus 注解，根据注解的值设置 response 的相关属性
 		setResponseStatus(webRequest);
 
+		// 3. 处理返回值
 		if (returnValue == null) {
 			if (isRequestNotModified(webRequest) || getResponseStatus() != null || mavContainer.isRequestHandled()) {
 				disableContentCachingIfNecessary(webRequest);
@@ -152,6 +155,7 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 		}
 
 		// To be picked up by RedirectView
+		// 设置到 request 中，为了在 redirect 中使用
 		webRequest.getRequest().setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, status);
 	}
 

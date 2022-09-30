@@ -50,6 +50,7 @@ public class ModelMethodProcessor implements HandlerMethodArgumentResolver, Hand
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
 		Assert.state(mavContainer != null, "ModelAndViewContainer is required for model exposure");
+		// 直接返回 Model,此时 Model 中可能已经保存了一些值，如 SessionAttribute 中的值、FlashMap 中的值
 		return mavContainer.getModel();
 	}
 

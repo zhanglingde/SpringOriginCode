@@ -157,18 +157,17 @@ public class Readme {
      *     <li> 适配 Servlet {@link SimpleServletHandlerAdapter} </li>
      *     <li> 适配 Controller 类型的 Handler {@link SimpleControllerHandlerAdapter} </li>
      *
-     *     <li> {@link RequestMappingHandlerAdapter#handleInternal(HttpServletRequest, HttpServletResponse, HandlerMethod)} </li>
-     *     <ul>
-     *         <li> @SessionAttribute 使用{@link com.ling.test04.BookController}</li>
-     *
-     *         <li> 用于创建 WebDataBinder，WebDataBinder 用于参数绑定，主要功能就是实现参数和 String 之间的转换 {@link RequestMappingHandlerAdapter#getDataBinderFactory(HandlerMethod)}</li>
-     *         <li> 两个功能 1. 在处理器具体处理之前对 Model 进行初始化 2. 处理完请求后对 Model 参数进行更新 {@link RequestMappingHandlerAdapter#getModelFactory(HandlerMethod, WebDataBinderFactory)}</li>
-     *         <li> 继承 HandlerMethod，可以直接执行；实际请求的处理就是通过该类执行的，参数绑定、处理请求以及返回值处理都在该类中完成 {@link RequestMappingHandlerAdapter#createInvocableHandlerMethod(HandlerMethod)}</li>
-     *     </ul>
+     *     <li> {@link RequestMappingHandlerAdapter#handleInternal(HttpServletRequest, HttpServletResponse, HandlerMethod) RequestMappingHandlerAdapter} </li>
      *     相关组件
-     *     <ul>
+     *     <ol>
+     *         <li> @SessionAttribute 使用{@link com.ling.test04.BookController}</li>
+     *         <ul>
+     *              <li> 用于创建 WebDataBinder，WebDataBinder 用于参数绑定，主要功能就是实现参数和 String 之间的转换 {@link RequestMappingHandlerAdapter#getDataBinderFactory(HandlerMethod)}</li>
+     *              <li> 两个功能 1. 在处理器具体处理之前对 Model 进行初始化 2. 处理完请求后对 Model 参数进行更新 {@link RequestMappingHandlerAdapter#getModelFactory(HandlerMethod, WebDataBinderFactory)}</li>
+     *              <li> 继承 HandlerMethod，可以直接执行；实际请求的处理就是通过该类执行的，参数绑定、处理请求以及返回值处理都在该类中完成 {@link RequestMappingHandlerAdapter#createInvocableHandlerMethod(HandlerMethod)}</li>
+     *         </ul>
      *         <li> ModelAndViewContainer:  </li>
-     *     </ul>
+     *     </ol>
      * </ol>
      */
     void read04(){}

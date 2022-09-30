@@ -42,6 +42,8 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
+ * 解析 url 路径中的值，使用模板方法模式
+ *
  * Resolves method arguments annotated with an @{@link PathVariable}.
  *
  * <p>An @{@link PathVariable} is a named value that gets resolved from a URI template variable.
@@ -87,10 +89,14 @@ public class PathVariableMethodArgumentResolver extends AbstractNamedValueMethod
 		return new PathVariableNamedValueInfo(ann);
 	}
 
+	/**
+	 * 具体解析参数，模板方法，流程在父类中
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	@Nullable
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request) throws Exception {
+		// 该值是在 RequestMappingInfoHandlerMapping 中的 handleMatch 中设置的，也就是在 HandlerMapping 中根据 lookupPath 找到处理请求的处理器后设置的
 		Map<String, String> uriTemplateVars = (Map<String, String>) request.getAttribute(
 				HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
 		return (uriTemplateVars != null ? uriTemplateVars.get(name) : null);
@@ -105,7 +111,7 @@ public class PathVariableMethodArgumentResolver extends AbstractNamedValueMethod
 	@SuppressWarnings("unchecked")
 	protected void handleResolvedValue(@Nullable Object arg, String name, MethodParameter parameter,
 			@Nullable ModelAndViewContainer mavContainer, NativeWebRequest request) {
-
+		// 将解析出的结果设置到 request 中，方便以后（如 view 中）使用
 		String key = View.PATH_VARIABLES;
 		int scope = RequestAttributes.SCOPE_REQUEST;
 		Map<String, Object> pathVars = (Map<String, Object>) request.getAttribute(key, scope);
