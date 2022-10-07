@@ -1,0 +1,46 @@
+@startuml
+
+autonumber
+hide footbox
+title SpringMVC 请求流程
+
+
+participant "客户端" as Client
+participant "FrameworkServlet" as FrameworkServlet #orange
+participant "HttpServlet" as HttpServlet #yellowgreen
+participant "DispatcherServlet" as DispatcherServlet #lightblue
+participant "HandlerAdapter" as HandlerAdapter
+
+activate Client
+Client -> FrameworkServlet: 服务器分配Socket 线程与请求连接，创建 request response
+deactivate Client
+activate FrameworkServlet
+FrameworkServlet -> HttpServlet: 到 SpringMvc的FrameworkServlet#service
+HttpServlet -> HttpServlet: HttpServlet.service\n根据请求类型调用不同的方法 (doGet 模板方法)
+HttpServlet -> FrameworkServlet: FrameworkServlet#processRequest
+note right of FrameworkServlet: 4.1 将当前请求的LocaleContext和RequestAttributes 封装到 Holder 中
+
+FrameworkServlet -> DispatcherServlet: DispatcherServlet#doService
+activate DispatcherServlet
+note right of FrameworkServlet: 将webApplicationContext、localeResolver、theme-Resolver、themeSource、\noutputFlashMap和flashMapManager设置到了request的属性中
+DispatcherServlet -> DispatcherServlet: DispatcherServlet#doDispatch
+note right of DispatcherServlet: 1.checkMultipart方法检查是不是上传请求\n2.getHandler方法获取到对应的Handler\n3.根据 Handler 找到对应的 HandlerAdapter
+deactivate FrameworkServlet
+DispatcherServlet -> HandlerAdapter: HandlerAdapter#handle(模板方法)\nRequestMappingHandlerAdapter#handleInternal
+activate HandlerAdapter
+HandlerAdapter -> HandlerAdapter: RequestMappingHandlerAdapter#invokeHandlerMethod
+HandlerAdapter -> HandlerAdapter: InvocableHandlerMethod#invokeForRequest 执行请求处理
+HandlerAdapter -> HandlerAdapter: InvocableHandlerMethod#getMethodArgumentValues 获取请求参数
+HandlerAdapter -> HandlerAdapter: 使用 HandlerMethodArgumentResolver 解析参数
+HandlerAdapter -> HandlerAdapter: 使用反射执行请求 doInvoke
+HandlerAdapter -> HandlerAdapter: ServletInvocableHandlerMethod#invokeAndHandle 中使用HandlerMethodReturnValueHandler 处理返回值，设置到 ModelAndView 中
+HandlerAdapter -> DispatcherServlet: ModelAndView 返回 DispatcherServlet
+DispatcherServlet -> Client: processDispatchResult 找到 View 并渲染输出给用户
+
+
+
+deactivate DispatcherServlet
+deactivate HttpServlet
+
+
+@enduml

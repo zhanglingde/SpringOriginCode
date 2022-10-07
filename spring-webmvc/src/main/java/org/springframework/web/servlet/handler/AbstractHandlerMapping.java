@@ -285,6 +285,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 
 
 	/**
+	 * 继承了 WebApplicationObjectSupport,初始化时会自动调用该模板方法初始化
      * AbstractHandlerMapping 中保存了所用配置的 Interceptor,创建 AbstractHandlerMapping 就是初始化 Interceptor
      *
 	 * Initializes the interceptors.
@@ -427,7 +428,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			String handlerName = (String) handler;
 			handler = obtainApplicationContext().getBean(handlerName);
 		}
-
+		// 拦截器设置进去
 		HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
 
 		if (logger.isTraceEnabled()) {

@@ -56,7 +56,7 @@ import org.springframework.web.servlet.HandlerExecutionChain;
 public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping implements MatchableHandlerMapping {
 
     /**
-     * 处理 '/' 请求的处理器 rootHandlerge
+     * 处理 '/' 请求的处理器 rootHandler
      */
 	@Nullable
 	private Object rootHandler;

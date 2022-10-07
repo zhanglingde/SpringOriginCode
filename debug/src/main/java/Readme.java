@@ -62,14 +62,21 @@ import java.util.function.Predicate;
 public class Readme {
 
 	/**
+	 * 设计模式
+	 * <ul>
+	 *     <li>  </li>
+	 * </ul>
+	 */
+	void read00(){}
+
+	/**
 	 * 1. 流程概述： {@link com.ling.test01.Test}  <br>
 	 * 2. 启动流程细节    {@link Test02}			<br>
 	 *
 	 * refresh 执行前设置：
 	 * <ul>
 	 *     <li> 调用父类方法初始化资源： {@link AbstractApplicationContext#AbstractApplicationContext()} </li>
-	 *     <li> 设置配置文件路径：
-	 * 	         {@link AbstractRefreshableConfigApplicationContext#setConfigLocations(String...)}</li>
+	 *     <li> 设置配置文件路径：{@link AbstractRefreshableConfigApplicationContext#setConfigLocations(String...)}</li>
 	 *     <li> spel 表达式（${username}）解析：配置文件，环境变量都是通过同样的方式进行解析的 {@link PropertyResolver#resolveRequiredPlaceholders(String)}</li>
 	 *     <li> 设置表达式解析器：{@link AbstractApplicationContext#prepareBeanFactory(ConfigurableListableBeanFactory)} </li>
 	 * </ul>
@@ -79,12 +86,12 @@ public class Readme {
 	}
 
 	/**
+	 *
+	 * {@link AbstractApplicationContext#refresh() refresh}：初始化容器的 13 个步骤
 	 * <ol>
+	 *     <li> {@link AbstractApplicationContext#prepareRefresh() prepareRefresh}: 准备刷新的上下文环境</li>
 	 *     <li>
-	 *         refresh()：{@link AbstractApplicationContext#refresh()}
-	 *     </li>
-	 *     <li>
-	 *         	初始化属性值扩展,自定义环境变量，重写该方法
+	 *         	初始化时属性值扩展,自定义环境变量，重写该方法
 	 *         	<ul>
 	 * 	 			<li> {@link AbstractApplicationContext#initPropertySources } </li>
 	 * 	 			<li> {@link MyClassPathXmlApplicationContext#initPropertySources() DefaultListableBeanFactory } </li>

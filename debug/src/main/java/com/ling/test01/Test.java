@@ -3,11 +3,6 @@ package com.ling.test01;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * @author zhangling  2021/9/1 17:35

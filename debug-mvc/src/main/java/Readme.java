@@ -189,13 +189,13 @@ public class Readme {
      * 视图解析器 ViewResolver
      *
      * <ol>
-     *     <li> 根据 ViewName 从 ApplicationContext 容器中查找相应的 bean 做 View 的 {@link BeanNameViewResolver} </li>
-     *     <li> 可以存放多个 ViewResolver {@link ViewResolverComposite} </li>
-     *     <li> 增加了对 MediaType 和后缀的支持 {@link ContentNegotiatingViewResolver#initServletContext(ServletContext)} </li>
-     *     <li> 提供了缓存视图的功能 {@link AbstractCachingViewResolver} </li>
+     *     <li> {@link BeanNameViewResolver}：根据 ViewName 从 ApplicationContext 容器中查找相应的 bean 做 View 的  </li>
+     *     <li> {@link ViewResolverComposite } ：可以存放多个 ViewResolver </li>
+     *     <li> {@link ContentNegotiatingViewResolver#initServletContext(ServletContext)} ：增加了对 MediaType 和后缀的支持 </li>
+     *     <li> {@link AbstractCachingViewResolver}：提供了缓存视图的功能  </li>
      *     <ul>
-     *         <li> 根据 properties 配置文件来解析视图 {@link ResourceBundleViewResolver} </li>
-     *         <li> 根据 xml 配置文件来解析视图 {@link XmlViewResolver} </li>
+     *         <li> {@link ResourceBundleViewResolver}：根据 properties 配置文件来解析视图  </li>
+     *         <li> {@link XmlViewResolver} ：根据 xml 配置文件来解析视图 </li>
      *         <li> {@link UrlBasedViewResolver} </li>
      *         <ol>
      *             <li> {@link UrlBasedViewResolver#createView(String, Locale)} </li>

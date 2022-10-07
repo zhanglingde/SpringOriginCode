@@ -1,0 +1,55 @@
+@startuml
+
+title Spring MVC核心Servlet结构图
+
+package java{
+interface Servlet << interface >>
+interface ServletConfig << interface >>
+class GenericServlet
+class HttpServlet
+}
+package spring{
+interface ApplicationContextAware << interface >>
+interface Aware << interface >>
+class DispatcherServlet
+interface EnvironmentAware << interface >>
+interface EnvironmentCapable << interface >>
+class FrameworkServlet
+class HttpServletBean
+}
+
+note top of java:java 中提供两个Servlet处理http请求
+note top of spring:三个类HttpServletBean、FrameworkServlet和DispatcherServlet是Spring MVC中的
+
+note right of HttpServletBean
+	init 方法将 Servlet 中的参数设置到 DispatcherServlet 中的属性中，
+	然后用模板方法initServletBean初始化子类
+end note
+note left of FrameworkServlet
+	实现了ApplicationContextAware接口，可以使用ApplicationContext
+	initServletBean初始化 WebApplicationContext
+  1. 构造方法传入 WebApplicationContext,使用构造方法的
+  2. 在ServletContext中配置，在配置 Servlet 的时候将 ServletContext 中的
+		webApplicationContext 的 name 配置到 contextAttribute 属性就可以了
+	3. 创建一个 webApplicationContext 对象（一般情况下都是使用这样的方式）
+end note
+note left of DispatcherServlet
+	onRefresh 初始化 SpringMVC 的九大组件
+end note
+
+
+
+Servlet                     ^-[#008200,dashed]-     GenericServlet
+ServletConfig               ^-[#008200,dashed]-     GenericServlet
+GenericServlet              ^-[#000082,plain]-      HttpServlet
+HttpServlet                 ^-[#000082,plain]-      HttpServletBean
+
+
+Aware                       ^-[#008200,plain]-      ApplicationContextAware
+Aware                       ^-[#008200,plain]-      EnvironmentAware
+EnvironmentAware            ^-[#008200,dashed]-     HttpServletBean
+EnvironmentCapable          ^-[#008200,dashed]-     HttpServletBean
+ApplicationContextAware     ^-[#008200,dashed]-     FrameworkServlet
+HttpServletBean             ^-[#000082,plain]-      FrameworkServlet
+FrameworkServlet            ^-[#000082,plain]-      DispatcherServlet
+@enduml
