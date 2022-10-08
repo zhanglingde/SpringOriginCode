@@ -1439,6 +1439,8 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+     * containingBd 为父类 Bean，对顶层元素的解析应设置为 null
+     *
 	 * Parse a custom element (outside of the default namespace).
 	 * @param ele the element to parse
 	 * @param containingBd the containing bean definition (if any)
@@ -1457,7 +1459,7 @@ public class BeanDefinitionParserDelegate {
 			error("Unable to locate Spring NamespaceHandler for XML schema namespace [" + namespaceUri + "]", ele);
 			return null;
 		}
-		// 调用自定义 NamespaceHandler 进行判断
+		// 调用自定义 NamespaceHandler 进行解析
 		return handler.parse(ele, new ParserContext(this.readerContext, this, containingBd));
 	}
 
