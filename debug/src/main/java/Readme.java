@@ -143,7 +143,7 @@ public class Readme {
 	 *
 	 */
 	void read05() {
-	}
+ 	}
 
 	/**
 	 * 06. 自定义标签加载过程     <br><br>
@@ -347,18 +347,15 @@ public class Readme {
 	 * 11. 注册 BeanPostProcessor
 	 *
 	 * <ol>
-	 *     <li> @Resource 注解处理（JSR-250）
-	 *         {@link AnnotationConfigUtils#registerAnnotationConfigProcessors(BeanDefinitionRegistry, Object)} )}
-	 *     </li>
-	 *     <li>
-	 *         {@link ComponentScanBeanDefinitionParser}
-	 *     </li>
-	 *     <li> BeanPostProcessor 的子类：   <br>
-	 *        销毁相关，BeanFactory 注释生命周期上： {@link org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor DestructionAwareBeanPostProcessor}  <br>
-	 *        合并BeanDefinition， {@link org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor MergedBeanDefinitionPostProcessor}  <br>
-	 * 		  bean 实例化相关： {@link org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor InstantiationAwareBeanPostProcessor}  <br>
-	 * 		  循环依赖： {@link org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor SmartInstantiationAwareBeanPostProcessor}
-	 *     </li>
+	 *     <li> @Resource 注解处理（JSR-250） {@link AnnotationConfigUtils#registerAnnotationConfigProcessors(BeanDefinitionRegistry, Object)} )} </li>
+	 *     <li> {@link ComponentScanBeanDefinitionParser} </li>
+     * </ol>
+	 * BeanPostProcessor 的子类：
+     * <ol>
+	 *      <li>  销毁相关，BeanFactory 注释生命周期上： {@link org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor DestructionAwareBeanPostProcessor}  </li>
+	 *      <li>  合并BeanDefinition， {@link org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor MergedBeanDefinitionPostProcessor}  </li>
+	 * 		<li>  bean 实例化相关： {@link org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor InstantiationAwareBeanPostProcessor}  </li>
+	 * 		<li>  循环依赖： {@link org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor SmartInstantiationAwareBeanPostProcessor}</li>
 	 * </ol>
 	 */
 	void read11() {
@@ -367,13 +364,12 @@ public class Readme {
 	/**
 	 * 12. spring 的消息资源和监听器的初始化
 	 *
-	 * <ol>
-	 *     <li> 消息资源（国际化 i18n）  <br>
-	 *         {@link AbstractApplicationContext#initMessageSource()}    <br>
-	 *         {@link org.springframework.context.MessageSource MessageSource}   <br>
-	 *         {@link org.springframework.context.support.DelegatingMessageSource DelegatingMessageSource}
-	 *     </li>
-	 * </ol>
+     * 消息资源（国际化 i18n）:
+	 * <ul>
+	 *       <li>  {@link AbstractApplicationContext#initMessageSource()}    </li>
+	 *       <li>  {@link org.springframework.context.MessageSource MessageSource}   </li>
+	 *       <li>  {@link org.springframework.context.support.DelegatingMessageSource DelegatingMessageSource}</li>
+	 * </ul>
 	 */
 	void read12() {
 	}
@@ -384,15 +380,9 @@ public class Readme {
 	 *
 	 * <p> 类型转换器
 	 * 		<ul>
-	 * 		 	<li> {@link org.springframework.core.convert.converter.Converter Converter}
-	 * 		 	</li>
-	 * 		 	<li> {@link org.springframework.core.convert.converter.GenericConverter GenericConverter}
-	 *
-	 * 		 	</li>
-	 *
-	 * 		 	<li> {@link org.springframework.core.convert.converter.ConverterFactory ConverterFactory}
-	 *
-	 * 		 	</li>
+	 * 		 	<li> {@link org.springframework.core.convert.converter.Converter Converter} </li>
+	 * 		 	<li> {@link org.springframework.core.convert.converter.GenericConverter GenericConverter} </li>
+	 * 		 	<li> {@link org.springframework.core.convert.converter.ConverterFactory ConverterFactory} </li>
 	 * 		 	<li> {@link AbstractApplicationContext#finishBeanFactoryInitialization(ConfigurableListableBeanFactory) finishBeanFactoryInitialization}  自定义类型转换器</li>
 	 * 		</ul>
 	 *
@@ -400,9 +390,7 @@ public class Readme {
 	 * <p>
 	 *     值解析器
 	 *     <ul>
-	 *         <li>
-	 *             {@link PlaceholderConfigurerSupport#doProcessProperties(ConfigurableListableBeanFactory, StringValueResolver) PlaceholderConfigurerSupport#doProcessProperties }
-	 *         </li>
+	 *         <li> {@link PlaceholderConfigurerSupport#doProcessProperties(ConfigurableListableBeanFactory, StringValueResolver) PlaceholderConfigurerSupport#doProcessProperties } </li>
 	 *     </ul>
 	 *
 	 * </p>
