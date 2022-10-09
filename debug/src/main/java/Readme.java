@@ -64,7 +64,9 @@ public class Readme {
 	/**
 	 * 设计模式
 	 * <ul>
-	 *     <li>  </li>
+	 *     <li> 模板方法： </li>
+	 *     <li> 解析 xml 配置文件前：{@link DefaultBeanDefinitionDocumentReader#preProcessXml(Element)}</li>
+	 *     <li> 解析 xml 配置文件后：{@link DefaultBeanDefinitionDocumentReader#postProcessXml(Element)} </li>
 	 * </ul>
 	 */
 	void read00(){}

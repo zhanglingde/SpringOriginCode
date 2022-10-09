@@ -105,12 +105,13 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 	}
 
 	/**
-	 * 如果某个 bean 实现了某个 Aware 接口，给指定的 bean 设置相应的属性值
+	 * 实现这些 Aware 接口的 bean 在被初始化后，可以获得一些对应的资源
 	 *
 	 * @param bean
 	 */
 	private void invokeAwareInterfaces(Object bean) {
 		if (bean instanceof EnvironmentAware) {
+			// bean 实现 EnvironmentAware 接口，在实例化后可以使用 Environment
 			((EnvironmentAware) bean).setEnvironment(this.applicationContext.getEnvironment());
 		}
 		if (bean instanceof EmbeddedValueResolverAware) {

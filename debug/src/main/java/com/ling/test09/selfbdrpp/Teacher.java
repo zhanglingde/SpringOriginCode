@@ -5,6 +5,8 @@ package com.ling.test09.selfbdrpp;
  * @date 2022/1/28 11:06 上午
  */
 public class Teacher {
+
+	private Long id;
 	private String name;
 
 	public Teacher() {
@@ -19,10 +21,19 @@ public class Teacher {
 		this.name = name;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
 		return "Teacher{" +
-				"name='" + name + '\'' +
+				"id=" + id +
+				", name='" + name + '\'' +
 				'}';
 	}
 }

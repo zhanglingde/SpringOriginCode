@@ -6,6 +6,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Spring 初始化时，初始化自己的环境变量
+ *
  * @author zhangling  2021/12/13 21:28
  */
 public class MyClassPathXmlApplicationContext extends ClassPathXmlApplicationContext {
@@ -29,6 +30,6 @@ public class MyClassPathXmlApplicationContext extends ClassPathXmlApplicationCon
 
 	@Override
 	protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
-		System.out.println("扩展实现 postProcessBeanFactory 方法");
+		System.out.println("扩展实现 MyClassPathXmlApplicationContext#postProcessBeanFactory 方法");
 	}
 }

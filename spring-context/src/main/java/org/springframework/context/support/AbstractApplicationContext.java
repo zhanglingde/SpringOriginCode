@@ -543,8 +543,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Tell the subclass to refresh the internal bean factory.
 			/**
-			 * 2. 初始化 BeanFactory（DefaultListableBeanFactory） ，并进行 XML 文件读取
-			 * 	  加载 xml 配置文件的属性值到当前工厂中，最重要的就是 BeanDefinition
+			 * 2. 初始化 BeanFactory（DefaultListableBeanFactory） ，并进行 XML 文件读取 （加载 xml 配置文件的属性值到当前工厂中，最重要的就是 BeanDefinition）
+			 *
 			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
@@ -715,7 +715,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// 添加 ApplicationContextAwareProcessor(BeanPostProcessor) 用来完成某些 Aware 对象的注入
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 
-		// 设置要忽略自动装配的接口,这些接口是由容器通过 set 方式进行注入的，所以在使用 Autowire 进行注入的时候要将这些接口进行忽略
+		// 设置要忽略自动装配的接口(上一步 ApplicationContextAwareProcessor 中已经对这些类处理了),这些接口是由容器通过 set 方式进行注入的，所以在使用 Autowire 进行注入的时候要将这些接口进行忽略
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
 		beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);
