@@ -370,15 +370,8 @@ public class Readme {
 	 *       <li>  {@link org.springframework.context.MessageSource MessageSource}   </li>
 	 *       <li>  {@link org.springframework.context.support.DelegatingMessageSource DelegatingMessageSource}</li>
 	 * </ul>
-	 */
-	void read12() {
-	}
-
-	/**
-	 * 13. Spring Bean
 	 *
-	 *
-	 * <p> 类型转换器
+	 <p> 类型转换器
 	 * 		<ul>
 	 * 		 	<li> {@link org.springframework.core.convert.converter.Converter Converter} </li>
 	 * 		 	<li> {@link org.springframework.core.convert.converter.GenericConverter GenericConverter} </li>
@@ -387,6 +380,15 @@ public class Readme {
 	 * 		</ul>
 	 *
 	 * </p>
+	 */
+	void read12() {
+	}
+
+	/**
+	 * 13. Spring Bean
+	 *
+	 *
+	 *
 	 * <p>
 	 *     值解析器
 	 *     <ul>

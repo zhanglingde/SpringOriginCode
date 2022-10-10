@@ -6,7 +6,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Test11 {
 	public static void main(String[] args) {
-		AbstractApplicationContext ac = new ClassPathXmlApplicationContext("bean10.xml");
+		AbstractApplicationContext ac = new ClassPathXmlApplicationContext("bean11.xml");
 		Person person = ac.getBean(Person.class);
 		System.out.println("person = " + person);
 	}

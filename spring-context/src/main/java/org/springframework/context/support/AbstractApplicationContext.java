@@ -1008,18 +1008,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		clearResourceCaches();
 
 		// Initialize lifecycle processor for this context.
-		// 为这个上下文初始化生命周期处理器
+		// 当 ApplicationContext 启动或停止时,它会通过 LifecycleProcessor 来与所有声明的 bean 的周期做状态更新，LifecycleProcessor 的使用前首先需要初始化
 		// 初始化 LifecycleProcessor，如果上下文中找到 lifecycleProcessor 的 LifecycleProcessor bean 对象，则使用 DefaultLifecycleProcessor
 		initLifecycleProcessor();
 
 		// Propagate refresh to lifecycle processor first.
-		// 首先将刷新传播到生命周期处理器
+		// 首先将刷新传播到生命周期处理器,启动所有实现了Lifecycle接口的bean
 		// 上下文刷新的通知，例如自动启动的组件
 		getLifecycleProcessor().onRefresh();
 
 		// Publish the final event.
 		// 发布最终事件
-		// 新建 ContextRefreshedEvent 事件对象，将其发布到所有的监听器
+		// 完成 ApplicationContext 初始化后, 发布 ContextRefreshedEvent 事件，对应的监听器可以做进一步的逻辑处理
 		publishEvent(new ContextRefreshedEvent(this));
 
 		// Participate in LiveBeansView MBean, if active.

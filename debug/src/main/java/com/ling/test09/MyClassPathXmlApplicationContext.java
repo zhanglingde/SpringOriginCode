@@ -23,7 +23,7 @@ public class MyClassPathXmlApplicationContext extends ClassPathXmlApplicationCon
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
 		beanFactory.setAllowBeanDefinitionOverriding(false);
 		beanFactory.setAllowCircularReferences(false);
-		// 自己添加 beanFactoryPostProcessor
+		// 自己添加 beanFactoryPostProcessor,添加到参数中
 		super.addBeanFactoryPostProcessor(new MyBeanFactoryPostProcessor());
 		super.customizeBeanFactory(beanFactory);
 	}

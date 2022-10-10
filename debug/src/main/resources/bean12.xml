@@ -8,14 +8,15 @@
 	   http://www.springframework.org/schema/context/spring-context.xsd">
 
 <!--	<context:component-scan base-package="com.ling.test10"></context:component-scan>-->
-<!--	<bean class="com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor"></bean>-->
 
 	<!-- 添加自定义转换器	-->
 	<bean id="studentConverter" class="com.ling.test12.selfConverter.StudentConverter"/>
+
 	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
 		<property name="converters">
 			<set>
 				<ref bean="studentConverter"/>
+				<bean class="com.ling.test12.selfConverter.String2DateConverter"/>
 			</set>
 		</property>
 	</bean>

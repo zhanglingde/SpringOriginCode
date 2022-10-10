@@ -1,0 +1,50 @@
+@startuml
+
+start
+:DefaultListableBeanFactory.preInstantiateSingletons();
+note right:实例化剩下的单例对象
+:遍历 BeanDefinition 的 name;
+if(是否实现 FactoryBean?) then(实现)
+
+else(未实现)
+:getBean(beanName);
+:<color:red>AbstractBeanFactory.doGetBean();
+note left:实际获取 bean的方法，\n也是触发依赖注入的方法
+endif
+end
+if(从一级缓存获取) then(缓存存在对象)
+if(是否是 FactoryBean) then(不是)
+:直接返回一级缓存中获取的 bean;
+else(是)
+:使用 FactoryBean 创建对象;
+:将对象添加到 FactoryBean 缓存中;
+:返回创建成功的对象;
+endif
+end
+else(一级缓存没有)
+:createBean();
+:<color:red>AbstractAutowireCapableBeanFactory.doCreateBean();
+note right:创建完成对象
+
+:createBeanInstance();
+note right
+使用对应的策略创建新的实例 BeanWrapper（反射创建 bean 实例）
+* 工厂方法
+* 构造函数注入
+* 简单初始化
+end note
+:判断bean是否允许循环依赖（如果允许）
+addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
+note right:为避免后期循环依赖，可以在 bean 初始化完成前\n将创建实例的 ObjectFactory 加入工厂（三级缓存）
+:populateBean(beanName, mbd, instanceWrapper);
+note right
+填充属性（初始化分为两步：填充属性，initMethod）；可能会依赖于其他 bean，则会递归初始化依赖的 bean
+end note
+:initializeBean(beanName, exposedObject, mbd);
+note right: 执行初始化逻辑
+
+:返回创建成功的对象;
+endif
+end
+
+@enduml
