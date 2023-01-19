@@ -1248,7 +1248,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * 根据 request 找到 Handler，包含值包含着与当前 request 相匹配的 Interceptor 和 Handler
+	 * 根据 request 找到 Handler，返回值包含着与当前 request 相匹配的 Interceptor 和 Handler
 	 *
 	 * 执行时先依次执行 Interceptor 的 preHandle 方法，最后执行 Handler，返回的时候按相反的顺序执行 Interceptor 的 postHandle 方法。
 	 * 就好像要去一个地方，Interceptor 是要经过的收费站，Handler是目的地，去的时候和返回的时候都要经过加油站，但两次所经过的顺序是相反的

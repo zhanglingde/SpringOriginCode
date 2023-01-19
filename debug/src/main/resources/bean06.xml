@@ -29,4 +29,6 @@
 	<!-- 解析非默认命名空间标签，（还有 tx） -->
 	<context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
 
+
+
 </beans>

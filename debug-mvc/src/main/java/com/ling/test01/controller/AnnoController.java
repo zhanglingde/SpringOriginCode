@@ -35,6 +35,7 @@ public class AnnoController {
      * @return
      */
     @RequestMapping("/testRequestBody")
+    @ResponseBody
     public String testRequestBody(@RequestBody User body) {
         System.out.println("执行了...");
         System.out.println(body);
