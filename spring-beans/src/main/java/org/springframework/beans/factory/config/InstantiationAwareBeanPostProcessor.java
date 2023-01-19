@@ -80,7 +80,9 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 	}
 
 	/**
-	 * 在 bean 实例化之后调用
+	 * 在 bean 实例化之后调用，该方法一般用于属性赋值；
+     *
+     * 该方法返回 false 表示不再继续进行 bean 的属性填充（populateBean），返回 true 继续进行属性填充
 	 *
 	 * Perform operations after the bean has been instantiated, via a constructor or factory method,
 	 * but before Spring property population (from explicit properties or autowiring) occurs.

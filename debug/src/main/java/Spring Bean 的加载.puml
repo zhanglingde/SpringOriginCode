@@ -1,50 +1,68 @@
 @startuml
 
-start
-:DefaultListableBeanFactory.preInstantiateSingletons();
-note right:实例化剩下的单例对象
-:遍历 BeanDefinition 的 name;
-if(是否实现 FactoryBean?) then(实现)
+'!theme plain
+top to bottom direction
+'skinparam linetype ortho
 
-else(未实现)
-:getBean(beanName);
-:<color:red>AbstractBeanFactory.doGetBean();
-note left:实际获取 bean的方法，\n也是触发依赖注入的方法
-endif
-end
-if(从一级缓存获取) then(缓存存在对象)
-if(是否是 FactoryBean) then(不是)
-:直接返回一级缓存中获取的 bean;
-else(是)
-:使用 FactoryBean 创建对象;
-:将对象添加到 FactoryBean 缓存中;
-:返回创建成功的对象;
-endif
-end
-else(一级缓存没有)
-:createBean();
-:<color:red>AbstractAutowireCapableBeanFactory.doCreateBean();
-note right:创建完成对象
+interface AliasRegistry
+class SimpleAliasRegistry
+interface SingletonBeanRegistry
+class DefaultSingletonBeanRegistry
+class FactoryBeanRegistrySupport
 
-:createBeanInstance();
-note right
-使用对应的策略创建新的实例 BeanWrapper（反射创建 bean 实例）
-* 工厂方法
-* 构造函数注入
-* 简单初始化
-end note
-:判断bean是否允许循环依赖（如果允许）
-addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
-note right:为避免后期循环依赖，可以在 bean 初始化完成前\n将创建实例的 ObjectFactory 加入工厂（三级缓存）
-:populateBean(beanName, mbd, instanceWrapper);
-note right
-填充属性（初始化分为两步：填充属性，initMethod）；可能会依赖于其他 bean，则会递归初始化依赖的 bean
-end note
-:initializeBean(beanName, exposedObject, mbd);
-note right: 执行初始化逻辑
+interface BeanFactory
+interface HierarchicalBeanFactory
+interface ListableBeanFactory
+interface ConfigurableBeanFactory
+interface ConfigurableListableBeanFactory
+interface AutowireCapableBeanFactory
 
-:返回创建成功的对象;
-endif
-end
+class AbstractBeanFactory
+interface BeanDefinitionRegistry
+class AbstractAutowireCapableBeanFactory
+class DefaultListableBeanFactory
 
+
+
+note top of AliasRegistry:<red>定义了对 alias 的简单增删改查等操作</red>
+note top of BeanDefinitionRegistry: 定义对 BeanDefinition 的各种增删改查操作
+note left of SimpleAliasRegistry:主要使用 map作为alias的缓存，\n并对接口 AliasRegistry进行实现
+note top of SingletonBeanRegistry:定义对单例bean的注册及获取
+note left of DefaultSingletonBeanRegistry:对接口 SingletonBeanRegistry 各函数的实现
+note left of FactoryBeanRegistrySupport:在DefaultSingletonBeanRegistry 基础上\n增加了对 FactoryBean 的特殊处理功能
+
+note top of BeanFactory:定义获取 bean 及 bean 的各种属性
+note top of ListableBeanFactory:根据各种条件获取 bean 的配置清单
+note top of HierarchicalBeanFactory:在 BeanFactory 定义的功能基础上\n增加了对 parentFactory 的支持
+note top of ConfigurableBeanFactory: 提供配置 Factory 的各种方法
+note right of AutowireCapableBeanFactory: 提供创建bean、自动注入、初始化\n以及应用 bean 的后置处理器
+note left of AbstractBeanFactory: 综合 FactoryBeanRegistrySupport 和\nConfigurableBeanFactory 的功能
+note right of ConfigurableListableBeanFactory: BeanFactory 配置清单，指定忽略类型及接口
+note left of AbstractAutowireCapableBeanFactory: 综合 AbstractBeanFactory 并对接口 \nAutowireCapableBeanFactory 进行实现
+
+
+note right of DefaultListableBeanFactory: 综合上面所有功能，主要是对 bean 注册后的处理
+
+
+AbstractBeanFactory          ^-[#000082,plain]-     AbstractAutowireCapableBeanFactory
+AutowireCapableBeanFactory  ^-[#008200,dashed]-    AbstractAutowireCapableBeanFactory
+ConfigurableBeanFactory     ^-[#008200,dashed]-    AbstractBeanFactory
+FactoryBeanRegistrySupport   ^-[#000082,plain]-     AbstractBeanFactory
+BeanFactory                  ^-[#008200,plain]-     AutowireCapableBeanFactory
+AliasRegistry                ^-[#008200,plain]-     BeanDefinitionRegistry
+HierarchicalBeanFactory      ^-[#008200,plain]-     ConfigurableBeanFactory
+SingletonBeanRegistry        ^-[#008200,plain]-     ConfigurableBeanFactory
+AutowireCapableBeanFactory   ^-[#008200,plain]-     ConfigurableListableBeanFactory
+ConfigurableBeanFactory      ^-[#008200,plain]-     ConfigurableListableBeanFactory
+ListableBeanFactory          ^-[#008200,plain]-     ConfigurableListableBeanFactory
+
+AbstractAutowireCapableBeanFactory      ^-[#000082,plain]-   		DefaultListableBeanFactory
+BeanDefinitionRegistry         					^-[#008200,dashed]-     DefaultListableBeanFactory
+ConfigurableListableBeanFactory         ^-[#008200,dashed]-     DefaultListableBeanFactory
+SimpleAliasRegistry       							^-[#000082,plain]-      DefaultSingletonBeanRegistry
+SingletonBeanRegistry        						^-[#008200,dashed]-     DefaultSingletonBeanRegistry
+DefaultSingletonBeanRegistry          	^-[#000082,plain]-  		FactoryBeanRegistrySupport
+BeanFactory             								^-[#008200,plain]-      HierarchicalBeanFactory
+BeanFactory                							^-[#008200,plain]-    	ListableBeanFactory
+AliasRegistry                 					^-[#008200,dashed]-    	SimpleAliasRegistry
 @enduml

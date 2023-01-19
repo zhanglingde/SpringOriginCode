@@ -7,7 +7,7 @@ package com.ling.test21.proxy.jdk;
 public class UserServiceImpl implements UserService{
 
 	@Override
-	public void add() {
+	public void doService() {
 		System.out.println("业务方法...");
 	}
 }

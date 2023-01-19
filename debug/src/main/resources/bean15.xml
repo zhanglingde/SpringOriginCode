@@ -8,12 +8,12 @@
 	   http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- 1. BeanPostProcessor 创建代理对象 -->
-	<!--<bean id="beforeInstantiation" class="com.ling.test15.resolveBeforeInstantiation.BeforeInstantiation"></bean>-->
-	<!--<bean id="myInstantiationAwareBeanPostProcessor" class="com.ling.test15.resolveBeforeInstantiation.MyInstantiationAwareBeanPostProcessor"></bean>-->
+	<bean id="beforeInstantiation" class="com.ling.test15.resolveBeforeInstantiation.BeforeInstantiation"></bean>
+	<bean id="myInstantiationAwareBeanPostProcessor" class="com.ling.test15.resolveBeforeInstantiation.MyInstantiationAwareBeanPostProcessor"></bean>
 
 	<!-- 2. supplier 创建 bean	-->
-	<!--<bean id="user" class="com.ling.test15.supplier.User"></bean>-->
-	<!--<bean class="com.ling.test15.supplier.SupplierBeanFactoryPostProcessor"></bean>-->
+	<bean id="user" class="com.ling.test15.supplier.User" ></bean>
+	<bean class="com.ling.test15.supplier.SupplierBeanFactoryPostProcessor"></bean>
 
 
 
@@ -22,7 +22,6 @@
 		<!-- 可以我方法指定参数		 -->
 		<constructor-arg value="zhangsan"></constructor-arg>
 	</bean>
-
 
 	<!--
 	 3. 实例工厂创建 bean
@@ -34,5 +33,13 @@
 	</bean>
 	<bean id="personInstanceFactory" class="com.ling.test15.factoryMethod.PersonInstanceFactory"></bean>
 
+	<!-- 构造方法创建 bean -->
+	<bean id="user2" class="com.ling.test15.supplier.User">
+		<property name="username" value="无参构造创建bean" ></property>
+	</bean>
+
+	<bean id="user3" class="com.ling.test15.supplier.User">
+		<constructor-arg name="username" value="有参构造创建bean"></constructor-arg>
+	</bean>
 
 </beans>
