@@ -7,6 +7,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
+ * 自定义标签解析
+ *
  * @author zhangling  2021/12/16 21:16
  */
 public class Test06 {

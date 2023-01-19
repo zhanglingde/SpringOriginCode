@@ -406,7 +406,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
         // Match 是内部类，保存匹配条件和 Handler
 		List<Match> matches = new ArrayList<>();
-        // 首先根据 lookupPath 获取到匹配条件
+        // 首先根据 lookupPath 获取到匹配条件（RequestMappingInfo）
 		List<T> directPathMatches = this.mappingRegistry.getMappingsByUrl(lookupPath);
 		if (directPathMatches != null) {
             // 将找到的匹配条件添加到 matches
