@@ -18,7 +18,7 @@ public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor, Pri
 		System.out.println("自定义 MyBeanFactoryPostProcessor#postProcessBeanFactory");
 	}
 
-	// 该 BFPP 通过重写 ApplicationContext#customizeBeanFactory 方法， order 顺序无效？
+	// 该 BFPP 通过重写 ApplicationContext#customizeBeanFactory 方法添加， order 顺序无效？
 	@Override
 	public int getOrder() {
 		return 0;

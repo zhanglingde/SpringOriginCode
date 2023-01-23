@@ -1,7 +1,7 @@
 package com.ling.test09;
 
 import com.ling.Person;
-import com.ling.test09.selfbdrpp.Teacher;
+import com.ling.test09.registryPostProcessor.Teacher;
 
 /**
  * 自定义 BeanFactoryPostProcessor

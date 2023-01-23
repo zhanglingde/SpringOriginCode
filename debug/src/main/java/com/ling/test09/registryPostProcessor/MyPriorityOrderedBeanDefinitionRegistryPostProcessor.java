@@ -1,11 +1,10 @@
-package com.ling.test09.selfbdrpp;
+package com.ling.test09.registryPostProcessor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.PriorityOrdered;
 
 /**
@@ -14,16 +13,16 @@ import org.springframework.core.PriorityOrdered;
  * @author zhangling
  * @date 2022/1/28 10:40 上午
  */
-public class MyBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, PriorityOrdered {
+public class MyPriorityOrderedBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, PriorityOrdered {
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-		System.out.println("执行 MyBeanDefinitionRegistryPostProcessor#postProcessBeanFactory");
+		System.out.println("执行 PriorityOrderedRegistryPostProcessor#postProcessBeanFactory");
 	}
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
 		// 在此处可能会添加进新的 BeanDefinition
-		System.out.println("执行 MyBeanDefinitionRegistryPostProcessor#postProcessBeanDefinitionRegistry");
+		System.out.println("执行 PriorityOrderedRegistryPostProcessor#postProcessBeanDefinitionRegistry");
 		// 查看两种方式 Bean 是什么时候创建的  ？
 		// 方式一
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Teacher.class);

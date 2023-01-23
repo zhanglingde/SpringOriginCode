@@ -1,4 +1,4 @@
-package com.ling.test09.selfbdrpp;
+package com.ling.test09.registryPostProcessor;
 
 /**
  * @author zhangling

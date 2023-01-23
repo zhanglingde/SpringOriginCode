@@ -1,4 +1,4 @@
-package com.ling.test09.selfbdrpp;
+package com.ling.test09.registryPostProcessor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

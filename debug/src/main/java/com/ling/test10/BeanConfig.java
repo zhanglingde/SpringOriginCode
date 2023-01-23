@@ -5,7 +5,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
-
+/**
+ * 不会被 Component
+ */
 @Conditional({WindowsCondition.class})
 @Configuration
 public class BeanConfig {

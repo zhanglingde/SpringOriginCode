@@ -42,14 +42,13 @@ import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostP
 import org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.context.support.AbstractRefreshableConfigApplicationContext;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.context.config.ContextNamespaceHandler;
 import org.springframework.beans.support.ResourceEditorRegistrar;
 import org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator;
 import org.springframework.aop.aspectj.autoproxy.AspectJAwareAdvisorAutoProxyCreator;
 
 
-import com.ling.test09.selfbdrpp.MyBeanDefinitionRegistryPostProcessor;
+import com.ling.test09.registryPostProcessor.MyPriorityOrderedBeanDefinitionRegistryPostProcessor;
 import com.ling.test06.customtag.CatBeanDefinitionParser;
 
 import java.lang.reflect.Constructor;
@@ -266,7 +265,7 @@ public class Readme {
 	 *     <ol>
 	 *         <li>  自定义 BeanDefinitionRegistryPostProcessor，分别实现 PriorityOrdered、Ordered 接口和不实现接口，BDRPP 被扫描执行的顺序不同 <br>
 	 * <p>
-	 *             {@link MyBeanDefinitionRegistryPostProcessor}
+	 *             {@link MyPriorityOrderedBeanDefinitionRegistryPostProcessor}
 	 *         </li>
 	 *         <li> 每个阶段执行 BDRPP ，每次需要重新获取 BeanDefinitionRegistryPostProcessor
 	 *

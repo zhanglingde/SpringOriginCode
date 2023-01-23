@@ -78,9 +78,9 @@ abstract class ConfigurationClassUtils {
 
 
 	/**
-	 * 判断当前 BeanDefinition 是否是一个配置类，并我 BeanDefinition 设置属性为 lite 或者 full，此处设置属性值是为了后续进行调用
+	 * 判断当前 BeanDefinition 是否是一个配置类，并为 BeanDefinition 设置属性为 lite 或者 full，此处设置属性值是为了后续进行调用
 	 * 如果 Configuration 配置 proxyBeanMethods 代理为 true 则为 full
-	 * 如果包含 @Bean、@Compoent、@ComponentScan、@Import、@ImportSource 注解，则设置为 lite
+	 * 如果包含 @Bean、@Component、@ComponentScan、@Import、@ImportSource 注解，则设置为 lite
 	 * 如果配置类上被 @Order 注解标注，则设置 BeanDefinition 的 order 属性值
 	 *
 	 * Check whether the given bean definition is a candidate for a configuration class
