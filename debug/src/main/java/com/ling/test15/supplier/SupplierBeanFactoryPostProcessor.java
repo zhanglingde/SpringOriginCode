@@ -17,7 +17,7 @@ public class SupplierBeanFactoryPostProcessor implements BeanFactoryPostProcesso
 		// 原生读取时生成 GenericBeanDefinition，里面有 Supplier 属性，可以对其属性值进行设置
 		GenericBeanDefinition genericBeanDefinition = (GenericBeanDefinition) user;
 		// 函数式接口
-		genericBeanDefinition.setInstanceSupplier(CreateSupplier::createUser);
+		genericBeanDefinition.setInstanceSupplier(UserCreateSupplier::createUser);
 		genericBeanDefinition.setBeanClass(User.class);
 
 	}

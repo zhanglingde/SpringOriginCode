@@ -1708,7 +1708,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
-					// postProcessProperties：在工厂将给定的属性值应用到给定 Bean 之前，对它们进行后处理，不需要任何属性扫描符。该回调方法在未来的版本会被删掉。
+					// postProcessProperties：在工厂将给定的属性值应用到给定 Bean 之前，对它们进行后处理，不需要任何属性扫描符。
 					// -- 取而代之的是 postProcessPropertyValues 回调方法。
 					// 让 ibp 对 pvs 增加对 bw 的 Bean 对象的 propertyValue，或编辑 pvs 的 propertyValue
 					PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
@@ -1718,7 +1718,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 							// 从 bw 提取一组经过筛选的 PropertyDescriptor,排除忽略的依赖项或忽略项上的定义的属性
 							filteredPds = filterPropertyDescriptorsForDependencyCheck(bw, mbd.allowCaching);
 						}
-						// 对所有需要依赖检查的属性进行后处理
+						// 对所有需要依赖检查的属性进行后处理（在 5.1 版本被废弃）
 						// postProcessPropertyValues:一般进行检查是否所有依赖项都满足，例如基于"Require"注释在 bean属性 setter，
 						// 	-- 替换要应用的属性值，通常是通过基于原始的PropertyValues创建一个新的MutablePropertyValue实例， 添加或删除特定的值
 						// 	-- 返回的PropertyValues 将应用于bw包装的bean实例 的实际属性值（添加PropertyValues实例到pvs 或者 设置为null以跳过属性填充）

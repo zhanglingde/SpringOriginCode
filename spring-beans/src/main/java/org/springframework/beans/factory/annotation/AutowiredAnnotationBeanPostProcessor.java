@@ -271,7 +271,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	 */
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
-		// 解析注解并缓存
+		// 解析 @Autowired 注解并缓存
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, beanType, null);
 		metadata.checkConfigMembers(beanDefinition);
 	}
@@ -300,7 +300,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 			throws BeanCreationException {
 
 		// Let's check for lookup methods here...
-		// 如果包含 @Loopup 注解的方法，如果集合中没有 beanName，则走一遍 bean 中的所有方法，过滤是否含有 lookup 方法
+		// 如果包含 @Lookup 注解的方法，如果集合中没有 beanName，则走一遍 bean 中的所有方法，过滤是否含有 lookup 方法
 		if (!this.lookupMethodsChecked.contains(beanName)) {
 			if (AnnotationUtils.isCandidateClass(beanClass, Lookup.class)) {
 				try {
@@ -571,7 +571,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	 * @return
 	 */
 	private InjectionMetadata buildAutowiringMetadata(final Class<?> clazz) {
-		// 如果 clazz 是 JDK 中的类，直接忽略，因为不可能标注有这些标注
+		// 如果 clazz 是 JDK 中的类，直接忽略，因为不可能标注有这些标注  被 @Autowired 和 @Value 注解标注
 		if (!AnnotationUtils.isCandidateClass(clazz, this.autowiredAnnotationTypes)) {
 			return InjectionMetadata.EMPTY;
 		}

@@ -18,10 +18,10 @@
 
 
 	<!-- 3. 静态工厂 -->
-	<bean id="person01" class="com.ling.test15.factoryMethod.PersonStaticFactory" factory-method="getPerson">
-		<!-- 可以我方法指定参数		 -->
-		<constructor-arg value="zhangsan"></constructor-arg>
-	</bean>
+	<!--<bean id="person01" class="com.ling.test15.factoryMethod.PersonStaticFactory" factory-method="getPerson">-->
+	<!--	&lt;!&ndash; 可以我方法指定参数		 &ndash;&gt;-->
+	<!--	<constructor-arg value="zhangsan"></constructor-arg>-->
+	<!--</bean>-->
 
 
 	<!--
@@ -29,10 +29,15 @@
 	 factory-bean：指定使用哪个工厂实例
 	 factory-method：指定使用哪个工厂实例的方法
 	 -->
-	<bean id="person02" class="com.ling.test15.factoryMethod.Person" factory-bean="personInstanceFactory" factory-method="getPerson">
-		<constructor-arg value="wangwu"></constructor-arg>
-	</bean>
-	<bean id="personInstanceFactory" class="com.ling.test15.factoryMethod.PersonInstanceFactory"></bean>
+	<!--<bean id="person02" class="com.ling.test15.factoryMethod.Person" factory-bean="personInstanceFactory" factory-method="getPerson">-->
+	<!--	<constructor-arg value="wangwu"></constructor-arg>-->
+	<!--</bean>-->
+	<!--<bean id="personInstanceFactory" class="com.ling.test15.factoryMethod.PersonInstanceFactory"></bean>-->
 
+	<!-- 5. 反射创建 -->
+	<bean id="person3" class="com.ling.test15.factoryMethod.Person">
+		<property name="id" value="1"></property>
+		<property name="name" value="ling"></property>
+	</bean>
 
 </beans>

@@ -9,6 +9,9 @@ public class Person {
     private String name;
     private int age;
     private String gender;
+    /**
+     * 根据名字会注入 Address
+     */
     private Address address;
     private String[] hobbies;
     private List<Book> books;

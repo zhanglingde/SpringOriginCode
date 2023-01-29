@@ -15,6 +15,7 @@
 	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
 		<property name="converters">
 			<set>
+				<!-- 两种添加方式 -->
 				<ref bean="studentConverter"/>
 				<bean class="com.ling.test12.selfConverter.String2DateConverter"/>
 			</set>

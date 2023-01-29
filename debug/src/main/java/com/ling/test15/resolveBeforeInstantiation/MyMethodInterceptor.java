@@ -6,6 +6,9 @@ import org.springframework.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
 
+/**
+ * 代理对象
+ */
 public class MyMethodInterceptor implements MethodInterceptor {
 
 	@Override

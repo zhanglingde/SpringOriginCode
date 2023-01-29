@@ -15,12 +15,12 @@ public class Person {
 	public Person() {
 	}
 
-	// @Autowired
+	@Autowired
 	public Person(Integer id) {
 		this.id = id;
 	}
 
-	// @Autowired
+	@Autowired
 	public Person(Integer id, String name) {
 		this.id = id;
 		this.name = name;
@@ -30,10 +30,6 @@ public class Person {
 		this.id = id;
 		this.name = name;
 	}
-
-
-
-
 
 
 	public Integer getId() {

@@ -4,6 +4,10 @@ package com.ling.test16;
 // import javax.annotation.PreDestroy;
 // import javax.annotation.Resource;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+
 public class Life {
 
 	// @Resource
@@ -19,12 +23,12 @@ public class Life {
 		this.name = name;
 	}
 
-	// @PostConstruct
+	@PostConstruct
 	public void init(){
 		System.out.println("init......");
 	}
 
-	// @PreDestroy
+	@PreDestroy
 	public void destroy(){
 		System.out.println("destroy...");
 	}

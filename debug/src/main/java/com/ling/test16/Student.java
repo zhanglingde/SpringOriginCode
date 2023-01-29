@@ -21,7 +21,7 @@ public class Student {
 		this.id = id;
 	}
 
-	// @Autowired
+	// @Autowired(required = true)
 	public Student(String name) {
 		this.name = name;
 	}

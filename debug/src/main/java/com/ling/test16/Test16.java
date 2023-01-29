@@ -11,12 +11,12 @@ public class Test16 {
 		// Person person2 = ac.getBean("person", Person.class);
 
 		// Autowire
-		// Student bean = ac.getBean(Student.class);
-		// System.out.println("bean = " + bean);
+		Student bean = ac.getBean(Student.class);
+		System.out.println("bean = " + bean);
 
 		// 生命周期
-		Life bean = ac.getBean(Life.class);
-		System.out.println("bean = " + bean);
+		Life life = ac.getBean(Life.class);
+		System.out.println("life = " + life);
 		ac.close();
 
 

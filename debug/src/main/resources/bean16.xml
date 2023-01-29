@@ -18,10 +18,10 @@
 	<!--	<constructor-arg name="name" value="zhangling"></constructor-arg>-->
 	<!--</bean>-->
 
-	<!--<bean id="student" class="com.ling.test16.Student">-->
-	<!--	<constructor-arg name="id" value="18"></constructor-arg>-->
-	<!--	<constructor-arg name="name" value="zhangling"></constructor-arg>-->
-	<!--</bean>-->
+	<bean id="student" class="com.ling.test16.Student">
+		<constructor-arg name="id" value="18"></constructor-arg>
+		<constructor-arg name="name" value="zhangling"></constructor-arg>
+	</bean>
 
 
 	<!-- @PostConstruct 和 @PreDestroy	-->

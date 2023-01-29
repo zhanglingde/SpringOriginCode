@@ -285,9 +285,8 @@ final class PostProcessorRegistrationDelegate {
 		}
 
 		// First, register the BeanPostProcessors that implement PriorityOrdered.
-		// 1. 对实现 PriorityOrdered 接口的 BeanPostProcessor 实例进行排序
+		// 1. 对实现 PriorityOrdered 接口的 BeanPostProcessor 排序,注册到 beanFactory 中
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
-		// 将实现了 PriorityOrdered 接口的 BeanPostProcessor 实例注册添加到 beanFactory 中
 		registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
 
 		// Next, register the BeanPostProcessors that implement Ordered.
@@ -302,9 +301,8 @@ final class PostProcessorRegistrationDelegate {
 				internalPostProcessors.add(pp);
 			}
 		}
-		// 对实现了 Ordered 接口的 BeanPostProcessor 进行排序
+		// 实现了 Ordered 接口的 BeanPostProcessor 排序，注册到 beanFactory
 		sortPostProcessors(orderedPostProcessors, beanFactory);
-		// 对实现了 Ordered 接口的 BeanPostProcessor 实例注册添加到 beanFactory
 		registerBeanPostProcessors(beanFactory, orderedPostProcessors);
 
 		// Now, register all regular BeanPostProcessors.
