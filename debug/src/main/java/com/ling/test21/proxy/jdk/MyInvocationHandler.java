@@ -1,5 +1,7 @@
 package com.ling.test21.proxy.jdk;
 
+import com.ling.test15.supplier.User;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -27,11 +29,7 @@ public class MyInvocationHandler implements InvocationHandler {
 
 	/**
 	 * 执行目标对象的方法
-	 *
-	 * @param proxy
-	 * @param method
-	 * @param args
-	 * @return
+     *
 	 * @throws Throwable
 	 */
 	@Override
@@ -45,12 +43,5 @@ public class MyInvocationHandler implements InvocationHandler {
 		return result;
 	}
 
-	/**
-	 * 获取目标对象的代理对象
-	 * @return 代理对象
-	 */
-	public Object getProxy(){
-		return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-				target.getClass().getInterfaces(), this);
-	}
+
 }

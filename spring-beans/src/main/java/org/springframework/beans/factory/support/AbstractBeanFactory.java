@@ -339,7 +339,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			// Check if bean definition exists in this factory.
 			// 获取父类容器
-			BeanFactory parentBeanFactory = getParentBeanFactory();
+ 			BeanFactory parentBeanFactory = getParentBeanFactory();
 			// 如果 beanDefinitionMap 中即在所有已经加载的类中不包含 beanName,尝试从父容器中获取
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
@@ -361,7 +361,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 
-			// 标志位
+			// 标志位 bean已经被创建
 			if (!typeCheckOnly) {
 				markBeanAsCreated(beanName);
 			}

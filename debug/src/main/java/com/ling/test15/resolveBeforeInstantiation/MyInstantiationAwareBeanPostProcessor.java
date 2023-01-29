@@ -40,7 +40,7 @@ public class MyInstantiationAwareBeanPostProcessor implements InstantiationAware
 	@Override
 	public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
 		System.out.println("beanName:"+beanName+"---------执行 postProcessAfterInstantiation");
-		return false;
+		return true;
 	}
 
 	/**

@@ -13,9 +13,9 @@ import java.lang.reflect.Method;
 public class MyCglib implements MethodInterceptor {
 	@Override
 	public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-		System.out.println("代理前...");
+		System.out.println("before...");
 		Object o1 = methodProxy.invokeSuper(o, objects);
-		System.out.println("代理后...");
+		System.out.println("after...");
 		return o1;
 	}
 }

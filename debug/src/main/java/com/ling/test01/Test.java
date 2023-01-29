@@ -5,6 +5,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
+ * 加载配置文件
  * @author zhangling  2021/9/1 17:35
  */
 public class Test {

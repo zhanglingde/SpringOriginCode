@@ -2,6 +2,7 @@ package com.ling.test15;
 
 import com.ling.test15.factoryMethod.Person;
 import com.ling.test15.resolveBeforeInstantiation.BeforeInstantiation;
+import com.ling.test15.supplier.User;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -14,17 +15,22 @@ public class Test15 {
 		bean.doSomeThing();
 
 		// 2. supplier 创建 bean
-		// ApplicationContext ac = new ClassPathXmlApplicationContext("bean15.xml");
-		// User user = ac.getBean(User.class);
-		// System.out.println("user = " + user);
+		User user = (User) ac.getBean("user");
+		System.out.println("user = " + user);
 
 		// 3. factoryMethod 创建 bean
-		// ApplicationContext ac = new ClassPathXmlApplicationContext("bean15.xml");
-		// Person person1 = ac.getBean("person01",Person.class);
-		// System.out.println("person = " + person1);
+		Person person1 = ac.getBean("person01",Person.class);
+		System.out.println("person = " + person1);
 		//
-		// Object person02 = ac.getBean("person02");
-		// System.out.println("person02 = " + person02);
+		Object person02 = ac.getBean("person02");
+		System.out.println("person02 = " + person02);
 
-	}
+        // 构造方法创建 bean(没有设置属性值，是 MyInstantiationAwareBeanPostProcessor#postProcessAfterInstantiation() 返回 false,属性赋值未执行)
+        User user2 =  ac.getBean("user2",User.class);
+        System.out.println("user2 = " + user2);
+
+        User user3 = (User) ac.getBean("user3");
+        System.out.println("user3 = " + user3);
+
+    }
 }
