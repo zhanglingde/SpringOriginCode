@@ -529,7 +529,7 @@ public class Readme {
 	 * </ul>
 	 *
 	 * <p>
-	 *     @ PostConstruct 和 @PreDestroy 和 @Resource 的处理
+	 *     @PostConstruct 和 @PreDestroy 和 @Resource 的处理
 	 * </p>
 	 * <ul>
 	 *     <li>

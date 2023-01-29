@@ -7,18 +7,18 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     public void saveAccount() {
-        System.out.println("执行了保存");
+        System.out.println("业务方法保存...");
     }
 
     @Override
     public void updateAccount(int i) {
-        System.out.println("执行了更新"+i);
+        System.out.println("业务方法更新"+i);
 
     }
 
     @Override
     public int deleteAccount() {
-        System.out.println("执行了删除");
+        System.out.println("业务方法删除");
         return 0;
     }
 }

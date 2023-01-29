@@ -25,7 +25,8 @@
 		<!-- 配置切面-->
 		<aop:aspect id="logAdvice" ref="logger">
 			<!--配置通知类型，并建立通知方法和切入点方法的关联-->
-			<aop:before method="printLog" pointcut="execution(public void com.ling.test21.aopxml.service.impl.AccountServiceImpl.saveAccount())"></aop:before>
+			<aop:pointcut id="pt1" expression="execution(public void com.ling.test21.aopxml.service.impl.AccountServiceImpl.saveAccount())"/>
+			<aop:before method="printLog" pointcut-ref="pt1"></aop:before>
 			<aop:after method="after" pointcut="execution(public void com.ling.test21.aopxml.service.impl.AccountServiceImpl.saveAccount())"></aop:after>
 		</aop:aspect>
 	</aop:config>
@@ -34,9 +35,9 @@
 	<!-- 注解方式 AOP -->
 
 	<!-- 配置spring开启注解AOP的支持 -->
-	<!--<aop:aspectj-autoproxy></aop:aspectj-autoproxy>-->
-	<!--&lt;!&ndash; @Autowired 注解注入属性，AnnotationBeanPostProcessor &ndash;&gt;-->
-	<!--<context:component-scan base-package="com.ling.test21.aopannotation"></context:component-scan>-->
+	<!-- <aop:aspectj-autoproxy></aop:aspectj-autoproxy> -->
+	<!-- @Autowired 注解注入属性，AnnotationBeanPostProcessor -->
+	<!-- <context:component-scan base-package="com.ling.test21.aopannotation"></context:component-scan> -->
 
 
 </beans>
