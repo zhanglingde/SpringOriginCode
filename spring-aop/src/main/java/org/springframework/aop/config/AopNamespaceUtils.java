@@ -104,7 +104,7 @@ public abstract class AopNamespaceUtils {
 
 			/**
 			 * 对 proxy-target-class 属性的处理
-			 * Spring AOP部分使用JDK动态代理或者CGLIB来为目标对象创建代理（建议尽量使用JDK的动态代理）。如果被代理的目标对象实现了至少一个接口，则会使用JDK动态代理。
+			 * Spring AOP 部分使用 JDK 动态代理或者 CGLIB 来为目标对象创建代理（建议尽量使用JDK的动态代理）。如果被代理的目标对象实现了至少一个接口，则会使用JDK动态代理。
 			 * 所有该目标类型实现的接口都将被代理。若该目标对象没有实现任何接口，则创建一个CGLIB代理
 			 */
 			boolean proxyTargetClass = Boolean.parseBoolean(sourceElement.getAttribute(PROXY_TARGET_CLASS_ATTRIBUTE));

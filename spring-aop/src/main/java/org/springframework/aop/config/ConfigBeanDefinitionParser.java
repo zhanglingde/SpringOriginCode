@@ -350,7 +350,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 			aspectFactoryDef.setSynthetic(true);
 
 			// register the pointcut
-			// 涉及 point-cut 属性的解析，并结合上述的两个 bean 最终包装为 AbstractBeanDefinition 通知对象
+			// 涉及 pointcut 属性的解析，并结合上述的两个 bean 最终包装为 AbstractBeanDefinition 通知对象
 			AbstractBeanDefinition adviceDef = createAdviceDefinition(
 					adviceElement, parserContext, aspectName, order, methodDefinition, aspectFactoryDef,
 					beanDefinitions, beanReferences);

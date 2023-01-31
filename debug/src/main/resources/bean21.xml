@@ -21,6 +21,7 @@
 	<!--配置logger类-->
 	<bean id="logger" class="com.ling.test21.aopxml.utils.Logger"></bean>
 	<!--配置AOP-->
+	<!--<aop:config proxy-target-class="true" expose-proxy="true">-->
 	<aop:config>
 		<!-- 配置切面-->
 		<aop:aspect id="logAdvice" ref="logger">
