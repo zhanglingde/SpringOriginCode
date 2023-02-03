@@ -1,0 +1,18 @@
+﻿<!DOCTYPE configuration
+		PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<!-- 和spring整合后 environments配置将废除-->
+	<typeAliases>
+		<typeAlias alias="account" type="com.ling.test30.Account"/>
+	</typeAliases>
+
+	<!-- 加载mapper.xml -->
+	<mappers>
+		<!--<mapper resource="com/ling/test30/mapper/AccountMapper.xml"/>-->
+		<!--<mapper class="com.ling.test30.mapper.AccountMapper"/>-->
+		<mapper resource="mapper/AccountMapper.xml"/>
+	</mappers>
+
+</configuration>

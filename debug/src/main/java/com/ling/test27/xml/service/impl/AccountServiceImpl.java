@@ -36,9 +36,9 @@ public class AccountServiceImpl implements AccountService {
 		accountDao.updateAccount(source);
 
 		int i = 10;
-		if (i == 10) {
-			throw new RuntimeException("自定义异常");
-		}
+		// if (i == 10) {
+		// 	throw new RuntimeException("自定义异常");
+		// }
 		accountDao.updateAccount(target);
 	}
 }

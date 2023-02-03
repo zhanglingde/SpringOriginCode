@@ -42,5 +42,8 @@ dependencies {
     // 数据库连接池，数据库操作工具类
     implementation group: 'c3p0', name: 'c3p0', version: '0.9.1.2'
     implementation group: 'commons-dbutils', name: 'commons-dbutils', version: '1.7'
+    // mybatis 依赖
+    implementation("org.mybatis:mybatis:3.5.11")
+    implementation("org.mybatis:mybatis-spring:2.1.0")
 
 }

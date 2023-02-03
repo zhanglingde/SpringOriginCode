@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间，为了对sql语句进行隔离，方便管理 ，mapper开发dao方式，使用namespace有特殊作用 -->
+<mapper namespace="com.ling.test02.mapper.UserMapper">
+	<!-- dao模式映射到接口的名称，不是dao模式直接映射到包名就好（反射读取路径） -->
+	<!-- 在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象mapper.xml以statement为单位管理sql语句
+	 -->
+	<select id="findAccountById" resultType="com.ling.test29.Account">
+		select * from account where id = #{accountId}
+	</select>
+
+	<select id="findAccountByName" resultType="com.ling.test29.Account">
+		select * from account where id = #{accountName}
+	</select>
+
+	<select id="updateAccount" parameterType="com.ling.test29.Account">
+		update account set name=#{name},money=#{money} where id=#{id}
+	</select>
+
+
+
+</mapper>

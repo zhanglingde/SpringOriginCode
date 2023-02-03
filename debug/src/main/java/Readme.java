@@ -745,7 +745,17 @@ public class Readme {
 	 *
 	 * </ol>
 	 */
-	void read30(){}
+	void read35(){}
+
+	/**
+	 * Mybatis 单独使用
+	 */
+	void test29(){}
+
+	/**
+	 * Mybatis 整合 Spring
+	 */
+	void test30(){}
 
 }
 
