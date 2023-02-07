@@ -290,7 +290,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 					// 处理定义在目标类上的通用注解，包括 @Lazy、@Primary、@DependsOn、@Role、@Description
 					AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);
 				}
-				// 检查 bean 是否已经注解过，如果注册过，检查是否兼容
+				// 检查 bean 是否已经注册过，如果注册过，检查是否兼容
 				if (checkCandidate(beanName, candidate)) {
 					// 将当前遍历 bean 的 bean 定义和 beanName 封装成 BeanDefinitionHolder
 					BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
@@ -298,7 +298,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 					definitionHolder =
 							AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
 					beanDefinitions.add(definitionHolder);
-					// 注解 beanDefinition
+					// 注册 beanDefinition
 					registerBeanDefinition(definitionHolder, this.registry);
 				}
 			}

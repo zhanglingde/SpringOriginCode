@@ -35,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
 		target.setMoney(target.getMoney() + money);
 		accountDao.updateAccount(source);
 
-		int i = 10;
+		int i = 11;
 		// if (i == 10) {
 		// 	throw new RuntimeException("自定义异常");
 		// }

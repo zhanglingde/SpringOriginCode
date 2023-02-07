@@ -17,22 +17,22 @@
 	<!-- xml 方式 aop -->
 
 	<!--配置springIOC,把service类注入进来-->
-	<!--<bean id="accountService" class="com.ling.test21.aopxml.service.impl.AccountServiceImpl"></bean>-->
+	<!-- <bean id="accountService" class="com.ling.test21.aopxml.service.impl.AccountServiceImpl"></bean> -->
 	<!--配置logger类-->
-	<!--<bean id="logger" class="com.ling.test21.aopxml.utils.Logger"></bean>-->
+	<!-- <bean id="logger" class="com.ling.test21.aopxml.utils.Logger"></bean> -->
 	<!--配置AOP
 
 	-->
 	<!--<aop:config proxy-target-class="true" expose-proxy="true">-->
-	<!--<aop:config>-->
-	<!--	&lt;!&ndash; 配置切面&ndash;&gt;-->
-	<!--	<aop:aspect id="logAdvice" ref="logger">-->
-	<!--		&lt;!&ndash;配置通知类型，并建立通知方法和切入点方法的关联&ndash;&gt;-->
-	<!--		<aop:pointcut id="pt1" expression="execution(public void com.ling.test21.aopxml.service.impl.AccountServiceImpl.saveAccount())"/>-->
-	<!--		<aop:before method="printLog" pointcut-ref="pt1"></aop:before>-->
-	<!--		<aop:after method="after" pointcut="execution(public void com.ling.test21.aopxml.service.impl.AccountServiceImpl.saveAccount())"></aop:after>-->
-	<!--	</aop:aspect>-->
-	<!--</aop:config>-->
+	<!-- <aop:config> -->
+	<!-- 	&lt;!&ndash; 配置切面&ndash;&gt; -->
+	<!-- 	<aop:aspect id="logAdvice" ref="logger"> -->
+	<!-- 		&lt;!&ndash;配置通知类型，并建立通知方法和切入点方法的关联&ndash;&gt; -->
+	<!-- 		<aop:pointcut id="pt1" expression="execution(public void com.ling.test21.aopxml.service.impl.AccountServiceImpl.saveAccount())"/> -->
+	<!-- 		<aop:before method="printLog" pointcut-ref="pt1"></aop:before> -->
+	<!-- 		<aop:after method="after" pointcut="execution(public void com.ling.test21.aopxml.service.impl.AccountServiceImpl.saveAccount())"></aop:after> -->
+	<!-- 	</aop:aspect> -->
+	<!-- </aop:config> -->
 
 
 	<!-- 注解方式 AOP -->

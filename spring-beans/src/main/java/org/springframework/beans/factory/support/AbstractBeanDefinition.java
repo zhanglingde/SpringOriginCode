@@ -268,7 +268,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	private boolean enforceDestroyMethod = true;
 
 	/**
-	 * 是否是应用程序本身定义的而不是用户定义的，创建 aop 的值是 true
+	 * BeanDefinition 是否是合成的；false: 是由应用程序本身定义的； true:是用户定义的(合成的)，创建 aop 的值是 true
 	 */
 	private boolean synthetic = false;
 
@@ -1103,6 +1103,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	}
 
 	/**
+     *
 	 * Return whether this bean definition is 'synthetic', that is,
 	 * not defined by the application itself.
 	 */

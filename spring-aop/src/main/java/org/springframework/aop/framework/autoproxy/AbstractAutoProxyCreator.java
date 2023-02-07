@@ -356,7 +356,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
-		// isInfrastructureClass 用户判断当前 bean 是否为 Spring 系统自带的 bean，自带的 bean 不用进行代理 ||
+		// isInfrastructureClass 给定的 bean 是否代表一个基础设施类，基础设施类不应代理 ||
 		// shouldSkip： 用于判断当前 bean 是否应该被略过（配置了指定 bean，不需要自动代理）
 		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
 			// 对当前 bean 进行缓存
@@ -385,7 +385,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 	/**
 	 * 判断 beanClass 是否是基础类
-	 *
+	 * 返回给定的 beanClass 是否表示不应代理的基础结构类
 	 * Return whether the given bean class represents an infrastructure class
 	 * that should never be proxied.
 	 * <p>The default implementation considers Advices, Advisors and
@@ -410,6 +410,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
+     * 配置了指定 bean 不需要自动代理
+     *
 	 * Subclasses should override this method to return {@code true} if the
 	 * given bean should not be considered for auto-proxying by this post-processor.
 	 * <p>Sometimes we need to be able to avoid this happening, e.g. if it will lead to

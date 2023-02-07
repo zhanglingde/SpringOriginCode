@@ -8,10 +8,10 @@ public class Test30 {
 	public static void main(String[] args) {
 		ApplicationContext ac = new ClassPathXmlApplicationContext("spring-mybatis.xml");
 		AccountService accountService = ac.getBean("accountService", AccountService.class);
-		// Account account = accountService.findAccountById(2);
-		// System.out.println("account = " + account);
+		Account account = accountService.findAccountById(2);
+		System.out.println("account = " + account);
 
 		// lisi -> zhang 转账 50
-		accountService.transfer("lisi", "zhang", 50f);
+		// accountService.transfer("lisi", "zhang", 50f);
 	}
 }
