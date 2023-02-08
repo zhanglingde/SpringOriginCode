@@ -592,7 +592,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 
 
 	/**
-	 * 有些传播机制需要挂起当前的事务，比如NOT_SUPPORTED,REQUIRES_NEW首先会清除所有线程相关的同步状态，如果当前事务存在的话，就进行一些属性的清除，比如清空连接持有器，清空线程私有变量的同步状态，
+	 * 有些传播机制需要挂起当前的事务，比如 NOT_SUPPORTED,REQUIRES_NEW 首先会清除所有线程相关的同步状态，如果当前事务存在的话，就进行一些属性的清除，比如清空连接持有器，清空线程私有变量的同步状态，
 	 * 最后把当前事务清除的属性保存到一个SuspendedResourcesHolder里，以便于恢复的时候设置会去
 	 *
 	 * Suspend the given transaction. Suspends transaction synchronization first,
@@ -783,7 +783,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 
 			try {
 				boolean unexpectedRollback = false;
-				// 预留
+				// 预留（模板方法）
 				prepareForCommit(status);
 				// 添加的 TransactionSynchronization 中的对应方法的调用
 				triggerBeforeCommit(status);

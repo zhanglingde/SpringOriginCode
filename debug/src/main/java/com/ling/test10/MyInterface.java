@@ -11,6 +11,7 @@ public interface MyInterface {
 
 	@Bean
 	default String show(){
+		System.out.println("show...");
 		return "";
 	}
 

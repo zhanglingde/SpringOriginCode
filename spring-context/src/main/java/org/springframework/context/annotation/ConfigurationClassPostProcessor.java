@@ -285,14 +285,11 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * {@link Configuration} classes.
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
-		// 存放 BeanDefinitionHolder 的对象集合（Holder 相当于 BeanDefinition 的包装类）
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
-		// 当 registry 就是 DefaultListableBeanFactory ，获取所有已经注册的 BeanDefinition 的 beanName
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
-		// 遍历所有要处理的 beanDefinition 的名称(筛选判断 beanDefinition 是否被注解修饰)
+		// 遍历(筛选判断 beanDefinition 是否被注解修饰)
 		for (String beanName : candidateNames) {
-			// 获取指定名称的 BeanDefinition 对象
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 			// 如果 beanDefinition 中的 configurationClass 属性不等于空，那么意味着已经处理过，输出日志信息
 			if (beanDef.getAttribute(ConfigurationClassUtils.CONFIGURATION_CLASS_ATTRIBUTE) != null) {
@@ -304,7 +301,6 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			// 判断 BeanDefinition 是否是一个配置类，并为 BeanDefinition 设置属性为 lite 或 full，此属性值是为了后续调用（ @@Configuration 为 full，其他注解则为 lite）
 			// 配置类上被 @Order 注解标注，则设置 BeanDefinition 的 order 属性值
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
-				// 添加到对应的集合对象中
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
 			}
 		}
@@ -342,18 +338,16 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				}
 			}
 		}
-		// 环境对象为空，重新创建新的环境对象
+
 		if (this.environment == null) {
 			this.environment = new StandardEnvironment();
 		}
 
-		// Parse each @Configuration class
-		// 实例化 ConfigurationClassParser 类，并初始化相关的参数，完成配置类的解析工作
+		// Parse each @Configuration class     实例化 ConfigurationClassParser 类，并初始化相关的参数，完成配置类的解析工作
 		ConfigurationClassParser parser = new ConfigurationClassParser(
 				this.metadataReaderFactory, this.problemReporter, this.environment,
 				this.resourceLoader, this.componentScanBeanNameGenerator, registry);
 
-		// 创建两个集合对象
 		// candidates 用于将之前加入的 configCandidates 去重
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		// alreadyParsed 用于判断是否已经处理过了(存放扫描包下的所有 bean)
@@ -369,7 +363,6 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			configClasses.removeAll(alreadyParsed);
 
 			// Read the model and create bean definitions based on its content
-			// 为空创建完全填充好的 ConfigurationClass 实例的读取器
 			if (this.reader == null) {
 				this.reader = new ConfigurationClassBeanDefinitionReader(
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
