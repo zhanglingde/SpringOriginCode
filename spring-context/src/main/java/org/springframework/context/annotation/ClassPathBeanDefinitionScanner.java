@@ -273,15 +273,16 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		Assert.notEmpty(basePackages, "At least one base package must be specified");
 		Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<>();
 		for (String basePackage : basePackages) {
-			// 扫描 basePackage，将符合要求的 bean 定义全部找出来
+			// 1. 扫描 basePackage，找出符合要求的 BeanDefinition
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
-			// 遍历所有候选的 bean 定义
+			// 2. 遍历并处理 BeanDefinition
 			for (BeanDefinition candidate : candidates) {
-				// 解析 @Scope 注解,包括 scopeName 和 proxyMode
+				// 2.1 解析 @Scope 注解,包括 scopeName 和 proxyMode
 				ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(candidate);
 				candidate.setScope(scopeMetadata.getScopeName());
-				// 使用 beanName 生成器来生成  beanName
+				// 2.2 使用 beanName 生成器来生成  beanName
 				String beanName = this.beanNameGenerator.generateBeanName(candidate, this.registry);
+				// 2.3 不同 BeanDefinition 特殊处理
 				if (candidate instanceof AbstractBeanDefinition) {
 					// 处理 beanDefinition 对象，例如，此 bean 是否可以自动装配到其他 bean 中
 					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);
@@ -290,13 +291,12 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 					// 处理定义在目标类上的通用注解，包括 @Lazy、@Primary、@DependsOn、@Role、@Description
 					AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);
 				}
-				// 检查 bean 是否已经注册过，如果注册过，检查是否兼容
+				// 2.4 检查 bean 是否已经注册过，如果注册过，检查是否兼容
 				if (checkCandidate(beanName, candidate)) {
-					// 将当前遍历 bean 的 bean 定义和 beanName 封装成 BeanDefinitionHolder
+					// 封装成 BeanDefinitionHolder
 					BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
-					// 根据 proxyMode 的值，选择是否创建作用域代理
-					definitionHolder =
-							AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+					// 根据 proxyMode 的值，选择是否创建作用域代理（默认单例无需代理）
+					definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
 					beanDefinitions.add(definitionHolder);
 					// 注册 beanDefinition
 					registerBeanDefinition(definitionHolder, this.registry);
@@ -332,6 +332,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 
 
 	/**
+	 * 检查 bean 是否需要注册或与现有定义冲突
+	 *
 	 * Check the given candidate's bean name, determining whether the corresponding
 	 * bean definition needs to be registered or conflicts with an existing definition.
 	 * @param beanName the suggested name for the bean
@@ -343,14 +345,17 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	 * bean definition has been found for the specified name
 	 */
 	protected boolean checkCandidate(String beanName, BeanDefinition beanDefinition) throws IllegalStateException {
+		// 1. 未注册过需要注册
 		if (!this.registry.containsBeanDefinition(beanName)) {
 			return true;
 		}
+		// 2. 已注册过，判断原有与现 BeanDefinition 是否有冲突
 		BeanDefinition existingDef = this.registry.getBeanDefinition(beanName);
 		BeanDefinition originatingDef = existingDef.getOriginatingBeanDefinition();
 		if (originatingDef != null) {
 			existingDef = originatingDef;
 		}
+		// 是否兼容
 		if (isCompatible(beanDefinition, existingDef)) {
 			return false;
 		}

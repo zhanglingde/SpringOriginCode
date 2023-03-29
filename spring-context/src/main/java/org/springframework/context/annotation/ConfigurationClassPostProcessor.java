@@ -288,7 +288,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
-		// 遍历(筛选判断 beanDefinition 是否被注解修饰)
+		// 1. 遍历(筛选判断 beanDefinition 是否被注解修饰)
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 			// 如果 beanDefinition 中的 configurationClass 属性不等于空，那么意味着已经处理过，输出日志信息
@@ -306,13 +306,13 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 
 		// Return immediately if no @Configuration classes were found
-		// 没有找到 @Configuration 标注的 BeanDefinition 直接返回
+		// 2. 没有找到 @Configuration 标注的 BeanDefinition 直接返回
 		if (configCandidates.isEmpty()) {
 			return;
 		}
 
 		// Sort by previously determined @Order value, if applicable
-		// 按 Order 值进行排序
+		// 3. BeanDefinition 按 Order 值进行排序
 		configCandidates.sort((bd1, bd2) -> {
 			int i1 = ConfigurationClassUtils.getOrder(bd1.getBeanDefinition());
 			int i2 = ConfigurationClassUtils.getOrder(bd2.getBeanDefinition());
@@ -327,8 +327,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			// 判断是否有自定义的 beanName 生成器
 			if (!this.localBeanNameGeneratorSet) {
 				// 获取 beanName 生成器
-				BeanNameGenerator generator = (BeanNameGenerator) sbr.getSingleton(
-						AnnotationConfigUtils.CONFIGURATION_BEAN_NAME_GENERATOR);
+				BeanNameGenerator generator = (BeanNameGenerator) sbr.getSingleton(AnnotationConfigUtils.CONFIGURATION_BEAN_NAME_GENERATOR);
 				// 如果有自定义的名称生成策略
 				if (generator != null) {
 					// 设置组件扫描的 beanName 生成策略
@@ -353,7 +352,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		// alreadyParsed 用于判断是否已经处理过了(存放扫描包下的所有 bean)
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
-			// 解析带有 @Controller、@Import、@ImportResource、@ComponentScan、@ComponentScans、@Bean 的 BeanDefinition
+			// 4. 解析带有 @Controller、@Import、@ImportResource、@ComponentScan、@ComponentScans、@Bean 的 BeanDefinition
 			parser.parse(candidates);
 			parser.validate();
 

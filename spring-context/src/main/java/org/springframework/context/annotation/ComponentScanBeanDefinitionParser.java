@@ -54,249 +54,233 @@ import org.springframework.util.StringUtils;
  */
 public class ComponentScanBeanDefinitionParser implements BeanDefinitionParser {
 
-	private static final String BASE_PACKAGE_ATTRIBUTE = "base-package";
+    private static final String BASE_PACKAGE_ATTRIBUTE = "base-package";
 
-	private static final String RESOURCE_PATTERN_ATTRIBUTE = "resource-pattern";
+    private static final String RESOURCE_PATTERN_ATTRIBUTE = "resource-pattern";
 
-	private static final String USE_DEFAULT_FILTERS_ATTRIBUTE = "use-default-filters";
+    private static final String USE_DEFAULT_FILTERS_ATTRIBUTE = "use-default-filters";
 
-	private static final String ANNOTATION_CONFIG_ATTRIBUTE = "annotation-config";
+    private static final String ANNOTATION_CONFIG_ATTRIBUTE = "annotation-config";
 
-	private static final String NAME_GENERATOR_ATTRIBUTE = "name-generator";
+    private static final String NAME_GENERATOR_ATTRIBUTE = "name-generator";
 
-	private static final String SCOPE_RESOLVER_ATTRIBUTE = "scope-resolver";
+    private static final String SCOPE_RESOLVER_ATTRIBUTE = "scope-resolver";
 
-	private static final String SCOPED_PROXY_ATTRIBUTE = "scoped-proxy";
+    private static final String SCOPED_PROXY_ATTRIBUTE = "scoped-proxy";
 
-	private static final String EXCLUDE_FILTER_ELEMENT = "exclude-filter";
+    private static final String EXCLUDE_FILTER_ELEMENT = "exclude-filter";
 
-	private static final String INCLUDE_FILTER_ELEMENT = "include-filter";
+    private static final String INCLUDE_FILTER_ELEMENT = "include-filter";
 
-	private static final String FILTER_TYPE_ATTRIBUTE = "type";
+    private static final String FILTER_TYPE_ATTRIBUTE = "type";
 
-	private static final String FILTER_EXPRESSION_ATTRIBUTE = "expression";
+    private static final String FILTER_EXPRESSION_ATTRIBUTE = "expression";
 
 
-	@Override
-	@Nullable
-	public BeanDefinition parse(Element element, ParserContext parserContext) {
-		// 获取 <context:component-scan> 节点的 base-package 属性值
-		String basePackage = element.getAttribute(BASE_PACKAGE_ATTRIBUTE);
-		// 解析占位符
-		basePackage = parserContext.getReaderContext().getEnvironment().resolvePlaceholders(basePackage);
-		// 解析 base-package(允许通过,;\t\n 中的任一符号填写多个)
-		String[] basePackages = StringUtils.tokenizeToStringArray(basePackage,
-				ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+    @Override
+    @Nullable
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
+        // 1. 获取 <context:component-scan> 节点的 base-package 属性值
+        String basePackage = element.getAttribute(BASE_PACKAGE_ATTRIBUTE);
+        // 1.1 解析占位符
+        basePackage = parserContext.getReaderContext().getEnvironment().resolvePlaceholders(basePackage);
+        // 1.2 解析 base-package(允许通过,;\t\n 中的任一符号填写多个)
+        String[] basePackages = StringUtils.tokenizeToStringArray(basePackage,
+                ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
 
-		// Actually scan for bean definitions and register them.
-		// 构建和配置 ClassPathBeanDefinitionScanner
-		ClassPathBeanDefinitionScanner scanner = configureScanner(parserContext, element);
-		// 使用 scanner 在执行的 basePackages 包中执行扫描，返回已注册的 bean 定义
-		Set<BeanDefinitionHolder> beanDefinitions = scanner.doScan(basePackages);
-		// 组件注册（包括注册一些内部的注解后置处理器，触发注册事件）
-		registerComponents(parserContext.getReaderContext(), beanDefinitions, element);
+        // Actually scan for bean definitions and register them.
+        // 2. 构建和配置 ClassPathBeanDefinitionScanner，然后扫描 basePackages,并返回已注册的 beanDefinition
+        ClassPathBeanDefinitionScanner scanner = configureScanner(parserContext, element);
+        Set<BeanDefinitionHolder> beanDefinitions = scanner.doScan(basePackages);
+        // 3. 组件注册（包括注册一些内部的注解后置处理器，触发注册事件）
+        registerComponents(parserContext.getReaderContext(), beanDefinitions, element);
 
-		return null;
-	}
+        return null;
+    }
 
-	protected ClassPathBeanDefinitionScanner configureScanner(ParserContext parserContext, Element element) {
-		// 解析use-default-filters属性，默认是true，用于指示是否使用默认的filter
-		boolean useDefaultFilters = true;
-		if (element.hasAttribute(USE_DEFAULT_FILTERS_ATTRIBUTE)) {
-			useDefaultFilters = Boolean.parseBoolean(element.getAttribute(USE_DEFAULT_FILTERS_ATTRIBUTE));
-		}
+    protected ClassPathBeanDefinitionScanner configureScanner(ParserContext parserContext, Element element) {
+        // 解析use-default-filters属性，默认是true，用于指示是否使用默认的filter
+        boolean useDefaultFilters = true;
+        if (element.hasAttribute(USE_DEFAULT_FILTERS_ATTRIBUTE)) {
+            useDefaultFilters = Boolean.parseBoolean(element.getAttribute(USE_DEFAULT_FILTERS_ATTRIBUTE));
+        }
 
-		// Delegate bean definition registration to scanner class.
-		// 构建ClassPathBeanDefinitionScanner,将bean定义注册委托给scanner类
-		ClassPathBeanDefinitionScanner scanner = createScanner(parserContext.getReaderContext(), useDefaultFilters);
-		scanner.setBeanDefinitionDefaults(parserContext.getDelegate().getBeanDefinitionDefaults());
-		scanner.setAutowireCandidatePatterns(parserContext.getDelegate().getAutowireCandidatePatterns());
+        // Delegate bean definition registration to scanner class.
+        // 构建ClassPathBeanDefinitionScanner,将bean定义注册委托给scanner类
+        ClassPathBeanDefinitionScanner scanner = createScanner(parserContext.getReaderContext(), useDefaultFilters);
+        scanner.setBeanDefinitionDefaults(parserContext.getDelegate().getBeanDefinitionDefaults());
+        scanner.setAutowireCandidatePatterns(parserContext.getDelegate().getAutowireCandidatePatterns());
 
-		// 解析resource-pattern属性
-		if (element.hasAttribute(RESOURCE_PATTERN_ATTRIBUTE)) {
-			scanner.setResourcePattern(element.getAttribute(RESOURCE_PATTERN_ATTRIBUTE));
-		}
+        // 解析resource-pattern属性
+        if (element.hasAttribute(RESOURCE_PATTERN_ATTRIBUTE)) {
+            scanner.setResourcePattern(element.getAttribute(RESOURCE_PATTERN_ATTRIBUTE));
+        }
 
-		try {
-			// 解析name-generator属性
-			parseBeanNameGenerator(element, scanner);
-		}
-		catch (Exception ex) {
-			parserContext.getReaderContext().error(ex.getMessage(), parserContext.extractSource(element), ex.getCause());
-		}
+        try {
+            // 解析name-generator属性
+            parseBeanNameGenerator(element, scanner);
+        } catch (Exception ex) {
+            parserContext.getReaderContext().error(ex.getMessage(), parserContext.extractSource(element), ex.getCause());
+        }
 
-		try {
-			// 解析scope-resolver、scoped-proxy属性
-			parseScope(element, scanner);
-		}
-		catch (Exception ex) {
-			parserContext.getReaderContext().error(ex.getMessage(), parserContext.extractSource(element), ex.getCause());
-		}
+        try {
+            // 解析scope-resolver、scoped-proxy属性
+            parseScope(element, scanner);
+        } catch (Exception ex) {
+            parserContext.getReaderContext().error(ex.getMessage(), parserContext.extractSource(element), ex.getCause());
+        }
 
-		// 解析类型过滤器
-		parseTypeFilters(element, scanner, parserContext);
+        // 解析类型过滤器
+        parseTypeFilters(element, scanner, parserContext);
 
-		return scanner;
-	}
+        return scanner;
+    }
 
-	protected ClassPathBeanDefinitionScanner createScanner(XmlReaderContext readerContext, boolean useDefaultFilters) {
-		return new ClassPathBeanDefinitionScanner(readerContext.getRegistry(), useDefaultFilters,
-				readerContext.getEnvironment(), readerContext.getResourceLoader());
-	}
+    protected ClassPathBeanDefinitionScanner createScanner(XmlReaderContext readerContext, boolean useDefaultFilters) {
+        return new ClassPathBeanDefinitionScanner(readerContext.getRegistry(), useDefaultFilters,
+                readerContext.getEnvironment(), readerContext.getResourceLoader());
+    }
 
-	protected void registerComponents(
-			XmlReaderContext readerContext, Set<BeanDefinitionHolder> beanDefinitions, Element element) {
+    protected void registerComponents(
+            XmlReaderContext readerContext, Set<BeanDefinitionHolder> beanDefinitions, Element element) {
 
-		Object source = readerContext.extractSource(element);
-		// 使用注解的 tagName 和 source 构建 CompositeCompoentDefinition
-		CompositeComponentDefinition compositeDef = new CompositeComponentDefinition(element.getTagName(), source);
+        Object source = readerContext.extractSource(element);
+        // 使用注解的 tagName 和 source 构建 CompositeComponentDefinition
+        CompositeComponentDefinition compositeDef = new CompositeComponentDefinition(element.getTagName(), source);
 
-		// 将扫描到的所有 beanDefinition 添加到 compositeDef 的 nestedComponents 属性中
-		for (BeanDefinitionHolder beanDefHolder : beanDefinitions) {
-			compositeDef.addNestedComponent(new BeanComponentDefinition(beanDefHolder));
-		}
+        // 1. 将扫描到的所有 beanDefinition 添加到 compositeDef 的 nestedComponents 属性中
+        for (BeanDefinitionHolder beanDefHolder : beanDefinitions) {
+            compositeDef.addNestedComponent(new BeanComponentDefinition(beanDefHolder));
+        }
 
-		// Register annotation config processors, if necessary.
-		boolean annotationConfig = true;
-		if (element.hasAttribute(ANNOTATION_CONFIG_ATTRIBUTE)) {
-			// 获取 component-scan 标签的 annotation-config 属性值，默认为 true
-			annotationConfig = Boolean.parseBoolean(element.getAttribute(ANNOTATION_CONFIG_ATTRIBUTE));
-		}
-		if (annotationConfig) {
-			// 如果 annotation-config 属性值为 true，在给定的注册表中注册所有用于注解的 bean 后置处理器
-			Set<BeanDefinitionHolder> processorDefinitions =
-					AnnotationConfigUtils.registerAnnotationConfigProcessors(readerContext.getRegistry(), source);
-			for (BeanDefinitionHolder processorDefinition : processorDefinitions) {
-				// 将注册的后置处理器的 BeanDefinition 添加到 compositeDef 的 nestedComponents 属性中
-				compositeDef.addNestedComponent(new BeanComponentDefinition(processorDefinition));
-			}
-		}
-		// 触发组件注册事件，默认实现为 EmptyReaderEventListener
-		readerContext.fireComponentRegistered(compositeDef);
-	}
+        // Register annotation config processors, if necessary.
+        boolean annotationConfig = true;
+        if (element.hasAttribute(ANNOTATION_CONFIG_ATTRIBUTE)) {
+            // 获取 component-scan 标签的 annotation-config 属性值，默认为 true
+            annotationConfig = Boolean.parseBoolean(element.getAttribute(ANNOTATION_CONFIG_ATTRIBUTE));
+        }
+        // 2. 注册后置处理器（ConfigurationClassPostProcessor、AutowiredAnnotationBeanPostProcessor、CommonAnnotationBeanPostProcessor），
+        //    并将注册的 BeanDefinition 添加到 compositeDef
+        if (annotationConfig) {
+            Set<BeanDefinitionHolder> processorDefinitions =
+                    AnnotationConfigUtils.registerAnnotationConfigProcessors(readerContext.getRegistry(), source);
+            for (BeanDefinitionHolder processorDefinition : processorDefinitions) {
+                compositeDef.addNestedComponent(new BeanComponentDefinition(processorDefinition));
+            }
+        }
+        // 3. 触发组件注册事件，默认实现为 EmptyReaderEventListener（为什么要再次注册）
+        readerContext.fireComponentRegistered(compositeDef);
+    }
 
-	protected void parseBeanNameGenerator(Element element, ClassPathBeanDefinitionScanner scanner) {
-		if (element.hasAttribute(NAME_GENERATOR_ATTRIBUTE)) {
-			BeanNameGenerator beanNameGenerator = (BeanNameGenerator) instantiateUserDefinedStrategy(
-					element.getAttribute(NAME_GENERATOR_ATTRIBUTE), BeanNameGenerator.class,
-					scanner.getResourceLoader().getClassLoader());
-			scanner.setBeanNameGenerator(beanNameGenerator);
-		}
-	}
+    protected void parseBeanNameGenerator(Element element, ClassPathBeanDefinitionScanner scanner) {
+        if (element.hasAttribute(NAME_GENERATOR_ATTRIBUTE)) {
+            BeanNameGenerator beanNameGenerator = (BeanNameGenerator) instantiateUserDefinedStrategy(
+                    element.getAttribute(NAME_GENERATOR_ATTRIBUTE), BeanNameGenerator.class,
+                    scanner.getResourceLoader().getClassLoader());
+            scanner.setBeanNameGenerator(beanNameGenerator);
+        }
+    }
 
-	protected void parseScope(Element element, ClassPathBeanDefinitionScanner scanner) {
-		// Register ScopeMetadataResolver if class name provided.
-		if (element.hasAttribute(SCOPE_RESOLVER_ATTRIBUTE)) {
-			if (element.hasAttribute(SCOPED_PROXY_ATTRIBUTE)) {
-				throw new IllegalArgumentException(
-						"Cannot define both 'scope-resolver' and 'scoped-proxy' on <component-scan> tag");
-			}
-			ScopeMetadataResolver scopeMetadataResolver = (ScopeMetadataResolver) instantiateUserDefinedStrategy(
-					element.getAttribute(SCOPE_RESOLVER_ATTRIBUTE), ScopeMetadataResolver.class,
-					scanner.getResourceLoader().getClassLoader());
-			scanner.setScopeMetadataResolver(scopeMetadataResolver);
-		}
+    protected void parseScope(Element element, ClassPathBeanDefinitionScanner scanner) {
+        // Register ScopeMetadataResolver if class name provided.
+        if (element.hasAttribute(SCOPE_RESOLVER_ATTRIBUTE)) {
+            if (element.hasAttribute(SCOPED_PROXY_ATTRIBUTE)) {
+                throw new IllegalArgumentException(
+                        "Cannot define both 'scope-resolver' and 'scoped-proxy' on <component-scan> tag");
+            }
+            ScopeMetadataResolver scopeMetadataResolver = (ScopeMetadataResolver) instantiateUserDefinedStrategy(
+                    element.getAttribute(SCOPE_RESOLVER_ATTRIBUTE), ScopeMetadataResolver.class,
+                    scanner.getResourceLoader().getClassLoader());
+            scanner.setScopeMetadataResolver(scopeMetadataResolver);
+        }
 
-		if (element.hasAttribute(SCOPED_PROXY_ATTRIBUTE)) {
-			String mode = element.getAttribute(SCOPED_PROXY_ATTRIBUTE);
-			if ("targetClass".equals(mode)) {
-				scanner.setScopedProxyMode(ScopedProxyMode.TARGET_CLASS);
-			}
-			else if ("interfaces".equals(mode)) {
-				scanner.setScopedProxyMode(ScopedProxyMode.INTERFACES);
-			}
-			else if ("no".equals(mode)) {
-				scanner.setScopedProxyMode(ScopedProxyMode.NO);
-			}
-			else {
-				throw new IllegalArgumentException("scoped-proxy only supports 'no', 'interfaces' and 'targetClass'");
-			}
-		}
-	}
+        if (element.hasAttribute(SCOPED_PROXY_ATTRIBUTE)) {
+            String mode = element.getAttribute(SCOPED_PROXY_ATTRIBUTE);
+            if ("targetClass".equals(mode)) {
+                scanner.setScopedProxyMode(ScopedProxyMode.TARGET_CLASS);
+            } else if ("interfaces".equals(mode)) {
+                scanner.setScopedProxyMode(ScopedProxyMode.INTERFACES);
+            } else if ("no".equals(mode)) {
+                scanner.setScopedProxyMode(ScopedProxyMode.NO);
+            } else {
+                throw new IllegalArgumentException("scoped-proxy only supports 'no', 'interfaces' and 'targetClass'");
+            }
+        }
+    }
 
-	protected void parseTypeFilters(Element element, ClassPathBeanDefinitionScanner scanner, ParserContext parserContext) {
-		// Parse exclude and include filter elements.
-		ClassLoader classLoader = scanner.getResourceLoader().getClassLoader();
-		NodeList nodeList = element.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node node = nodeList.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				String localName = parserContext.getDelegate().getLocalName(node);
-				try {
-					if (INCLUDE_FILTER_ELEMENT.equals(localName)) {
-						TypeFilter typeFilter = createTypeFilter((Element) node, classLoader, parserContext);
-						scanner.addIncludeFilter(typeFilter);
-					}
-					else if (EXCLUDE_FILTER_ELEMENT.equals(localName)) {
-						TypeFilter typeFilter = createTypeFilter((Element) node, classLoader, parserContext);
-						scanner.addExcludeFilter(typeFilter);
-					}
-				}
-				catch (ClassNotFoundException ex) {
-					parserContext.getReaderContext().warning(
-							"Ignoring non-present type filter class: " + ex, parserContext.extractSource(element));
-				}
-				catch (Exception ex) {
-					parserContext.getReaderContext().error(
-							ex.getMessage(), parserContext.extractSource(element), ex.getCause());
-				}
-			}
-		}
-	}
+    protected void parseTypeFilters(Element element, ClassPathBeanDefinitionScanner scanner, ParserContext parserContext) {
+        // Parse exclude and include filter elements.
+        ClassLoader classLoader = scanner.getResourceLoader().getClassLoader();
+        NodeList nodeList = element.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                String localName = parserContext.getDelegate().getLocalName(node);
+                try {
+                    if (INCLUDE_FILTER_ELEMENT.equals(localName)) {
+                        TypeFilter typeFilter = createTypeFilter((Element) node, classLoader, parserContext);
+                        scanner.addIncludeFilter(typeFilter);
+                    } else if (EXCLUDE_FILTER_ELEMENT.equals(localName)) {
+                        TypeFilter typeFilter = createTypeFilter((Element) node, classLoader, parserContext);
+                        scanner.addExcludeFilter(typeFilter);
+                    }
+                } catch (ClassNotFoundException ex) {
+                    parserContext.getReaderContext().warning(
+                            "Ignoring non-present type filter class: " + ex, parserContext.extractSource(element));
+                } catch (Exception ex) {
+                    parserContext.getReaderContext().error(
+                            ex.getMessage(), parserContext.extractSource(element), ex.getCause());
+                }
+            }
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	protected TypeFilter createTypeFilter(Element element, @Nullable ClassLoader classLoader,
-			ParserContext parserContext) throws ClassNotFoundException {
+    @SuppressWarnings("unchecked")
+    protected TypeFilter createTypeFilter(Element element, @Nullable ClassLoader classLoader,
+                                          ParserContext parserContext) throws ClassNotFoundException {
 
-		String filterType = element.getAttribute(FILTER_TYPE_ATTRIBUTE);
-		String expression = element.getAttribute(FILTER_EXPRESSION_ATTRIBUTE);
-		expression = parserContext.getReaderContext().getEnvironment().resolvePlaceholders(expression);
-		if ("annotation".equals(filterType)) {
-			return new AnnotationTypeFilter((Class<Annotation>) ClassUtils.forName(expression, classLoader));
-		}
-		else if ("assignable".equals(filterType)) {
-			return new AssignableTypeFilter(ClassUtils.forName(expression, classLoader));
-		}
-		else if ("aspectj".equals(filterType)) {
-			return new AspectJTypeFilter(expression, classLoader);
-		}
-		else if ("regex".equals(filterType)) {
-			return new RegexPatternTypeFilter(Pattern.compile(expression));
-		}
-		else if ("custom".equals(filterType)) {
-			Class<?> filterClass = ClassUtils.forName(expression, classLoader);
-			if (!TypeFilter.class.isAssignableFrom(filterClass)) {
-				throw new IllegalArgumentException(
-						"Class is not assignable to [" + TypeFilter.class.getName() + "]: " + expression);
-			}
-			return (TypeFilter) BeanUtils.instantiateClass(filterClass);
-		}
-		else {
-			throw new IllegalArgumentException("Unsupported filter type: " + filterType);
-		}
-	}
+        String filterType = element.getAttribute(FILTER_TYPE_ATTRIBUTE);
+        String expression = element.getAttribute(FILTER_EXPRESSION_ATTRIBUTE);
+        expression = parserContext.getReaderContext().getEnvironment().resolvePlaceholders(expression);
+        if ("annotation".equals(filterType)) {
+            return new AnnotationTypeFilter((Class<Annotation>) ClassUtils.forName(expression, classLoader));
+        } else if ("assignable".equals(filterType)) {
+            return new AssignableTypeFilter(ClassUtils.forName(expression, classLoader));
+        } else if ("aspectj".equals(filterType)) {
+            return new AspectJTypeFilter(expression, classLoader);
+        } else if ("regex".equals(filterType)) {
+            return new RegexPatternTypeFilter(Pattern.compile(expression));
+        } else if ("custom".equals(filterType)) {
+            Class<?> filterClass = ClassUtils.forName(expression, classLoader);
+            if (!TypeFilter.class.isAssignableFrom(filterClass)) {
+                throw new IllegalArgumentException(
+                        "Class is not assignable to [" + TypeFilter.class.getName() + "]: " + expression);
+            }
+            return (TypeFilter) BeanUtils.instantiateClass(filterClass);
+        } else {
+            throw new IllegalArgumentException("Unsupported filter type: " + filterType);
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	private Object instantiateUserDefinedStrategy(
-			String className, Class<?> strategyType, @Nullable ClassLoader classLoader) {
+    @SuppressWarnings("unchecked")
+    private Object instantiateUserDefinedStrategy(
+            String className, Class<?> strategyType, @Nullable ClassLoader classLoader) {
 
-		Object result;
-		try {
-			result = ReflectionUtils.accessibleConstructor(ClassUtils.forName(className, classLoader)).newInstance();
-		}
-		catch (ClassNotFoundException ex) {
-			throw new IllegalArgumentException("Class [" + className + "] for strategy [" +
-					strategyType.getName() + "] not found", ex);
-		}
-		catch (Throwable ex) {
-			throw new IllegalArgumentException("Unable to instantiate class [" + className + "] for strategy [" +
-					strategyType.getName() + "]: a zero-argument constructor is required", ex);
-		}
+        Object result;
+        try {
+            result = ReflectionUtils.accessibleConstructor(ClassUtils.forName(className, classLoader)).newInstance();
+        } catch (ClassNotFoundException ex) {
+            throw new IllegalArgumentException("Class [" + className + "] for strategy [" +
+                    strategyType.getName() + "] not found", ex);
+        } catch (Throwable ex) {
+            throw new IllegalArgumentException("Unable to instantiate class [" + className + "] for strategy [" +
+                    strategyType.getName() + "]: a zero-argument constructor is required", ex);
+        }
 
-		if (!strategyType.isAssignableFrom(result.getClass())) {
-			throw new IllegalArgumentException("Provided class name must be an implementation of " + strategyType);
-		}
-		return result;
-	}
+        if (!strategyType.isAssignableFrom(result.getClass())) {
+            throw new IllegalArgumentException("Provided class name must be an implementation of " + strategyType);
+        }
+        return result;
+    }
 
 }

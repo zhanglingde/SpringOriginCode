@@ -74,12 +74,10 @@ final class PostProcessorRegistrationDelegate {
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
-			// 1. 首先处理入参中的 BFPP，将 BeanDefinitionRegistryPostProcessor 和 BeanFactoryPostProcessor 区分开
+			// 1. 首先处理入参中的 BFPP，将 BeanDefinitionRegistryPostProcessor（执行后置 BeanDefinition 注册） 和 BeanFactoryPostProcessor 区分开
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
-					BeanDefinitionRegistryPostProcessor registryProcessor =
-							(BeanDefinitionRegistryPostProcessor) postProcessor;
-					// 直接执行 BeanDefinitionRegistryPostProcessor 接口中的 postProcessBeanDefinitionRegistry 方法
+					BeanDefinitionRegistryPostProcessor registryProcessor = (BeanDefinitionRegistryPostProcessor) postProcessor;
 					registryProcessor.postProcessBeanDefinitionRegistry(registry);
 					// 添加到 registryProcessors，用于后续执行 postProcessBeanFactory 方法
 					registryProcessors.add(registryProcessor);

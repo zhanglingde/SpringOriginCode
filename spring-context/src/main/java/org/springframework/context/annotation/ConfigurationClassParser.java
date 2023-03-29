@@ -251,24 +251,24 @@ class ConfigurationClassParser {
 	 * @throws IOException
 	 */
 	protected void processConfigurationClass(ConfigurationClass configClass, Predicate<String> filter) throws IOException {
-		// 判断是否跳过解析（条件计算器 Condition 配置判断是否有自动装配，没有自动装配使用自己的配置）
+		// 1. 判断是否跳过解析（条件计算器 Condition 配置判断是否有自动装配，没有自动装配使用自己的配置）
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
 		}
 
+		// 2. 处理 Import 的情况，当前类是否被别的类 Import(重复 Import,第一次无需处理)
 		// 第一次进入的时候，configurationClass 的 size 为 0，existingClass 肯定为 null，在此处处理 configuration 重复 import
-		// 如果同一个配置类被处理两次，两次都属于被 import 都则合并导入类，返回；如果配置类不是被导入的，则移除旧的使用新的配置类
-		// 处理 Imported 的情况，当前类是否被别的类 Import
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
 		if (existingClass != null) {
 			if (configClass.isImported()) {
 				if (existingClass.isImported()) {
-					// 如果要处理的配置类 configclass 在已经分析处理的配置类记录中已存在，合并两者的 importBy 属性
+					// 2.1 如果同一个配置类被处理两次，两次都属于被 import 都则合并导入类
 					existingClass.mergeImportedBy(configClass);
 				}
 				// Otherwise ignore new imported config class; existing non-imported class overrides it.
 				return;
 			} else {
+				// 2.2 如果配置类不是被导入的，则移除旧的使用新的配置类
 				// Explicit bean definition found, probably replacing an import.
 				// Let's remove the old one and go with the new one.
 				this.configurationClasses.remove(configClass);
@@ -277,12 +277,12 @@ class ConfigurationClassParser {
 		}
 
 		// Recursively process the configuration class and its superclass hierarchy.
-		// 处理配置类，由于配置类可能存在父类（若父类的全类名是以 java 开头的，则除外），所有需要将 configClass 变成 sourceClass 去判断，然后返回 sourceClass 的父类
+		// 3. 处理配置类，由于配置类可能存在父类（若父类的全类名是以 java 开头的，则除外），所有需要将 configClass 变成 sourceClass 去判断，然后返回 sourceClass 的父类
 		// 如果此时父类为空，则不会进行 while 循环去解析，如果父类不为空，则会循环的去解析父类
 		// SourceClass 的意义，简单的包装类，目的是为了以统一的方式去处理带有注解的类，不管这些类是如何加载的
 		SourceClass sourceClass = asSourceClass(configClass, filter);
 		do {
-			// 解析各种注解（重要）
+			// 4. 解析各种注解（重要）
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass, filter);
 		}
 		while (sourceClass != null);

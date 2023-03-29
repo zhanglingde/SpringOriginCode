@@ -99,7 +99,7 @@ abstract class ConfigurationClassUtils {
 			return false;
 		}
 
-		// 注解元数据信息，可以获取到对象上有哪些注解
+		// 1. 获取注解元数据信息，可以获取到对象上有哪些注解
 		AnnotationMetadata metadata;
 		// 通过注解注入的 db 都是 AnnotatedGenericBeanDefinition,实现了 AnnotatedBeanDefinition
 		// Spring 内部的 bd 是 RootBeanDefinition,实现了 AbstractBeanDefinition
@@ -142,13 +142,13 @@ abstract class ConfigurationClassUtils {
 			}
 		}
 
-		// 判断当前 BeanDefinition 是否存在 @Configuration 注解
+		// 2. 获取 @Configuration 注解信息， 判断当前 BeanDefinition 是否存在
 		Map<String, Object> config = metadata.getAnnotationAttributes(Configuration.class.getName());
-		// 如果包含 @Configuration 注解，同时 proxyBeanMethod 属性为 true（使用代理模式），那么设置 configurationClass 属性为 full
+		// 2.1 如果包含 @Configuration 注解，同时 proxyBeanMethod 属性为 true（使用代理模式），那么设置 configurationClass 属性为 full
 		if (config != null && !Boolean.FALSE.equals(config.get("proxyBeanMethods"))) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
-		// 如果bean 被 @Configuration 注解标注，或被包含 @Bean、@Component、@ComponentScan、@Import、@ImportSource 注解，则将 bean定义标记为 lite
+		// 2.2 如果bean 被 @Configuration 注解标注，或被包含 @Bean、@Component、@ComponentScan、@Import、@ImportSource 注解，则将 bean定义标记为 lite
 		else if (config != null || isConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
@@ -157,9 +157,8 @@ abstract class ConfigurationClassUtils {
 		}
 
 		// It's a full or lite configuration candidate... Let's determine the order value, if any.
-		// 获取具体的执行顺序
+		// 3. 获取具体的执行顺序 @Order，设置到 BeanDefinition 中
 		Integer order = getOrder(metadata);
-		// 值不为空，直接设置到具体的 beanDefinition 中
 		if (order != null) {
 			beanDef.setAttribute(ORDER_ATTRIBUTE, order);
 		}
