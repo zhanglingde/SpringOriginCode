@@ -306,14 +306,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			throws BeansException {
 
 		/**
-		 * 提取对应的beanName
+		 * 1. 提取对应的 beanName
 		 * bean 对象实现 FactoryBean 接口之后就会变成 &beanName，如果同时存在别名，也需要把别名进行转换
 		 */
 		String beanName = transformedBeanName(name);
 		Object bean;
 
 		// Eagerly check singleton cache for manually registered singletons.
-		// 从一级缓存中获取 （提前检查单例缓存中是否有手动注册的单例对象，与循环依赖有关）
+		// 2. 从一级缓存中获取 （提前检查单例缓存中是否有手动注册的单例对象，与循环依赖有关）
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
@@ -367,7 +367,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			try {
-				// 此处做了 BeanDefinition 对象的转换，当从 xml文件中加载 beandefinition 对象的时候，封装的对象是 GenericBeanDefinition
+				// 3. 此处做了 BeanDefinition 对象的转换，当从 xml文件中加载 beandefinition 对象的时候，封装的对象是 GenericBeanDefinition
 				// 此处要做类型转换，如果是子类 bean 的话，会合并父类的相关属性
 				RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				checkMergedBeanDefinition(mbd, beanName, args);

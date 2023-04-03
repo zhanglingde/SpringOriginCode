@@ -356,7 +356,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			parser.parse(candidates);
 			parser.validate();
 
-			// 获取所有的 bean，包括扫描的 bean 对象，@Import 导入的 bean 对象
+			// 5. 获取所有的 bean：包括扫描的 bean 对象、@Import 导入的 bean 对象
 			Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());
 			// 清除已经解析处理过的配置类
 			configClasses.removeAll(alreadyParsed);
@@ -367,7 +367,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
-			// 将上一步 parser 解析出的 ConfigurationClass 类加载成 BeanDefinition,实际上经过上一步的 parser 后，解析出来的 bean 已经放入到 BeanDefinition 中
+			// 6. 将上一步 parser 解析出的 ConfigurationClass 类加载成 BeanDefinition,实际上经过上一步的 parser 后，解析出来的 bean 已经放入到 BeanDefinition 中
 			// 但是由于这些 bean 可能会引入新的 bean，（例如实现了 ImportBeanDefinitionRegistrar 或者 ImportSelector 接口的 bean，或者 bean 中存在被 @Bean 注解的方法）
 			// 因此需要执行一次 loadBeanDefinition() ，这样就会执行 ImportBeanDefinitionRegistrar 或者 ImportSelector 接口
 			this.reader.loadBeanDefinitions(configClasses);
