@@ -130,9 +130,9 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// delegate 对象进行相关解析工作
 		this.delegate = createDelegate(getReaderContext(), root, parent);
 
-		// xml 命名空间（xmlns）,默认命名空间  "http://www.springframework.org/schema/beans"
+		// 1. xml 命名空间（xmlns）,默认命名空间  "http://www.springframework.org/schema/beans"
 		if (this.delegate.isDefaultNamespace(root)) {
-			// profile 标签
+			// 2. profile 标签
 			String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
 			if (StringUtils.hasText(profileSpec)) {
 				String[] specifiedProfiles = StringUtils.tokenizeToStringArray(
@@ -149,11 +149,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
-		// pre postProcessXml 扩展（SpringMVC）（模板方法）
+		// 3. pre postProcessXml 扩展（SpringMVC）（模板方法）
 		preProcessXml(root);
-		// 使用 delegate 从根节点开始解析
+		// 4. 使用 delegate 从根节点开始解析
 		parseBeanDefinitions(root, this.delegate);
-		// 解析后处理，留给子类实现
+		// 5. 解析后处理，留给子类实现
 		postProcessXml(root);
 
 		this.delegate = parent;
@@ -173,21 +173,21 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * @param root the DOM root element of the document
 	 */
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
-		// 一般都以 <beans></beans> 标签开头，是默认的命名空间
+		// 1. 一般都以 <beans></beans> 标签开头，是默认的命名空间
 		if (delegate.isDefaultNamespace(root)) {
-			// 获取子节点
+			// 2. 获取子节点
 			NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node node = nl.item(i);
-				// 标签解析 <bean>
+				// 3. 标签解析 <bean>
 				if (node instanceof Element) {
 					Element ele = (Element) node;
-					// 不需要额外导入的命名空间（默认命名空间）<import> <alias> <bean> <beans> <description> 等
+					// 4. 不需要额外导入的命名空间（默认命名空间）<import> <alias> <bean> <beans> <description> 等
 					if (delegate.isDefaultNamespace(ele)) {
 						parseDefaultElement(ele, delegate);
 					}
 					else {
-						// 需要导入的 <aop> <tx> <context> 等标签
+						// 4. 需要导入的 <aop> <tx> <context> 等标签
 						delegate.parseCustomElement(ele);
 					}
 				}

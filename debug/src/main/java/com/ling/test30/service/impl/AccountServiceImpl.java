@@ -4,6 +4,7 @@ package com.ling.test30.service.impl;
 import com.ling.test30.Account;
 import com.ling.test30.mapper.AccountMapper;
 import com.ling.test30.service.AccountService;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +29,20 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.findAccountById(accountId);
     }
 
+    @Autowired
+    AccountService accountService;
+
     /**
      * 转账
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void transfer(String sourceName, String targetName, Float money) {
+        ((AccountService) AopContext.currentProxy()).transferImpl(sourceName, targetName, money);
+        // accountService.transferImpl(sourceName, targetName, money);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void transferImpl(String sourceName, String targetName, Float money) {
         System.out.println("before transfer....");
         Account source = accountMapper.findAccountByName(sourceName);
         Account target = accountMapper.findAccountByName(targetName);

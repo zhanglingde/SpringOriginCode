@@ -664,7 +664,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Allow post-processors to modify the merged bean definition.
-		// 允许 beanPostProcessor 去修改合并的 beanDefinition（@PostConstruct 和 @PreDestroy）
+		// 2. 允许 beanPostProcessor 去修改合并的 beanDefinition（@PostConstruct 和 @PreDestroy）
 		synchronized (mbd.postProcessingLock) {
 			// 判断 beanDefinition 是否被处理过
 			if (!mbd.postProcessed) {

@@ -165,20 +165,18 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 	public Object proceed() throws Throwable {
 		// We start with an index of -1 and increment early.
 		// 执行完所有增强后执行切点方法
-		// 从索引为 -1 的拦截器开始调用，并按序执行；如果拦截器链中的拦截器迭代调用完毕，开始调用 target 的函数，这个函数是通过反射机制完成的
+		// 2. 从索引为 -1 的拦截器开始调用，并按序执行；如果拦截器链中的拦截器迭代调用完毕，开始调用 target 的函数，这个函数是通过反射机制完成的
 		if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
 			return invokeJoinpoint();
 		}
 
-		// 获取下一个要执行的拦截器（interceptorOrInterceptionAdvice 拦截器链）
-		Object interceptorOrInterceptionAdvice =
-				this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
+		// 1. 获取下一个要执行的拦截器（interceptorOrInterceptionAdvice 拦截器链）
+		Object interceptorOrInterceptionAdvice = this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
 		if (interceptorOrInterceptionAdvice instanceof InterceptorAndDynamicMethodMatcher) {
 			// Evaluate dynamic method matcher here: static part will already have
 			// been evaluated and found to match.
 			// 动态匹配拦截器，对 pointcut 触发进行匹配；如果和定义的 pointcut 匹配，那么这个 advice 将会得到执行
-			InterceptorAndDynamicMethodMatcher dm =
-					(InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
+			InterceptorAndDynamicMethodMatcher dm = (InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
 			Class<?> targetClass = (this.targetClass != null ? this.targetClass : this.method.getDeclaringClass());
 			if (dm.methodMatcher.matches(this.method, targetClass, this.arguments)) {
 				return dm.interceptor.invoke(this);

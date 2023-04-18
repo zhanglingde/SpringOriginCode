@@ -356,7 +356,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
-		// isInfrastructureClass 给定的 bean 是否代表一个基础设施类，基础设施类不应代理 ||
+		// 1. isInfrastructureClass 给定的 bean 是否代表一个基础设施类，基础设施类不应代理 ||
 		// shouldSkip： 用于判断当前 bean 是否应该被略过（配置了指定 bean，不需要自动代理）
 		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
 			// 对当前 bean 进行缓存
@@ -364,14 +364,14 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			return bean;
 		}
 
-		// 如果存在增强方法则创建代理，获取当前 bean 的 Advices 和 Advisors
+		// 2. 如果存在增强方法则创建代理，获取当前 bean 的 Advices 和 Advisors
 		// Create proxy if we have advice.
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		// 如果获取到了增强则需要针对增强创建代理
 		if (specificInterceptors != DO_NOT_PROXY) {
 			// 对当前 bean 的代理状态进行缓存
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
-			// 根据获取到的 Advices 和 Advisors 为当前 bean 生成代理对象
+			// 3. 根据获取到的 Advices 和 Advisors 为当前 bean 生成代理对象
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
 			// 缓存生成的代理 bean 的类型，并且返回生成的代理 bean
@@ -483,10 +483,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		ProxyFactory proxyFactory = new ProxyFactory();
-		// 获取当前类中相关属性
+		// 1. 获取当前类中相关属性
 		proxyFactory.copyFrom(this);
 
-		// 是否直接代理目标类以及任何接口
+		// 2. 是否直接代理目标类以及任何接口
 		if (!proxyFactory.isProxyTargetClass()) {
 			// 对于给定的 bean 是否应该使用 targetClass 而不是它的接口代理
 			if (shouldProxyTargetClass(beanClass, beanName)) {

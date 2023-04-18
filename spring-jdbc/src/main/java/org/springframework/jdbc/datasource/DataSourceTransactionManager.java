@@ -244,18 +244,17 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	 */
 	@Override
 	protected Object doGetTransaction() {
-		// 创建一个数据源对象
+		// 1. 创建一个数据源对象
 		DataSourceTransactionObject txObject = new DataSourceTransactionObject();
-		// 是否允许当前事务设置保持点(只与 Nested 行为有关)
+		// 2. 是否允许当前事务设置保持点(只与 Nested 行为有关)
 		txObject.setSavepointAllowed(isNestedTransactionAllowed());
 
 		/**
 		 * TransactionSynchronizationManager 事务同步管理器对象(该类中都是局部线程变量 ThreadLocal)
-		 * 用来保存当前事务的信息,我们第一次从这里去线程变量中获取 事务连接持有器对象 通过数据源为key去获取
-		 * 由于第一次进来开始事务 我们的事务同步管理器中没有被存放.所以此时获取出来的conHolder为null
+		 * 用来保存当前事务的信息,我们第一次从这里去线程变量中获取 事务连接持有器对象 通过数据源为 key 去获取
+		 * 由于第一次进来开始事务 我们的事务同步管理器中没有被存放.所以此时获取出来的 conHolder 为 null
 		 */
-		ConnectionHolder conHolder =
-				(ConnectionHolder) TransactionSynchronizationManager.getResource(obtainDataSource());
+		ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(obtainDataSource());
 		// 非新创建连接则写 false
 		txObject.setConnectionHolder(conHolder, false);
 		// 返回事务对象

@@ -305,10 +305,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			String name, @Nullable Class<T> requiredType, @Nullable Object[] args, boolean typeCheckOnly)
 			throws BeansException {
 
-		/**
-		 * 1. 提取对应的 beanName
-		 * bean 对象实现 FactoryBean 接口之后就会变成 &beanName，如果同时存在别名，也需要把别名进行转换
-		 */
+		// 1. 提取对应的 beanName（bean 对象实现 FactoryBean 接口之后就会变成 &beanName，如果同时存在别名，也需要把别名进行转换）
 		String beanName = transformedBeanName(name);
 		Object bean;
 
@@ -367,13 +364,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			try {
-				// 3. 此处做了 BeanDefinition 对象的转换，当从 xml文件中加载 beandefinition 对象的时候，封装的对象是 GenericBeanDefinition
+				// 此处做了 BeanDefinition 对象的转换，当从 xml文件中加载 beandefinition 对象的时候，封装的对象是 GenericBeanDefinition
 				// 此处要做类型转换，如果是子类 bean 的话，会合并父类的相关属性
 				RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.
-				// 如果存在依赖的 bean，则优先实例化依赖的 bean; A->B,优先实例化 B
+				// 3. 如果存在依赖的 bean，则优先实例化依赖的 bean; A->B,优先实例化 B
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
 					// 如果存在依赖，需要递归实例化依赖的 bean
@@ -395,7 +392,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				// Create bean instance.
-				// 创建 单例 bean 的实例对象
+				// 4. 创建 单例 bean 的实例对象
 				if (mbd.isSingleton()) {
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
@@ -463,7 +460,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 
 		// Check if required type matches the type of the actual bean instance.
-		// 检查创建的 bean 类型与所需要的 bean 类型是否一致
+		// 5. 检查创建的 bean 类型与所需要的 bean 类型是否一致
 		if (requiredType != null && !requiredType.isInstance(bean)) {
 			try {
 				// 获取 beanFactory 使用的类型转换器，将 bean 转换为 requiredType

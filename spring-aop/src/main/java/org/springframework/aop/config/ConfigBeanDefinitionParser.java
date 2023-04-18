@@ -103,10 +103,10 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 				new CompositeComponentDefinition(element.getTagName(), parserContext.extractSource(element));
 		parserContext.pushContainingComponent(compositeDef);
 
-		// 注册自动代理模式创建器：AspectJAwareAutoProxyCreator(注解 AnnotationAwareAspectJAutoProxyCreator)
+		// 1. 注册自动代理模式创建器：AspectJAwareAutoProxyCreator(注解 AnnotationAwareAspectJAutoProxyCreator)
 		configureAutoProxyCreator(parserContext, element);
 
-		// 解析 aop:config 子节点下的 aop:pointcut/aop:advice/aop:aspect 标签
+		// 2. 解析 aop:config 子节点下的 aop:pointcut/aop:advice/aop:aspect 标签
 		List<Element> childElts = DomUtils.getChildElements(element);
 		for (Element elt: childElts) {
 			String localName = parserContext.getDelegate().getLocalName(elt);

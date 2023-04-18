@@ -649,15 +649,15 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
-		// 留给子类覆盖，初始化属性资源（扩展）
+		// 2. 留给子类覆盖，初始化属性资源（扩展）
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
-		// 创建并获取环境对象，验证所有标记为必填的属性是否已经都放入环境对象中
+		// 3. 创建并获取环境对象，验证所有标记为必填的属性是否已经都放入环境对象中
 		getEnvironment().validateRequiredProperties();
 
-		// 创建基本监听器，事件集合对象（作扩展使用），判断刷新前的应用程序监听器集合是否为空，如果为空，则将监听器添加到此集合中
+		// 4. 创建基本监听器，事件集合对象（作扩展使用），判断刷新前的应用程序监听器集合是否为空，如果为空，则将监听器添加到此集合中
 		// Store pre-refresh ApplicationListeners...
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
@@ -956,7 +956,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// Initialize conversion service for this context.
-		// 初始化类型转换操作到当前上下文中
+		// 1. 初始化类型转换操作到当前上下文中
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
 				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
 			beanFactory.setConversionService(
@@ -966,16 +966,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Register a default embedded value resolver if no bean post-processor
 		// (such as a PropertyPlaceholderConfigurer bean) registered any before:
 		// at this point, primarily for resolution in annotation attribute values.
-		// 注册一个默认的值处理器（处理 ${}）
-		// 如果 beanFactory 之前没有注册嵌入 值处理器，注册一个默认的值处理器（处理 ${}），主要用于注解属性值的解析
-		// {@link PlaceholderConfigurerSupport.doProcessProperties} 进行赋值
+		// 2. 如果 beanFactory 之前没有注册嵌入值处理器，注册一个默认的值处理器（处理 ${}），主要用于注解属性值的解析 {@link PlaceholderConfigurerSupport.doProcessProperties} 进行赋值
 		if (!beanFactory.hasEmbeddedValueResolver()) {
 			beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().resolvePlaceholders(strVal));
 		}
 
 		// Initialize LoadTimeWeaverAware beans early to allow for registering their transformers early.
-		// 处理 AOP 织入的相关操作
-		// 尽早初始化 loadTimeWeaverAware bean,以便尽早注册他们的转换器
+		//
+		// 3. 尽早初始化 loadTimeWeaverAware bean,以便尽早注册他们的转换器（处理 AOP 织入的相关操作）
 		String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
 		for (String weaverAwareName : weaverAwareNames) {
 			getBean(weaverAwareName);
@@ -986,11 +984,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.setTempClassLoader(null);
 
 		// Allow for caching all bean definition metadata, not expecting further changes.
-		// 冻结所有的 bean 定义，说明注册的 bean 定义将不被修改或任何进一步处理
+		// 4. 冻结所有的 bean 定义，说明注册的 bean 定义将不被修改或任何进一步处理
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.
-		// 实例化剩下的单例对象（所有非懒加载） beanDefinitionMap 中的对象 - singletonObjects 需要实例化的对象
+		// 5. 实例化剩下的单例对象（所有非懒加载） beanDefinitionMap 中的对象 - singletonObjects 需要实例化的对象
 		beanFactory.preInstantiateSingletons();
 	}
 
