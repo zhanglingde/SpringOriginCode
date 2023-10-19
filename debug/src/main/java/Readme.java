@@ -67,6 +67,11 @@ public class Readme {
 	 *     <li> 解析 xml 配置文件前：{@link DefaultBeanDefinitionDocumentReader#preProcessXml(Element)}</li>
 	 *     <li> 解析 xml 配置文件后：{@link DefaultBeanDefinitionDocumentReader#postProcessXml(Element)} </li>
 	 * </ul>
+	 *
+	 *
+	 *
+	 * @Autowire 注解处理   {@link com.ling.test16.Test16}
+	 * 循环依赖	{@link com.ling.test20.Test20}
 	 */
 	void read00(){}
 
@@ -407,11 +412,22 @@ public class Readme {
 	 *     </ol>
 	 * </p>
 	 *
-	 * <p> FactoryBean
-	 *        {@link  AbstractBeanFactory#getObjectForBeanInstance(Object, String, String, RootBeanDefinition) getObjectForBeanInstance}
-	 * </p>
+	 *
 	 */
 	void read13() {
+	}
+
+	/**
+	 * 创建对象的几种方法
+	 *
+	 * FactoryBean   {@link  AbstractBeanFactory#getObjectForBeanInstance(Object, String, String, RootBeanDefinition) getObjectForBeanInstance}
+	 *
+	 * Supplier 创建 bean   mbd.getInstanceSupplier()
+	 * 		{@link AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[])}    <br>
+	 * 	 	{@link com.ling.test15.supplier.SupplierBeanFactoryPostProcessor}
+	 */
+	void read13_2(){
+
 	}
 
 

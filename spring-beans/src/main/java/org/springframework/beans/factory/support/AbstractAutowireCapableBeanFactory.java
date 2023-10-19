@@ -1151,7 +1151,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// mbd 的 synthetic 属性：设置此 bean 定义是否是 "synthetic"，一般是指只有 AOP 相关的 pointCut 配置或者 Advice配 置才会将 synthetic 设置为true
 		// 如果mdb不是synthetic且此工厂拥有 InstantiationAwareBeanPostProcessor
 		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
-			// 遍历工厂内的后置处理器
+			// 遍历工厂内的后置处理器  AbstractAutoProxyCreator(AOP)
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {
 					SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;
@@ -1722,14 +1722,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 						// postProcessPropertyValues:一般进行检查是否所有依赖项都满足，例如基于"Require"注释在 bean属性 setter，
 						// 	-- 替换要应用的属性值，通常是通过基于原始的PropertyValues创建一个新的MutablePropertyValue实例， 添加或删除特定的值
 						// 	-- 返回的PropertyValues 将应用于bw包装的bean实例 的实际属性值（添加PropertyValues实例到pvs 或者 设置为null以跳过属性填充）
-						// 回到ipd的postProcessPropertyValues方法
+						// 回到 ibd 的 postProcessPropertyValues 方法
 						pvsToUse = ibp.postProcessPropertyValues(pvs, filteredPds, bw.getWrappedInstance(), beanName);
 						if (pvsToUse == null) {
 							// 跳过属性填充
 							return;
 						}
 					}
-					// pvs 引用 pvsToUser
 					pvs = pvsToUse;
 				}
 			}

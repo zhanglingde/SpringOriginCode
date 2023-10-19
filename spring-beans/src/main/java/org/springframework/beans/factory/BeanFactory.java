@@ -119,6 +119,8 @@ import org.springframework.lang.Nullable;
 public interface BeanFactory {
 
 	/**
+	 * 如果当前 bean 是 FactoryBean，就给这个 bean 名字加一个 & 前缀
+	 *
 	 * Used to dereference a {@link FactoryBean} instance and distinguish it from
 	 * beans <i>created</i> by the FactoryBean. For example, if the bean named
 	 * {@code myJndiObject} is a FactoryBean, getting {@code &myJndiObject}

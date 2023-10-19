@@ -12,8 +12,8 @@
 	<!--<bean id="myInstantiationAwareBeanPostProcessor" class="com.ling.test15.resolveBeforeInstantiation.MyInstantiationAwareBeanPostProcessor"></bean>-->
 
 	<!-- 2. supplier 创建 bean	-->
-	<!--<bean id="user" class="com.ling.test15.supplier.User"></bean>-->
-	<!--<bean class="com.ling.test15.supplier.SupplierBeanFactoryPostProcessor"></bean>-->
+	<bean id="user" class="com.ling.test15.supplier.User"></bean>
+	<bean class="com.ling.test15.supplier.SupplierBeanFactoryPostProcessor"></bean>
 
 
 
@@ -35,9 +35,9 @@
 	<!--<bean id="personInstanceFactory" class="com.ling.test15.factoryMethod.PersonInstanceFactory"></bean>-->
 
 	<!-- 5. 反射创建 -->
-	<bean id="person3" class="com.ling.test15.factoryMethod.Person">
-		<property name="id" value="1"></property>
-		<property name="name" value="ling"></property>
-	</bean>
+<!--	<bean id="person3" class="com.ling.test15.factoryMethod.Person">-->
+<!--		<property name="id" value="1"></property>-->
+<!--		<property name="name" value="ling"></property>-->
+<!--	</bean>-->
 
 </beans>

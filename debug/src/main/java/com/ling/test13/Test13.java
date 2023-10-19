@@ -30,6 +30,6 @@ public class Test13 {
 		// 获取 FactoryBean 创建的对象
 		// Student student = (Student) ac.getBean("student");
 		Student student = ac.getBean(Student.class);
-		System.out.println("student = " + student);
+		System.out.println("student3 = " + student);
 	}
 }

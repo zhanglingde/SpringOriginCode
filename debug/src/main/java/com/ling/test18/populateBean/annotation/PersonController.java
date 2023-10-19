@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 
 @Controller
 public class PersonController {
-    // @Autowired
-	@Resource
+    @Autowired
+	// @Resource
     private PersonService personService;
 }

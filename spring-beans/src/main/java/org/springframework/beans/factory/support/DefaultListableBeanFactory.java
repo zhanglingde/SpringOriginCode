@@ -1370,12 +1370,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (multipleBeans != null) {
 				return multipleBeans;
 			}
-
-			// 尝试与 type 匹配的候选 bean 对象，构建成 Map（key-- beanName；value--bean 对象）
+			//
+			// 尝试与 PersonService.class(依赖的对象) 匹配的候选 bean 对象，构建成 Map（key-- beanName；value--bean 对象）
 			Map<String, Object> matchingBeans = findAutowireCandidates(beanName, type, descriptor);
 			if (matchingBeans.isEmpty()) {
 				if (isRequired(descriptor)) {
-					// 没有候选 bean 对象，且 descriptor 需要注入，抛出  NoSuchBeanDefinitionException 异常，以解决不可解决的依赖关系
+					// 若 personService 必填，抛出  NoSuchBeanDefinitionException 异常，表示不可解决的依赖关系
 					raiseNoMatchingBeanFound(type, descriptor.getResolvableType(), descriptor);
 				}
 				return null;
@@ -1385,6 +1385,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			String autowiredBeanName;
 			// 存储唯一的候选 bean 对象
 			Object instanceCandidate;
+
+			// ============================ 决定候选的 bean ========================================
 
 			// 候选 bean 对象 map 不止一个
 			if (matchingBeans.size() > 1) {
@@ -1408,24 +1410,23 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				// 获取 autowiredBeanName 对应的候选 Bean 对象
 				instanceCandidate = matchingBeans.get(autowiredBeanName);
 			} else {
-				// We have exactly one match.
-				// 这个时候 matchingBeans 不会没有元素的，因为前面已经检查了
-				// 获取 matchingBeans 唯一的元素
+				// We have exactly one match. 唯一确认匹配的对象（不会为空）
 				Map.Entry<String, Object> entry = matchingBeans.entrySet().iterator().next();
-				// bean 名称
+				// 注入的 bean 名称
 				autowiredBeanName = entry.getKey();
-				// bean 对象
+				// 注入的 bean 对象
 				instanceCandidate = entry.getValue();
 			}
 
 			if (autowiredBeanNames != null) {
 				autowiredBeanNames.add(autowiredBeanName);
 			}
+			// 3. 解析候选的 bean，beanFactory.getBean(beanName) 创建对象（依赖的对象内部还有依赖的对象，先创建内部的）
 			if (instanceCandidate instanceof Class) {
 				// instanceCandidate 引用 descriptor 对 autowiredBeanName 解析为该工厂的 Bean 实例
 				instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, this);
 			}
-			// result 存储最佳候选 bean 对象
+			// 4. 对依赖的对象作相应校验，最后返回依赖对象 result
 			Object result = instanceCandidate;
 			if (result instanceof NullBean) {
 				if (isRequired(descriptor)) {
@@ -1434,12 +1435,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 				result = null;
 			}
-			// 如果 result 不是 type 的实例
+
 			if (!ClassUtils.isAssignableValue(type, result)) {
-				// 抛出 Bean 不是必需类型异常
+				// 如果 result 不是 type 的实例， 抛出 Bean 不是必需类型异常
 				throw new BeanNotOfRequiredTypeException(autowiredBeanName, type, instanceCandidate.getClass());
 			}
-			// 返回最佳候选 bean 对象
 			return result;
 		} finally {
 			// 设置上一个切入点对象

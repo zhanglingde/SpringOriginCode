@@ -1103,7 +1103,10 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	}
 
 	/**
-     *
+     * 判断 BeanDefinition 是否是合成的，这种一般都是 Spring 定义的，我们自定义的 Bean 一般都不属于这一类
+	 *
+	 * 一般只有 AOP 相关的 pointCut 配置或 Advice 配置才会将 synthetic 设置为 true
+	 *
 	 * Return whether this bean definition is 'synthetic', that is,
 	 * not defined by the application itself.
 	 */
