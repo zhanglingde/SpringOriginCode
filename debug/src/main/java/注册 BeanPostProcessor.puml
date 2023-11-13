@@ -1,15 +1,14 @@
 @startuml
 
+skin rose
+
 start
-:PostProcessorRegistrationDelegate#registerBeanPostProcessors;
-:找到所有实现 BeanPostProcessor 接口的类;
-:添加 BeanPostProcessorChecker 到 BeanFactory\n主要用于记录信息;
-:遍历 BeanFactory 中的 BeanPostProcessor,\n按 PriorityOrdered、Ordered和无序存放不同的list中\nBPP 是MergedBeanDefinitionPostProcessor，添加到Spring内部的BPP集合中;
-:将 BPP 排序然后添加到 BeanFactory 中(先PriorityOrdered，后Ordered);
-:将Spring内部的BPP注册到 BeanFactory 中;
-:将 ApplicationListenerDetector 注册到 beanFactory 中（之前注册过，重新注册，将该监听器放到最后面）;
-
-
+    :PostProcessorRegistrationDelegate#registerBeanPostProcessors;
+    :找到所有实现 BeanPostProcessor 接口的类;
+    :添加 BeanPostProcessorChecker 到 BeanFactory\n主要用于记录信息;
+    :遍历 BeanFactory 中的 BeanPostProcessor,\n按 PriorityOrdered、Ordered和无序存放不同的list中\nBPP 是MergedBeanDefinitionPostProcessor，添加到Spring内部的BPP集合中;
+    :将 BPP 排序然后添加到 BeanFactory 中(先PriorityOrdered，后Ordered);
+    :将Spring内部的BPP注册到 BeanFactory 中;
+    :将 ApplicationListenerDetector 注册到 beanFactory 中（之前注册过，重新注册，将该监听器放到最后面）;
 end
-
 @enduml
