@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ap="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/util
+       https://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<!-- xml 方式 aop -->
+
+	<bean id="dog" class="com.ling.test21.bianchenapo.introductionAdvisor.DogImpl"/>
+
+	<bean id = "animalAspect" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
+		<property name="expression" value="execution(* com.ling.test21.bianchenapo.introductionAdvisor.Animal.*(..))"/>
+	</bean>
+
+	<!-- Advice 增强	-->
+	<bean id="animalAdvice" class="com.ling.test21.bianchenapo.introductionAdvisor.AnimalIntroductionInterceptor"/>
+
+<!--	<bean id="dogIntroductionAdvisor" class="org.springframework.aop.framework.ProxyFactoryBean"-->
+<!--		  p:interfaces="com.ling.test21.bianchenapo.introductionAdvisor.Animal"-->
+<!--		  p:target-ref="dog"-->
+<!--		  p:interceptorNames="run"-->
+<!--		  p:proxyTargetClass="true"></bean>-->
+
+
+	<context:component-scan base-package="com.ling.test21"></context:component-scan>
+
+
+</beans>
