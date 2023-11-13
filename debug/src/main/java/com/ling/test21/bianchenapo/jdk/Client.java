@@ -10,7 +10,7 @@ public class Client {
 	public static void main(String[] args) {
 		ProxyFactory proxyFactory = new ProxyFactory();
 		// 设置真正的代理对象
-		proxyFactory.setTarget(new ICalculatorImpl());
+		proxyFactory.setTarget(new CalculatorImpl());
 		// 设置代理对象的接口
 		proxyFactory.setInterfaces(ICalculator.class);
 		// 添加增强/通知

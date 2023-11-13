@@ -1,6 +1,5 @@
 package com.ling.test20;
 
-import com.ling.test19.populateBean.Person;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

@@ -77,6 +77,7 @@ public class NameMatchMethodPointcut extends StaticMethodMatcherPointcut impleme
 
 	@Override
 	public boolean matches(Method method, Class<?> targetClass) {
+		// 外部传一个方法列表进来，先调用 equals 匹配，然后调用 isMatch 匹配（支持通配符匹配）
 		for (String mappedName : this.mappedNames) {
 			if (mappedName.equals(method.getName()) || isMatch(method.getName(), mappedName)) {
 				return true;
@@ -95,6 +96,7 @@ public class NameMatchMethodPointcut extends StaticMethodMatcherPointcut impleme
 	 * @see org.springframework.util.PatternMatchUtils#simpleMatch(String, String)
 	 */
 	protected boolean isMatch(String methodName, String mappedName) {
+		// 支持通配符匹配
 		return PatternMatchUtils.simpleMatch(mappedName, methodName);
 	}
 
