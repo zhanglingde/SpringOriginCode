@@ -1,10 +1,10 @@
 package com.ling.test21.aopannotation.service.impl;
 
-import com.ling.test21.aopannotation.service.IAccountService;
+import com.ling.test21.aopannotation.service.AccountService;
 import org.springframework.stereotype.Service;
 
 @Service("accountService")
-public class AccountServiceImpl implements IAccountService {
+public class AccountServiceImpl implements AccountService {
 
     @Override
     public void saveAccount() {

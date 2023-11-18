@@ -336,27 +336,27 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 			this.parseState.push(new AdviceEntry(parserContext.getDelegate().getLocalName(adviceElement)));
 
 			// create the method factory bean
-			// 解析 advice 节点中的 method 属性，并包装为 MethodLocatingFactoryBean 对象
+			// 1. 解析 advice 节点中的 method 属性，并包装为 MethodLocatingFactoryBean 对象
 			RootBeanDefinition methodDefinition = new RootBeanDefinition(MethodLocatingFactoryBean.class);
 			methodDefinition.getPropertyValues().add("targetBeanName", aspectName);
 			methodDefinition.getPropertyValues().add("methodName", adviceElement.getAttribute("method"));
 			methodDefinition.setSynthetic(true);
 
 			// create instance factory definition
-			// 关联 aspectName ，包装为 SimpleBeanFactoryAwareAspectInstanceFactory 对象
+			// 2. 关联 aspectName(<aop:aspect> 的 ref 属性) ，包装为 SimpleBeanFactoryAwareAspectInstanceFactory 对象
 			RootBeanDefinition aspectFactoryDef =
 					new RootBeanDefinition(SimpleBeanFactoryAwareAspectInstanceFactory.class);
 			aspectFactoryDef.getPropertyValues().add("aspectBeanName", aspectName);
 			aspectFactoryDef.setSynthetic(true);
 
 			// register the pointcut
-			// 涉及 pointcut 属性的解析，并结合上述的两个 bean 最终包装为 AbstractBeanDefinition 通知对象
+			// 3. 涉及 pointcut 属性的解析，并结合上述的两个 bean 最终包装为 AbstractBeanDefinition 通知对象
 			AbstractBeanDefinition adviceDef = createAdviceDefinition(
 					adviceElement, parserContext, aspectName, order, methodDefinition, aspectFactoryDef,
 					beanDefinitions, beanReferences);
 
 			// configure the advisor
-			// 最终包装为 AspectJPointcutAdvisor 对象
+			// 4. 最终包装为 AspectJPointcutAdvisor 对象
 			RootBeanDefinition advisorDefinition = new RootBeanDefinition(AspectJPointcutAdvisor.class);
 			advisorDefinition.setSource(parserContext.extractSource(adviceElement));
 			advisorDefinition.getConstructorArgumentValues().addGenericArgumentValue(adviceDef);
