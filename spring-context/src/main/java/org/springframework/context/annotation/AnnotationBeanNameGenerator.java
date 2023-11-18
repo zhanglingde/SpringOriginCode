@@ -77,7 +77,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 
 	@Override
 	public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
-		// 通过注解的属性值获取 bean 名称
+		// 1. 通过注解的属性值获取 bean 名称
 		if (definition instanceof AnnotatedBeanDefinition) {
 			String beanName = determineBeanNameFromAnnotation((AnnotatedBeanDefinition) definition);
 			if (StringUtils.hasText(beanName)) {
@@ -87,7 +87,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 			}
 		}
 		// Fallback: generate a unique default bean name.
-		// 如果注解未指定 bena 名称，则生成一个唯一的默认 bean 名称
+		// 2. 如果注解未指定 bean 名称，则生成一个唯一的默认 bean 名称
 		return buildDefaultBeanName(definition, registry);
 	}
 
@@ -98,16 +98,23 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	 */
 	@Nullable
 	protected String determineBeanNameFromAnnotation(AnnotatedBeanDefinition annotatedDef) {
+		// 1. 获取类上的注解信息，然后获取所有注解类型，并进行遍历
 		AnnotationMetadata amd = annotatedDef.getMetadata();
 		Set<String> types = amd.getAnnotationTypes();
 		String beanName = null;
 		for (String type : types) {
+			// 2. 获取注解的所有属性
 			AnnotationAttributes attributes = AnnotationConfigUtils.attributesFor(amd, type);
 			if (attributes != null) {
+				// 3. 继续读取注解的元注解，并将读取到的结果存入 metaAnnotationTypesCache 缓存中（）
+				// Spring 中用来标记 Bean 的注解大部分衍生自 @Component，甚至我们也可以自定义注解，那么如果自定义注解了，
+				// 这个地方就没法判断了，因为每个人自定义出来的注解都不一样。所以，万变不离其宗，这里就去找各个注解的元注解。例如如果我们在类上添加的是 @Configuration，那么 @Configuration 的元注解有两个，分别是 @Component 和 @Indexed
 				Set<String> metaTypes = this.metaAnnotationTypesCache.computeIfAbsent(type, key -> {
 					Set<String> result = amd.getMetaAnnotationTypes(key);
 					return (result.isEmpty() ? Collections.emptySet() : result);
 				});
+				// 4. 判断 type 是不是 @Component 或者 Jakarta 中自带的 @ManagedBean、@Named，亦或者 metaTypes 里是否包含 @Component。
+				// 如果确定是 @Component 衍生出来的注解，亦或者是 @ManagedBean、@Named 注解标记的 Bean，那么就将其 value 属性读取出来，作为 beanName，如果包含多个有效注解，且各自配置的 beanName 不一致，就会抛出异常
 				if (isStereotypeWithNameValue(type, metaTypes, attributes)) {
 					Object value = attributes.get("value");
 					if (value instanceof String) {
@@ -167,8 +174,10 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	 * @return the default bean name (never {@code null})
 	 */
 	protected String buildDefaultBeanName(BeanDefinition definition) {
+		// 1. 获取完整类名
 		String beanClassName = definition.getBeanClassName();
 		Assert.state(beanClassName != null, "No bean class name set");
+		// 2. 去除包名后，将首字母小写
 		String shortClassName = ClassUtils.getShortName(beanClassName);
 		return Introspector.decapitalize(shortClassName);
 	}

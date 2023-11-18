@@ -192,7 +192,8 @@ class ConfigurationClassBeanDefinitionReader {
 		AnnotationAttributes bean = AnnotationConfigUtils.attributesFor(metadata, Bean.class);
 		Assert.state(bean != null, "No @Bean annotation attributes");
 
-		// Consider name and any aliases
+		// Consider name and any aliases 
+		// @Bean 注解配置了 names 属性，将集合中的第一个值作为 beanName，集合中其他值当作别名；没有配置 name,使用方法名作为 beanName
 		List<String> names = new ArrayList<>(Arrays.asList(bean.getStringArray("name")));
 		String beanName = (!names.isEmpty() ? names.remove(0) : methodName);
 

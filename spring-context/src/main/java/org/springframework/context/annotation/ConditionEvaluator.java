@@ -72,35 +72,34 @@ class ConditionEvaluator {
 	}
 
 	/**
+	 * 判断是否要条件条件注解
+	 *
 	 * Determine if an item should be skipped based on {@code @Conditional} annotations.
 	 * @param metadata the meta data
 	 * @param phase the phase of the call
 	 * @return if the item should be skipped
 	 */
 	public boolean shouldSkip(@Nullable AnnotatedTypeMetadata metadata, @Nullable ConfigurationPhase phase) {
-		// metadata 为空或配置类中不存在 @Conditional 标签
+		// 1. 判断当前注解是否是条件注解（不是条件注解就不能跳过） （条件注解有 @Conditional 标签）
 		if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) {
 			return false;
 		}
 
-		// 采用递归的方式进行判断，第一次执行的时候 phase 为空，向下执行
+		// 2. 采用递归的方式进行判断，第一次执行的时候 phase 为空，向下执行
 		if (phase == null) {
-			// ConfigurationClassUtils.isConfigurationCandidate 方法，判断逻辑如下
-			// 1. metadata 是 AnnotationMetadata 类的一个实例
-			// 2. 检查 bean 中是否使用 @Configuration 注解
-			// 3. 检查 bean 不是一个接口
-			// 4. 检查 bean 是否包含 @Component、@ComponentScan、@Import、@ImportResource 中任意一个
-			// 5. 检查 bean 中是否有 @Bean 注解
-			// 只要满足其中 1，2或1，3或1，4或1，5 就会继续递归
 			if (metadata instanceof AnnotationMetadata &&
 					ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) {
+				// 2. 当前注解是配置类上的注解
+				// 当前类上添加的注解是 @Component、@ComponentScan、@Import、@ImportResource 以及这四种注解衍生出来的注解，
+				// 亦或者当前类中有 @Bean 注解标记的方法，那么当前类就是一个配置类，就会设置 phase 为 PARSE_CONFIGURATION
 				return shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);
 			}
+			// 2. 当前注解不是配置类上的注解
 			return shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);
 		}
 
 		List<Condition> conditions = new ArrayList<>();
-		// 遍历条件集合
+		// 3.获取注解元数据上的 Condition 条件，排序后进行遍历条件
 		for (String[] conditionClasses : getConditionClasses(metadata)) {
 			for (String conditionClass : conditionClasses) {
 				// 提供 @Conditional 注解后面的 value 数组
@@ -115,15 +114,11 @@ class ConditionEvaluator {
 		for (Condition condition : conditions) {
 			ConfigurationPhase requiredPhase = null;
 			if (condition instanceof ConfigurationCondition) {
+				// 4. 获取条件上的 ConfigurationPhase（在哪个阶段进行注入）
 				requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();
 			}
-			// requiredPhase 只可能是空或者是 ConfigurationCondition 的一个实例对象
 			if ((requiredPhase == null || requiredPhase == phase) && !condition.matches(this.context, metadata)) {
-				// 逻辑为：
-				// 1. requiredPhase 不是 ConfigurationCondition 的实例
-				// 2. requiredPhase == phase，从上述的递归可知：phase 可为 ConfigurationPhase.PARSE_CONFIGURATION 或 ConfigurationPhase.REGISTER_BEAN
-				// 3. condition.matches(this.context, metadata) 返回 false
-				// 如果 1、2或1、3 成立，则此函数上层将阻断 bean 进行 Spring 容器
+				// 调用条件的匹配方法，判断是否要跳过；条件匹配成功不跳过，条件未匹配成功则跳过
 				return true;
 			}
 		}

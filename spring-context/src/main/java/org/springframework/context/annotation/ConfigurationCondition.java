@@ -36,11 +36,16 @@ public interface ConfigurationCondition extends Condition {
 
 
 	/**
+	 *
+	 * 配置的阶段，即条件注解生效的阶段
+	 *
 	 * The various configuration phases where the condition could be evaluated.
 	 */
 	enum ConfigurationPhase {
 
 		/**
+		 * 在解析 @Configuration 类的时候进行判断是否要加载配置类
+		 *
 		 * The {@link Condition} should be evaluated as a {@code @Configuration}
 		 * class is being parsed.
 		 * <p>If the condition does not match at this point, the {@code @Configuration}
@@ -49,6 +54,9 @@ public interface ConfigurationCondition extends Condition {
 		PARSE_CONFIGURATION,
 
 		/**
+		 * 在添加常规 Bean 的时候判断 Condition 条件，看条件注解是否满足条件
+		 * （常规 Bean 指非配置类，例如添加搭配 @Bean 注解使用的条件注解）
+		 *
 		 * The {@link Condition} should be evaluated when adding a regular
 		 * (non {@code @Configuration}) bean. The condition will not prevent
 		 * {@code @Configuration} classes from being added.
