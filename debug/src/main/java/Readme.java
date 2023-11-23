@@ -69,7 +69,7 @@ public class Readme {
 	 * </ul>
 	 *
 	 *
-	 *
+	 * 生命周期 {@link com.ling.test22.Test22}
 	 * @Autowire 注解处理   {@link com.ling.test16.Test16}
 	 * 循环依赖	{@link com.ling.test20.Test20}
 	 * 代理模式	{@link com.ling.test21.Test21}

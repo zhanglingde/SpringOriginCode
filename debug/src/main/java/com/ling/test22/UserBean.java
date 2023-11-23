@@ -20,7 +20,7 @@ public class UserBean implements InitializingBean, BeanNameAware, DisposableBean
 	public UserBean(int id, String name) {
 		this.id = id;
 		this.name = name;
-		System.out.println("2. 调用构造函数");
+		System.out.println("2. 调用构造函数实例化");
 	}
 
 	public int getId() {
