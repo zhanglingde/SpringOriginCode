@@ -68,7 +68,7 @@ public class Readme {
 	 *     <li> 解析 xml 配置文件后：{@link DefaultBeanDefinitionDocumentReader#postProcessXml(Element)} </li>
 	 * </ul>
 	 *
-	 *
+	 *	BeanFactoryPostProcessor 执行 {@link com.ling.test09.Test09}
 	 * 生命周期 {@link com.ling.test22.Test22}
 	 * @Autowire 注解处理   {@link com.ling.test16.Test16}
 	 * 循环依赖	{@link com.ling.test20.Test20}

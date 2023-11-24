@@ -7,8 +7,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.core.PriorityOrdered;
 
 /**
- * @author zhangling
- * @date 2022/1/28 4:46 下午
+ * BeanFactoryPostProcessor 中 添加的 BeanDefinition
  */
 public class MySelfBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, PriorityOrdered {
 
@@ -24,12 +23,12 @@ public class MySelfBeanDefinitionRegistryPostProcessor implements BeanDefinition
 
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-		System.out.println("调用执行 MySelfBeanDefinitionRegistryPostProcessor#postProcessBeanFactory");
+		System.out.println("7. BFPP 中添加的 BFPP 的 postProcessBeanFactory(), MySelfBeanDefinitionRegistryPostProcessor#postProcessBeanFactory()");
 	}
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-		System.out.println("调用执行 MySelfBeanDefinitionRegistryPostProcessor#postProcessBeanDefinitionRegistry（）... ");
+		System.out.println("4. BFPP 中添加的 BFPP 的 postProcessBeanDefinitionRegistry(), MySelfBeanDefinitionRegistryPostProcessor#postProcessBeanDefinitionRegistry()... ");
 	}
 
 	@Override

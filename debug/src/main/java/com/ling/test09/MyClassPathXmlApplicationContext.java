@@ -6,8 +6,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Spring 初始化时，初始化自己的环境变量
- *
- * @author zhangling  2021/12/13 21:28
  */
 public class MyClassPathXmlApplicationContext extends ClassPathXmlApplicationContext {
 
@@ -17,19 +15,18 @@ public class MyClassPathXmlApplicationContext extends ClassPathXmlApplicationCon
 
 	/**
 	 * 设置 bean 允许被覆盖，允许循环依赖，重写方法
-	 * @param beanFactory the newly created bean factory for this context
 	 */
 	@Override
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
 		beanFactory.setAllowBeanDefinitionOverriding(false);
 		beanFactory.setAllowCircularReferences(false);
-		// 自己添加 beanFactoryPostProcessor,添加到参数中
+		// 自己添加 beanFactoryPostProcessor,添加作为参数中的 BFPP
 		super.addBeanFactoryPostProcessor(new MyBeanFactoryPostProcessor());
 		super.customizeBeanFactory(beanFactory);
 	}
 
 	@Override
 	protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
-		System.out.println("扩展实现 MyClassPathXmlApplicationContext#postProcessBeanFactory 方法");
+		System.out.println("1. 扩展重写 AbstractApplicationContext 中的 postProcessBeanFactory(), MyClassPathXmlApplicationContext#postProcessBeanFactory 方法");
 	}
 }

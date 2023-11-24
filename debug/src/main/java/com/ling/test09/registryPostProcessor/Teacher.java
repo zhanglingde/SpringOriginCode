@@ -10,7 +10,7 @@ public class Teacher {
 	private String name;
 
 	public Teacher() {
-		System.out.println("创建 teacher 对象");
+		System.out.println("8. 执行 bean 的创建，创建 teacher 对象");
 	}
 
 	public String getName() {

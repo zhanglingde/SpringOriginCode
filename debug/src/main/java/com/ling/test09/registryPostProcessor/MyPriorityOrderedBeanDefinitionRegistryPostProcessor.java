@@ -9,20 +9,17 @@ import org.springframework.core.PriorityOrdered;
 
 /**
  * 实现 PriorityOrder,Ordered 和不实现接口，执行顺序不一样
- *
- * @author zhangling
- * @date 2022/1/28 10:40 上午
  */
 public class MyPriorityOrderedBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, PriorityOrdered {
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-		System.out.println("执行 PriorityOrderedRegistryPostProcessor#postProcessBeanFactory");
+		System.out.println("6. 优先执行 PriorityOrder 的 PriorityOrderedRegistryPostProcessor#postProcessBeanFactory()");
 	}
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
 		// 在此处可能会添加进新的 BeanDefinition
-		System.out.println("执行 PriorityOrderedRegistryPostProcessor#postProcessBeanDefinitionRegistry");
+		System.out.println("3. 执行 PriorityOrdered 的 postProcessBeanDefinitionRegistry(), PriorityOrderedRegistryPostProcessor#postProcessBeanDefinitionRegistry");
 		// 查看两种方式 Bean 是什么时候创建的  ？
 		// 方式一
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Teacher.class);

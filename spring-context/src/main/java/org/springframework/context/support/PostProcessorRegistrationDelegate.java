@@ -70,7 +70,7 @@ final class PostProcessorRegistrationDelegate {
 		// 1. BeanDefinitionRegistry 类型处理（ DefaultListableBeanFactory 为其子类）
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
-			// BeanFactoryPostProcessor 针对的操作对象是 BeanFactory，BeanDefinitionRegistryPostProcessor 针对的操作对象是 BeanDefinition
+			// BeanFactoryPostProcessor 针对的操作对象是 BeanFactory; BeanDefinitionRegistryPostProcessor 针对的操作对象是 BeanDefinition
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
