@@ -307,7 +307,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	@Override
 	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {
 		if (bean != null) {
-			// 根据给定的 bean 的 class 和 name 构建出一个 key，格式：beanClassName_beanName
+			// 根据给定的 bean 的 class 和 name 构建出一个 key，格式：beanClassName => beanName
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
 			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
 				// 如何它适合被代理，则需要封装指定 bean
@@ -356,7 +356,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
-		// 1. isInfrastructureClass 给定的 bean 是否代表一个基础设施类，基础设施类不应代理 ||
+		// 1. isInfrastructureClass: 判断 beanClass 是否是永远不应该被代理的基础结构类（默认 Advices、Advisors、Pointcut、AopInfrastructureBean 为基础结构类） ||
 		// shouldSkip： 用于判断当前 bean 是否应该被略过（配置了指定 bean，不需要自动代理）
 		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
 			// 对当前 bean 进行缓存
@@ -384,8 +384,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
-	 * 判断 beanClass 是否是基础类
-	 * 返回给定的 beanClass 是否表示不应代理的基础结构类
+	 * 判断 beanClass 是否是永远不应该被代理的基础结构类（默认 Advices、Advisors、Pointcut、AopInfrastructureBean 为基础结构类）
+	 * 返回 true 不被代理；false 有可能被代理
+	 *
 	 * Return whether the given bean class represents an infrastructure class
 	 * that should never be proxied.
 	 * <p>The default implementation considers Advices, Advisors and

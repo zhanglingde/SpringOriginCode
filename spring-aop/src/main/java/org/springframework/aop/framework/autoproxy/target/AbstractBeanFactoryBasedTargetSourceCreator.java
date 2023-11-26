@@ -98,7 +98,7 @@ public abstract class AbstractBeanFactoryBasedTargetSourceCreator
 		if (logger.isDebugEnabled()) {
 			logger.debug("Configuring AbstractBeanFactoryBasedTargetSource: " + targetSource);
 		}
-
+		// 创建一个新的内部容器（子容器）
 		DefaultListableBeanFactory internalBeanFactory = getInternalBeanFactoryForBean(beanName);
 
 		// We need to override just this bean definition, as it may reference other beans
@@ -109,6 +109,7 @@ public abstract class AbstractBeanFactoryBasedTargetSourceCreator
 		if (isPrototypeBased()) {
 			bdCopy.setScope(BeanDefinition.SCOPE_PROTOTYPE);
 		}
+		// 获取到 BeanDefinition，进行属性配置并注册到内部容器中
 		internalBeanFactory.registerBeanDefinition(beanName, bdCopy);
 
 		// Complete configuring the PrototypeTargetSource.
@@ -127,6 +128,7 @@ public abstract class AbstractBeanFactoryBasedTargetSourceCreator
 		synchronized (this.internalBeanFactories) {
 			DefaultListableBeanFactory internalBeanFactory = this.internalBeanFactories.get(beanName);
 			if (internalBeanFactory == null) {
+				//
 				internalBeanFactory = buildInternalBeanFactory(this.beanFactory);
 				this.internalBeanFactories.put(beanName, internalBeanFactory);
 			}
@@ -148,6 +150,9 @@ public abstract class AbstractBeanFactoryBasedTargetSourceCreator
 
 		// Filter out BeanPostProcessors that are part of the AOP infrastructure,
 		// since those are only meant to apply to beans defined in the original factory.
+		// 在创建内部容器后，会从内部容器中移除所有 AopInfrastructureBean 类型的 BeanPostProcessor，
+		// 也就是内部容器将来创建出来的 bean，不再走 AopInfrastructureBean 类型后置处理器，因为这种类型的后置处理器主要是用来处理 AOP 的，
+		// 现在，AOP 代理当场就生成了，就不再需要这些后置处理器了
 		internalBeanFactory.getBeanPostProcessors().removeIf(beanPostProcessor ->
 				beanPostProcessor instanceof AopInfrastructureBean);
 

@@ -111,7 +111,7 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
 		for (Advisor advisor : candidateAdvisors) {
 			if (advisor instanceof AspectJPointcutAdvisor &&
-					((AspectJPointcutAdvisor) advisor).getAspectName().equals(beanName)) {
+					((AspectJPointcutAdvisor) advisor).getAspectName().equals(beanName)) { // 判断是否是切面
 				return true;
 			}
 		}

@@ -502,7 +502,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 
 	/**
-	 * existingBean 初始化后的处理，bean 实例化之后
+	 * existingBean 初始化后的处理，bean 实例化之后，方法参数为 bean
 	 */
 	@Override
 	public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
@@ -596,7 +596,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-			// 给 BeanPostProcessors 一个机会来返回代理来替代真正的实例，应用实例化的前置处理器(默认情况下不处理)
+			// 给 BeanPostProcessors 一个机会来返回代理来替代真正的实例，应用实例化的前置处理器(默认情况下不处理) 提前 AOP
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -1343,7 +1343,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
-	 * bean 实例化之前，调用的前置处理器的方法(InstantiationAwareBeanPostProcessors 类型的前置处理器)
+	 * bean 实例化之前，调用的前置处理器的方法(InstantiationAwareBeanPostProcessors 类型的前置处理器)，方法参数还是 Class
 	 *
 	 * @return 返回一个 Object，即此处可以做代理的事，如果发现有一个处理器返回的不是 null，就直接返回了
 	 *
