@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/util
+       https://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<!-- xml 方式 aop -->
+
+<!--	 <bean id="accountService" class="com.ling.test15.resolveBeforeInstantiation.MyInstantiationAwareBeanPostProcessor"></bean>-->
+	 <bean id="myInstantiationAwareBeanPostProcessor" class="com.ling.test21.preproxy.MyInstantiationAwareBeanPostProcessor"></bean>
+	 <bean id="bookService" class="com.ling.test21.preproxy.BookService"></bean>
+
+
+
+
+
+
+
+</beans>

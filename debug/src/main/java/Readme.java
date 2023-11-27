@@ -69,10 +69,19 @@ public class Readme {
 	 * </ul>
 	 *
 	 *	BeanFactoryPostProcessor 执行 {@link com.ling.test09.Test09}
-	 * 生命周期 {@link com.ling.test22.Test22}
-	 * @Autowire 注解处理   {@link com.ling.test16.Test16}
+	 *
+	 * Bean 相关注解扫描	{@link com.ling.test10.Test10}
+	 * 自定义转换器	{@link com.ling.test12.Test12}
+	 * FactoryBean {@link com.ling.test13.Test13}
+	 * lookup      {@link  com.ling.test14.Test14}
+	 * bean 的创建  {@link com.ling.test15.Test15}
+	 * @Autowire、@PostConstruct 等注解处理   {@link com.ling.test16.Test16}
+	 * 属性赋值 {@link com.ling.test18.Test18}
+	 * BeanPostProcessor 中对属性赋值 {@link com.ling.test19.Test19}
 	 * 循环依赖	{@link com.ling.test20.Test20}
 	 * 代理模式 AOP	{@link com.ling.test21.Test21}
+	 * 生命周期 {@link com.ling.test22.Test22}
+	 * Condition 条件	{@link com.ling.test23.condition.Test23}
 	 */
 	void read00(){}
 
