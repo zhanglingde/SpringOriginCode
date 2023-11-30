@@ -3,6 +3,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	   http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -10,14 +11,16 @@
        https://www.springframework.org/schema/util/spring-util.xsd
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+	   http://www.springframework.org/schema/tx/spring-tx.xsd
 	   http://www.springframework.org/schema/context
 	   http://www.springframework.org/schema/context/spring-context.xsd">
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-        <property name="url" value="jdbc:mysql://121.37.185.192:3306/test"></property>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/test"></property>
         <property name="username" value="root"></property>
-        <property name="password" value="zhangling03"></property>
+        <property name="password" value="root"></property>
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -36,5 +39,7 @@
 
     <aop:aspectj-autoproxy  expose-proxy="true"/>
     <context:component-scan base-package="com.ling.test30"></context:component-scan>
+	<!-- 开启事务的注解配置，添加了这个配置，就可以直接在代码中通过 @Transactional 注解来开启事务了 -->
+	<tx:annotation-driven />
 
 </beans>

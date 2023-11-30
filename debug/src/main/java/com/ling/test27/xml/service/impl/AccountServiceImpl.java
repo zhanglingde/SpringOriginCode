@@ -27,18 +27,16 @@ public class AccountServiceImpl implements AccountService {
 	 * 转账
 	 */
 	@Override
-	public void transfer(String sourceName, String targetName, Float money) {
+	public void transfer(String sourceName, String targetName, Float money,boolean flag) {
 		System.out.println("before transfer....");
 		Account source = accountDao.findAccountByName(sourceName);
 		Account target = accountDao.findAccountByName(targetName);
 		source.setMoney(source.getMoney() - money);
 		target.setMoney(target.getMoney() + money);
 		accountDao.updateAccount(source);
-
-		int i = 11;
-		// if (i == 10) {
-		// 	throw new RuntimeException("自定义异常");
-		// }
+		if (flag) {
+			throw new RuntimeException("自定义异常");
+		}
 		accountDao.updateAccount(target);
 	}
 }

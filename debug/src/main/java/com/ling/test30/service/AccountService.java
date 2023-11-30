@@ -9,11 +9,12 @@ import com.ling.test30.Account;
 public interface AccountService {
 
     Account findAccountById(Integer accountId);
+    Account findAccountByName(String name);
 
     /**
      * 转账
      */
     void transfer(String sourceName, String targetName, Float money);
 
-    void transferImpl(String sourceName, String targetName, Float money);
+    void transferImpl(String sourceName, String targetName, Float money,boolean flag);
 }

@@ -14,19 +14,16 @@
 	<bean id="accountService" class="com.ling.test27.xml.service.impl.AccountServiceImpl">
 		<property name="accountDao" ref="accountDao"></property>
 	</bean>
-
 	<!-- 配置账户的持久层-->
 	<bean id="accountDao" class="com.ling.test27.xml.dao.impl.AccountDaoImpl">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
-
-
 	<!-- 配置数据源-->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-		<property name="url" value="jdbc:mysql://121.37.185.192:3306/test"></property>
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/test"></property>
 		<property name="username" value="root"></property>
-		<property name="password" value="zhangling03"></property>
+		<property name="password" value="root"></property>
 	</bean>
 
 	<!-- spring中基于XML的声明式事务控制配置步骤
@@ -48,14 +45,6 @@
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 
-	<!--配置AOP-->
-	<aop:config>
-		<!--3. 配置切入点表达式-->
-		<aop:pointcut id="txPoint" expression="execution(* com.ling.test27.xml.service.impl.*.*(..))"></aop:pointcut>
-		<!--4. 建立切入点表达式和事物通知的关系-->
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"></aop:advisor>
-	</aop:config>
-
 	<!--2. 配置事物的通知-->
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<!--5.配置事务的属性
@@ -73,5 +62,13 @@
 			<tx:method name="find*" propagation="SUPPORTS" read-only="true"></tx:method>
 		</tx:attributes>
 	</tx:advice>
+
+	<!--配置AOP-->
+	<aop:config>
+		<!--3. 配置切入点表达式-->
+		<aop:pointcut id="txPoint" expression="execution(* com.ling.test27.xml.service.impl.*.*(..))"></aop:pointcut>
+		<!--4. 建立切入点表达式和事物通知的关系-->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"></aop:advisor>
+	</aop:config>
 
 </beans>

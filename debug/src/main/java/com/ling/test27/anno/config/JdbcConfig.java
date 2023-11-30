@@ -1,4 +1,4 @@
-package com.ling.test28.anno.config;
+package com.ling.test27.anno.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

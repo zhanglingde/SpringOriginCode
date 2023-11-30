@@ -1,9 +1,9 @@
-package com.ling.test28.anno.service.impl;
+package com.ling.test27.anno.service.impl;
 
 
-import com.ling.test28.anno.Account;
-import com.ling.test28.anno.dao.AccountDao;
-import com.ling.test28.anno.service.AccountService;
+import com.ling.test27.anno.Account;
+import com.ling.test27.anno.dao.AccountDao;
+import com.ling.test27.anno.service.AccountService;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,11 +1,8 @@
-package com.ling.test28.anno.dao.impl;
+package com.ling.test27.anno.dao.impl;
 
 
-import com.ling.test28.anno.Account;
-import com.ling.test28.anno.dao.AccountDao;
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanHandler;
-import org.apache.commons.dbutils.handlers.BeanListHandler;
+import com.ling.test27.anno.Account;
+import com.ling.test27.anno.dao.AccountDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

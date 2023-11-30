@@ -13,5 +13,5 @@ public interface AccountService {
     /**
      * 转账
      */
-    void transfer(String sourceName, String targetName, Float money);
+    void transfer(String sourceName, String targetName, Float money,boolean flag);
 }

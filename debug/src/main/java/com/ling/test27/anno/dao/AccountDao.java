@@ -1,9 +1,7 @@
-package com.ling.test28.anno.dao;
+package com.ling.test27.anno.dao;
 
 
-import com.ling.test28.anno.Account;
-
-import java.util.List;
+import com.ling.test27.anno.Account;
 
 /**
  * 账户的持久层接口

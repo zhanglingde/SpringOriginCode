@@ -12,7 +12,7 @@
 	</select>
 
 	<select id="findAccountByName" resultType="com.ling.test30.Account">
-		select * from account where id = #{accountName}
+		select * from account where name = #{accountName}
 	</select>
 
 	<select id="updateAccount" parameterType="com.ling.test30.Account">

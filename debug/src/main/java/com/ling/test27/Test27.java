@@ -9,10 +9,11 @@ public class Test27 {
 	public static void main(String[] args) {
 		ApplicationContext ac = new ClassPathXmlApplicationContext("bean27.xml");
 		AccountService accountService = ac.getBean("accountService", AccountService.class);
-		// Account account = accountService.findAccountById(2);
-		// System.out.println("account = " + account);
-
+		Account account = accountService.findAccountById(2);
+		System.out.println("account = " + account);
 		// lisi -> zhang 转账 50
-		accountService.transfer("lisi", "zhang", 50f);
+		accountService.transfer("lisi", "zhangsan", 50f,true);
+		Account account2 = accountService.findAccountById(2);
+		System.out.println("account = " + account2);
 	}
 }

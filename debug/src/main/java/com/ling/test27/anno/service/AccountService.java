@@ -1,7 +1,7 @@
-package com.ling.test28.anno.service;
+package com.ling.test27.anno.service;
 
 
-import com.ling.test28.anno.Account;
+import com.ling.test27.anno.Account;
 
 /**
  * 账户的业务层接口
