@@ -205,7 +205,7 @@ class ConfigurationClassParser {
 						"Failed to parse configuration class [" + bd.getBeanClassName() + "]", ex);
 			}
 		}
-		// 处理延迟 importSelector
+		// 处理延迟 DeferredImportSelector
 		this.deferredImportSelectorHandler.process();
 	}
 
@@ -220,6 +220,7 @@ class ConfigurationClassParser {
 	}
 
 	protected final void parse(AnnotationMetadata metadata, String beanName) throws IOException {
+		// 处理配置类
 		processConfigurationClass(new ConfigurationClass(metadata, beanName), DEFAULT_EXCLUSION_FILTER);
 	}
 
@@ -282,7 +283,7 @@ class ConfigurationClassParser {
 		// SourceClass 的意义，简单的包装类，目的是为了以统一的方式去处理带有注解的类，不管这些类是如何加载的
 		SourceClass sourceClass = asSourceClass(configClass, filter);
 		do {
-			// 4. 解析各种注解（重要）
+			// 4. 解析各种注解（重要）  一个个循环处理配置类
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass, filter);
 		}
 		while (sourceClass != null);
@@ -307,7 +308,7 @@ class ConfigurationClassParser {
 			ConfigurationClass configClass, SourceClass sourceClass, Predicate<String> filter)
 			throws IOException {
 
-		// 1. @Configuration 继承了 @Component
+		// 1. 处理 @Component(@Configuration 继承了 @Component)
 		if (configClass.getMetadata().isAnnotated(Component.class.getName())) {
 			// Recursively process any member (nested) classes first
 			// 递归解析配置类，最终还是调用 doProcessConfigurationClass() 方法
@@ -372,7 +373,7 @@ class ConfigurationClassParser {
 		}
 
 		// Process individual @Bean methods
-		// 6. 处理加了 @Bean 注解的方法，将 @Bean 方法转换为 BeanMethod 对象，保存到集合中
+		// 6. 处理加了 @Bean 注解的方法，将 @Bean 方法转换为 BeanMethod 对象，保存到集合中(不是执行)
 		Set<MethodMetadata> beanMethods = retrieveBeanMethodMetadata(sourceClass);
 		for (MethodMetadata methodMetadata : beanMethods) {
 			configClass.addBeanMethod(new BeanMethod(methodMetadata, configClass));
@@ -383,7 +384,7 @@ class ConfigurationClassParser {
 		processInterfaces(configClass, sourceClass);
 
 		// Process superclass, if any
-		// 8. 解析父类，如果被解析的配置类继承了某个类，那么配置类的父类也会被进行解析
+		// 8. 解析 Configuration 父类，如果被解析的配置类继承了某个类，那么配置类的父类也会被进行解析
 		if (sourceClass.getMetadata().hasSuperClass()) {
 			String superclass = sourceClass.getMetadata().getSuperClassName();
 			if (superclass != null && !superclass.startsWith("java") &&
@@ -646,31 +647,30 @@ class ConfigurationClassParser {
 			try {
 				// 遍历每个 @Import 注解的类
 				for (SourceClass candidate : importCandidates) {
-					// 如果实现了 ImportSelector 接口的 beanDefinition
+					// 1. 如果实现了 ImportSelector 接口的 BeanDefinition
 					if (candidate.isAssignable(ImportSelector.class)) {
 						// Candidate class is an ImportSelector -> delegate to it to determine imports
 
-
-						
 						Class<?> candidateClass = candidate.loadClass();
-						// 反射生成ImportSelector 对象
+						// 1.1 反射生成 ImportSelector 实例
 						ImportSelector selector = ParserStrategyUtils.instantiateClass(candidateClass, ImportSelector.class,
 								this.environment, this.resourceLoader, this.registry);
 						Predicate<String> selectorFilter = selector.getExclusionFilter();
 						if (selectorFilter != null) {
 							exclusionFilter = exclusionFilter.or(selectorFilter);
 						}
-						// 判断是否是 DeferredImportSelector 接口，延迟处理
+						// 1.2 如果实现了 DeferredImportSelector 接口，延迟处理
 						if (selector instanceof DeferredImportSelector) {
+							// 将该实例交给了 Deferred 的处理器
 							this.deferredImportSelectorHandler.handle(configClass, (DeferredImportSelector) selector);
 						} else {
-							// 执行 selectImports 方法
+							// 重点!!!   没有实现 DeferredImportSelector 接口，直接执行 selectImports 方法
 							String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
 							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames, exclusionFilter);
 							processImports(configClass, currentSourceClass, importSourceClasses, exclusionFilter, false);
 						}
 					}
-					// 实现了 ImportBeanDefinitionRegistrar 接口的 BeanDefinition
+					// 2. 实现了 ImportBeanDefinitionRegistrar 接口的 BeanDefinition
 					else if (candidate.isAssignable(ImportBeanDefinitionRegistrar.class)) {
 						// Candidate class is an ImportBeanDefinitionRegistrar ->
 						// delegate to it to register additional bean definitions
@@ -682,6 +682,7 @@ class ConfigurationClassParser {
 					} else {
 						// Candidate class not an ImportSelector or ImportBeanDefinitionRegistrar ->
 						// process it as an @Configuration class
+						// 3. 否则直接注入
 						this.importStack.registerImport(
 								currentSourceClass.getMetadata(), candidate.getMetadata().getClassName());
 						processConfigurationClass(candidate.asConfigClass(configClass), exclusionFilter);
@@ -851,6 +852,7 @@ class ConfigurationClassParser {
 			}
 		}
 
+		// 按需导入一组 bean 定义，以实现灵活和可配置的组件加载
 		public void process() {
 			List<DeferredImportSelectorHolder> deferredImports = this.deferredImportSelectors;
 			this.deferredImportSelectors = null;
@@ -858,7 +860,9 @@ class ConfigurationClassParser {
 				if (deferredImports != null) {
 					DeferredImportSelectorGroupingHandler handler = new DeferredImportSelectorGroupingHandler();
 					deferredImports.sort(DEFERRED_IMPORT_COMPARATOR);
+					// 遍历对延迟选择器按 Group 分组，并将延迟选择器注册到处理程序中 DeferredImportSelectorGroupingHandler 中
 					deferredImports.forEach(handler::register);
+					// 处理所有已注册的延迟导入选择器
 					handler.processGroupImports();
 				}
 			} finally {
@@ -870,11 +874,13 @@ class ConfigurationClassParser {
 
 	private class DeferredImportSelectorGroupingHandler {
 
+		// 分组：key 为 DeferredImportSelectorGrouping 中有多个 ImportSelector
 		private final Map<Object, DeferredImportSelectorGrouping> groupings = new LinkedHashMap<>();
 
 		private final Map<AnnotationMetadata, ConfigurationClass> configurationClasses = new HashMap<>();
 
 		public void register(DeferredImportSelectorHolder deferredImport) {
+			// 1. 获取延迟选择器 Group，并将 ImportSelector 按 Group 分组延迟选择器
 			Class<? extends Group> group = deferredImport.getImportSelector().getImportGroup();
 			DeferredImportSelectorGrouping grouping = this.groupings.computeIfAbsent(
 					(group != null ? group : deferredImport),
@@ -884,12 +890,17 @@ class ConfigurationClassParser {
 					deferredImport.getConfigurationClass());
 		}
 
+		// 处理分组导入，按组导入一组相关的 BeanDefinition
 		public void processGroupImports() {
+			// 1. 按 Group 分组进行遍历
 			for (DeferredImportSelectorGrouping grouping : this.groupings.values()) {
-				Predicate<String> exclusionFilter = grouping.getCandidateFilter();
+				Predicate<String> exclusionFilter = grouping.getCandidateFilter();   // 获取候选过滤器
+				// 2. 遍历同一组中的 DeferredImportSelector（getImports() 方法先调用了 group 的 process() 方法，然后调用 group 的 selectImports() 返回类数组）
 				grouping.getImports().forEach(entry -> {
+					// 获取配置类
 					ConfigurationClass configurationClass = this.configurationClasses.get(entry.getMetadata());
 					try {
+						// 将配置类转换为源类并应用过滤器；将导入类名转换为源类，并应用候选过滤器
 						processImports(configurationClass, asSourceClass(configurationClass, exclusionFilter),
 								Collections.singleton(asSourceClass(entry.getImportClassName(), exclusionFilter)),
 								exclusionFilter, false);
