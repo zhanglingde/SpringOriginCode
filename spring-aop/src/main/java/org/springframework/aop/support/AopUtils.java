@@ -284,9 +284,11 @@ public abstract class AopUtils {
 	 */
 	public static boolean canApply(Advisor advisor, Class<?> targetClass, boolean hasIntroductions) {
 		if (advisor instanceof IntroductionAdvisor) {
+			// 引介增强，只需要判断 ClassFilter 是否匹配，只在类级别进行判断
 			return ((IntroductionAdvisor) advisor).getClassFilter().matches(targetClass);
 		}
 		else if (advisor instanceof PointcutAdvisor) {
+			//  Pointcut 需要判断方法是否匹配，更灵活
 			PointcutAdvisor pca = (PointcutAdvisor) advisor;
 			return canApply(pca.getPointcut(), targetClass, hasIntroductions);
 		}
